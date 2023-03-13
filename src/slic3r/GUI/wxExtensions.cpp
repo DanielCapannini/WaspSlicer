@@ -668,11 +668,11 @@ ModeButton::ModeButton( wxWindow*           parent,
 
 void ModeButton::Init(const wxString &mode)
 {
-    std::string mode_str = std::string(mode.ToUTF8());
-    m_tt_focused  = Slic3r::GUI::from_u8((boost::format(_utf8(L("Switch to the %s mode"))) % mode_str).str());
-    m_tt_selected = Slic3r::GUI::from_u8((boost::format(_utf8(L("Current mode is %s"))) % mode_str).str());
+    //std::string mode_str = std::string(mode.ToUTF8());
+    //m_tt_focused  = Slic3r::GUI::from_u8((boost::format(_utf8(L("Switch to the %s mode"))) % mode_str).str());
+    //m_tt_selected = Slic3r::GUI::from_u8((boost::format(_utf8(L("Current mode is %s"))) % mode_str).str());
 
-    SetBitmapMargins(3, 0);
+    //SetBitmapMargins(3, 0);
 
     //button events
     //Bind(wxEVT_BUTTON,          &ModeButton::OnButton, this);
