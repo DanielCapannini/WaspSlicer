@@ -675,9 +675,9 @@ void ModeButton::Init(const wxString &mode)
     SetBitmapMargins(3, 0);
 
     //button events
-    Bind(wxEVT_BUTTON,          &ModeButton::OnButton, this);
-    Bind(wxEVT_ENTER_WINDOW,    &ModeButton::OnEnterBtn, this);
-    Bind(wxEVT_LEAVE_WINDOW,    &ModeButton::OnLeaveBtn, this);
+    //Bind(wxEVT_BUTTON,          &ModeButton::OnButton, this);
+    //Bind(wxEVT_ENTER_WINDOW,    &ModeButton::OnEnterBtn, this);
+    //Bind(wxEVT_LEAVE_WINDOW,    &ModeButton::OnLeaveBtn, this);
 }
 
 void ModeButton::OnButton(wxCommandEvent& event)
