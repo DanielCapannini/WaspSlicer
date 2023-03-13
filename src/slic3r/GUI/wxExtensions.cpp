@@ -724,9 +724,6 @@ void ModeButton::focus_button(const bool focus)
 #endif    
     ));
 #endif /* no _WIN32 */
-
-    Refresh();
-    Update();
 }
 
 void ModeButton::sys_color_changed()
