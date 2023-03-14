@@ -2265,7 +2265,6 @@ void ConfigWizard::priv::load_pages()
     if (!only_sla_mode)
         index->add_page(page_fff);
     index->add_page(page_msla);
-    index->add_page(page_wasp);
     if (!only_sla_mode) {
         index->add_page(page_vendors);
         for (const auto &pages : pages_3rdparty) {
@@ -2460,7 +2459,6 @@ void ConfigWizard::priv::create_3rdparty_pages()
 
         PagePrinters* pageFFF = nullptr;
         PagePrinters* pageSLA = nullptr;
-        PagePrinters* pageWasp = nullptr;
 
         if (is_fff_technology) {
             pageFFF = new PagePrinters(q, vendor->name + " " +_L("FFF Technology Printers"), vendor->name+" FFF", *vendor, 1, T_FFF);
@@ -2472,10 +2470,7 @@ void ConfigWizard::priv::create_3rdparty_pages()
             add_page(pageSLA);
         }
 
-        pageWasp = new PagePrinters(q, vendor->name + " " + _L(" Technology Printers"), vendor->name+" FFF", *vendor, 1, T_SLA);
-        add_page(pageWasp);
-
-        pages_3rdparty.insert({vendor->id, {pageFFF, pageSLA, pageWasp}});
+        pages_3rdparty.insert({vendor->id, {pageFFF, pageSLA}});
     }
 }
 
@@ -3430,7 +3425,6 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
         p->load_pages();
         p->page_fff->select_all(true, false);
         p->page_msla->select_all(true, false);
-        p->page_wasp->select_all(true, false);
         p->index->go_to(p->page_mode);
     });
 
