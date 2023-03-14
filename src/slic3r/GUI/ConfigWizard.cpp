@@ -1590,8 +1590,8 @@ PageMode::PageMode(ConfigWizard *parent)
     else { radio_simple->SetValue(true); }
 
     append(radio_simple);
-    append(radio_advanced);
-    append(radio_expert);
+    //append(radio_advanced);
+    //append(radio_expert);
 
     append_text("\n" + _L("The size of the object can be specified in inches"));
     check_inch = new wxCheckBox(this, wxID_ANY, _L("Use inches"));
