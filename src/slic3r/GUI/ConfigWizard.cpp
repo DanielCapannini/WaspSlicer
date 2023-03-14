@@ -3369,7 +3369,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
 #ifdef _WIN32
     p->add_page(p->page_files_association = new PageFilesAssociation(this));
 #endif // _WIN32
-    //p->add_page(p->page_mode     = new PageMode(this));
+    p->add_page(p->page_mode     = new PageMode(this));
     p->add_page(p->page_firmware = new PageFirmware(this));
     p->add_page(p->page_bed      = new PageBedShape(this));
     p->add_page(p->page_bvolume  = new PageBuildVolume(this));
