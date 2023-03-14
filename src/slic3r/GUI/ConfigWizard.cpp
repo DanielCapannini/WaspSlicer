@@ -11,7 +11,6 @@
 #include <boost/log/trivial.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/nowide/convert.hpp>
-#include <boost/dll/runtime_symbol_info.hpp>
 
 #include <wx/settings.h>
 #include <wx/stattext.h>
@@ -28,12 +27,6 @@
 #include <wx/wupdlock.h>
 #include <wx/debug.h>
 
-#ifdef WIN32
-#include <wx/msw/registry.h>
-#include <KnownFolders.h>
-#include <Shlobj_core.h>
-#endif // WIN32
-
 #ifdef _MSW_DARK_MODE
 #include <wx/msw/dark_mode.h>
 #endif // _MSW_DARK_MODE
@@ -43,7 +36,6 @@
 #include "libslic3r/Config.hpp"
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/Model.hpp"
-#include "libslic3r/Color.hpp"
 #include "GUI.hpp"
 #include "GUI_App.hpp"
 #include "GUI_Utils.hpp"
@@ -55,7 +47,6 @@
 #include "format.hpp"
 #include "MsgDialog.hpp"
 #include "UnsavedChangesDialog.hpp"
-#include "slic3r/Utils/AppUpdater.hpp"
 
 #if defined(__linux__) && defined(__WXGTK3__)
 #define wxLinux_gtk3 true
