@@ -2418,7 +2418,7 @@ void GUI_App::add_config_menu(wxMenuBar *menu)
     wxMenu* mode_menu = nullptr;
     if (is_editor()) {
         //local_menu->AppendSeparator();
-        mode_menu = new wxMenu();
+        //mode_menu = new wxMenu();
     //    mode_menu->AppendRadioItem(config_id_base + ConfigMenuModeSimple, _L("Simple"), _L("Simple View Mode"));
 //    mode_menu->AppendRadioItem(config_id_base + ConfigMenuModeAdvanced, _L("Advanced"), _L("Advanced View Mode"));
     //    mode_menu->AppendRadioItem(config_id_base + ConfigMenuModeAdvanced, _CTX(L_CONTEXT("Advanced", "Mode"), "Mode"), _L("Advanced View Mode"));
