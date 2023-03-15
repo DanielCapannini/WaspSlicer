@@ -3326,6 +3326,9 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     wxCHECK_RET(prusa_it != p->bundles.cend(), "Vendor PrusaResearch not found");
     const VendorProfile *vendor_prusa = prusa_it->second.vendor_profile;
 
+    const auto wasp_it = p->bundles.find("Wasp");
+    const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
+
     p->add_page(p->page_welcome = new PageWelcome(this));
 
     
@@ -3337,7 +3340,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     }
   
 
-    p->page_msla = new PagePrinters(this, _L("Prusa MSLA Technology Printers"), "Prusa MSLA", *vendor_prusa, 0, T_SLA);
+    p->page_msla = new PagePrinters(this, _L("Wasp Technology Printers"), "Wasp", *vendor_wasp, 0, T_ANY);
     p->add_page(p->page_msla);
     if (p->only_sla_mode) {
         p->page_msla->is_primary_printer_page = true;
