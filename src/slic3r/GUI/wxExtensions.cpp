@@ -747,7 +747,7 @@ ModeSizer::ModeSizer(wxWindow *parent, int hgap/* = 0*/) :
     auto modebtnfn = [this](wxCommandEvent &event, int mode_id) {
         if (Slic3r::GUI::wxGetApp().save_mode(mode_id))
             event.Skip();
-        else
+        //else
             //SetMode(Slic3r::GUI::wxGetApp().get_mode());
     };
     
