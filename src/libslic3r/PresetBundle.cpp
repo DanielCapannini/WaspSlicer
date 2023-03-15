@@ -36,6 +36,7 @@ static std::vector<std::string> s_project_options {
 };
 
 const char *PresetBundle::PRUSA_BUNDLE = "PrusaResearch";
+const char *PresetBundle::WASP_BUNDLE = "WaspResearch";
 
 PresetBundle::PresetBundle() :
     prints(Preset::TYPE_PRINT, Preset::print_options(), static_cast<const PrintRegionConfig&>(FullPrintConfig::defaults())),
