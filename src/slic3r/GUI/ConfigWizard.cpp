@@ -191,21 +191,6 @@ const Bundle& BundleMap::prusa_bundle() const
     return const_cast<BundleMap*>(this)->prusa_bundle();
 }
 
-Bundle& BundleMap::wasp_bundle()
-{
-    auto it = find(PresetBundle::WASP_BUNDLE);
-    if (it == end()) {
-        throw Slic3r::RuntimeError("ConfigWizard: Internal error in BundleMap: WASP_BUNDLE not loaded");
-    }
-
-    return it->second;
-}
-
-const Bundle& BundleMap::wasp_bundle() const
-{
-    return const_cast<BundleMap*>(this)->wasp_bundle();
-}
-
 // Printer model picker GUI control
 
 struct PrinterPickerEvent : public wxEvent
