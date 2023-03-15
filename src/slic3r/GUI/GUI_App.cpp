@@ -1453,7 +1453,7 @@ const wxColour GUI_App::get_label_default_clr_system()
 
 const wxColour GUI_App::get_label_default_clr_modified()
 {
-    return dark_mode() ? wxColour(253, 111, 40) : wxColour(252, 77, 1);
+    return dark_mode() ? wxColour(40, 72, 253) : wxColour(14, 1, 252);
 }
 
 const std::vector<std::string> GUI_App::get_mode_default_palette()
