@@ -136,7 +136,7 @@ BundleMap BundleMap::load()
     }
 
     auto wasp_bundle_path = (vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-    BundleLocation prusa_bundle_loc = BundleLocation::IN_VENDOR;
+    BundleLocation wasp_bundle_loc = BundleLocation::IN_VENDOR;
     if (! boost::filesystem::exists(wasp_bundle_path)) {
         wasp_bundle_path = (archive_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
         wasp_bundle_loc = BundleLocation::IN_ARCHIVE;
