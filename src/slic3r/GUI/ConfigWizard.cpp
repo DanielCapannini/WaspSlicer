@@ -135,22 +135,6 @@ BundleMap BundleMap::load()
             res.emplace(PresetBundle::PRUSA_BUNDLE, std::move(prusa_bundle)); 
     }
 
-    auto wasp_bundle_path = (vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-    BundleLocation wasp_bundle_loc = BundleLocation::IN_VENDOR;
-    if (! boost::filesystem::exists(wasp_bundle_path)) {
-        wasp_bundle_path = (archive_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-        wasp_bundle_loc = BundleLocation::IN_ARCHIVE;
-    }
-    if (!boost::filesystem::exists(wasp_bundle_path)) {
-        wasp_bundle_path = (rsrc_vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-        wasp_bundle_loc = BundleLocation::IN_RESOURCES;
-    }
-    {
-        Bundle wasp_bundle;
-        if (wasp_bundle.load(std::move(wasp_bundle_path), wasp_bundle_loc, true))
-            res.emplace(PresetBundle::WASP_BUNDLE, std::move(wasp_bundle)); 
-    }
-
     // Load the other bundles in the datadir/vendor directory
     // and then additionally from datadir/cache/vendor (archive) and resources/profiles.
     // Should we concider case where archive has older profiles than resources (shouldnt happen)?
@@ -190,6 +174,7 @@ const Bundle& BundleMap::prusa_bundle() const
 {
     return const_cast<BundleMap*>(this)->prusa_bundle();
 }
+
 
 // Printer model picker GUI control
 
@@ -1640,7 +1625,7 @@ PageVendors::PageVendors(ConfigWizard *parent)
 
     for (const auto &pair : wizard_p()->bundles) {
         const VendorProfile *vendor = pair.second.vendor_profile;
-        //if (vendor->id == PresetBundle::PRUSA_BUNDLE) { continue; }
+        if (vendor->id == PresetBundle::PRUSA_BUNDLE) { continue; }
         if (vendor && vendor->templates_profile)
             continue;
 
@@ -2280,7 +2265,6 @@ void ConfigWizard::priv::load_pages()
     if (!only_sla_mode)
         index->add_page(page_fff);
     index->add_page(page_msla);
-    index->add_page(page_wasp);
     if (!only_sla_mode) {
         index->add_page(page_vendors);
         for (const auto &pages : pages_3rdparty) {
@@ -2647,7 +2631,7 @@ void ConfigWizard::priv::on_custom_setup(const bool custom_wanted)
 void ConfigWizard::priv::on_printer_pick(PagePrinters *page, const PrinterPickerEvent &evt)
 {
     if (check_sla_selected() != any_sla_selected ||
-        check_fff_selected() != any_fff_selected ) {
+        check_fff_selected() != any_fff_selected) {
         any_fff_selected = check_fff_selected();
         any_sla_selected = check_sla_selected();
 
@@ -3340,9 +3324,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
 
     const auto prusa_it = p->bundles.find("PrusaResearch");
     wxCHECK_RET(prusa_it != p->bundles.cend(), "Vendor PrusaResearch not found");
-    const auto wasp_it = p->bundles.find("WaspResearch");
     const VendorProfile *vendor_prusa = prusa_it->second.vendor_profile;
-    const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
 
     p->add_page(p->page_welcome = new PageWelcome(this));
 
@@ -3350,7 +3332,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     p->page_fff = new PagePrinters(this, _L("Prusa FFF Technology Printers"), "Prusa FFF", *vendor_prusa, 0, T_FFF);
     p->only_sla_mode = !p->page_fff->has_printers;
     if (!p->only_sla_mode) {
-        //p->add_page(p->page_fff);
+        p->add_page(p->page_fff);
         p->page_fff->is_primary_printer_page = true;
     }
   
@@ -3359,13 +3341,6 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     p->add_page(p->page_msla);
     if (p->only_sla_mode) {
         p->page_msla->is_primary_printer_page = true;
-    }
-
-    p->page_wasp = new PagePrinters(this, _L("wasp FFF Technology Printers"), "wasp FFF", *vendor_wasp, 0, T_FFF);
-    p->only_sla_mode = !p->page_wasp->has_printers;
-    if (!p->only_sla_mode) {
-        p->add_page(p->page_wasp);
-        p->page_wasp->is_primary_printer_page = true;
     }
 
     if (!p->only_sla_mode) {
@@ -3444,7 +3419,6 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
         p->load_pages();
         p->page_fff->select_all(true, false);
         p->page_msla->select_all(true, false);
-        p->page_wasp->select_all(true, false);
         p->index->go_to(p->page_mode);
     });
 
