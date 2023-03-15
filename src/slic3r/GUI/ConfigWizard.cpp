@@ -136,7 +136,7 @@ BundleMap BundleMap::load()
     }
 
     auto wasp_bundle_path = (vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-    BundleLocation prusa_bundle_loc = BundleLocation::IN_VENDOR;
+    BundleLocation wasp_bundle_loc = BundleLocation::IN_VENDOR;
     if (! boost::filesystem::exists(wasp_bundle_path)) {
         wasp_bundle_path = (archive_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
         wasp_bundle_loc = BundleLocation::IN_ARCHIVE;
@@ -191,6 +191,20 @@ const Bundle& BundleMap::prusa_bundle() const
     return const_cast<BundleMap*>(this)->prusa_bundle();
 }
 
+Bundle& BundleMap::wasp_bundle()
+{
+    auto it = find(PresetBundle::WASP_BUNDLE);
+    if (it == end()) {
+        throw Slic3r::RuntimeError("ConfigWizard: Internal error in BundleMap: WASP_BUNDLE not loaded");
+    }
+
+    return it->second;
+}
+
+const Bundle& BundleMap::wasp_bundle() const
+{
+    return const_cast<BundleMap*>(this)->wasp_bundle();
+}
 
 // Printer model picker GUI control
 

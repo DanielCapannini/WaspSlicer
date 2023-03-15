@@ -156,6 +156,7 @@ public:
                                                   const std::string& new_name, const std::vector<std::string>& options);
 
     static const char *PRUSA_BUNDLE;
+    static const char *WASP_BUNDLE;
 
     static std::array<Preset::Type, 3>  types_list(PrinterTechnology pt) {
         if (pt == ptFFF)
