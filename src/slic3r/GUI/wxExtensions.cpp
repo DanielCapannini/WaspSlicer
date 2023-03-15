@@ -757,7 +757,7 @@ ModeSizer::ModeSizer(wxWindow *parent, int hgap/* = 0*/) :
         m_mode_btns.push_back(new ModeButton(parent, mode_id++, label, mode_icon_px_size()));
 
         m_mode_btns.back()->Bind(wxEVT_BUTTON, std::bind(modebtnfn, std::placeholders::_1, int(m_mode_btns.size() - 1)));
-        Add(m_mode_btns.back());
+        //Add(m_mode_btns.back());
     }
 }
 
