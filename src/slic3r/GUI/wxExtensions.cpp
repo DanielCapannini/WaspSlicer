@@ -748,15 +748,15 @@ ModeSizer::ModeSizer(wxWindow *parent, int hgap/* = 0*/) :
         if (Slic3r::GUI::wxGetApp().save_mode(mode_id))
             event.Skip();
         else
-            SetMode(Slic3r::GUI::wxGetApp().get_mode());
+            //SetMode(Slic3r::GUI::wxGetApp().get_mode());
     };
     
     m_mode_btns.reserve(3);
     int mode_id = 0;
     for (const wxString& label : {_L("Simple"), _CTX(L_CONTEXT("Advanced", "Mode"), "Mode"),_L("Expert")}) {
-        m_mode_btns.push_back(new ModeButton(parent, mode_id++, label, mode_icon_px_size()));
+        //m_mode_btns.push_back(new ModeButton(parent, mode_id++, label, mode_icon_px_size()));
 
-        m_mode_btns.back()->Bind(wxEVT_BUTTON, std::bind(modebtnfn, std::placeholders::_1, int(m_mode_btns.size() - 1)));
+        //m_mode_btns.back()->Bind(wxEVT_BUTTON, std::bind(modebtnfn, std::placeholders::_1, int(m_mode_btns.size() - 1)));
         //Add(m_mode_btns.back());
     }
 }
