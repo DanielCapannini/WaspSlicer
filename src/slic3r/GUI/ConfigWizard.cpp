@@ -3343,12 +3343,6 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
         p->page_msla->is_primary_printer_page = true;
     }
 
-    p->page_wasp = new PagePrinters(this, _L("Wasp Technology Printers"), "Wasp", *vendor_prusa, 0, T_FFF);
-    p->add_page(p->page_wasp);
-    if (p->only_sla_mode) {
-        p->page_wasp->is_primary_printer_page = true;
-    }
-
     if (!p->only_sla_mode) {
 	    // Pages for 3rd party vendors
 	    p->create_3rdparty_pages();   // Needs to be done _before_ creating PageVendors
@@ -3375,7 +3369,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
 #ifdef _WIN32
     p->add_page(p->page_files_association = new PageFilesAssociation(this));
 #endif // _WIN32
-    //p->add_page(p->page_mode     = new PageMode(this));
+    p->add_page(p->page_mode     = new PageMode(this));
     p->add_page(p->page_firmware = new PageFirmware(this));
     p->add_page(p->page_bed      = new PageBedShape(this));
     p->add_page(p->page_bvolume  = new PageBuildVolume(this));

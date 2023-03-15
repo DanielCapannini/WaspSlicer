@@ -1573,7 +1573,7 @@ void Sidebar::collapse(bool collapse)
 #ifdef _MSW_DARK_MODE
 void Sidebar::show_mode_sizer(bool show)
 {
-    p->mode_sizer->Show(show);
+    //p->mode_sizer->Show(show);
 }
 #endif
 

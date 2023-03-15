@@ -29,8 +29,8 @@ ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, bool add_mode_buttons/* = fal
 
     if (add_mode_buttons) {
         m_mode_sizer = new ModeSizer(this, m_btn_margin);
-        m_sizer->AddStretchSpacer(20);
-        m_sizer->Add(m_mode_sizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxBOTTOM, m_btn_margin);
+        //m_sizer->AddStretchSpacer(20);
+        //m_sizer->Add(m_mode_sizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxBOTTOM, m_btn_margin);
     }
 
     this->Bind(wxEVT_PAINT, &ButtonsListCtrl::OnPaint, this);
