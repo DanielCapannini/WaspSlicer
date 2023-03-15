@@ -1625,7 +1625,7 @@ PageVendors::PageVendors(ConfigWizard *parent)
 
     for (const auto &pair : wizard_p()->bundles) {
         const VendorProfile *vendor = pair.second.vendor_profile;
-        //if (vendor->id == PresetBundle::PRUSA_BUNDLE) { continue; }
+        if (vendor->id == PresetBundle::PRUSA_BUNDLE) { continue; }
         if (vendor && vendor->templates_profile)
             continue;
 
@@ -2265,7 +2265,6 @@ void ConfigWizard::priv::load_pages()
     if (!only_sla_mode)
         index->add_page(page_fff);
     index->add_page(page_msla);
-    index->add_page(page_wasp);
     if (!only_sla_mode) {
         index->add_page(page_vendors);
         for (const auto &pages : pages_3rdparty) {
@@ -2632,7 +2631,7 @@ void ConfigWizard::priv::on_custom_setup(const bool custom_wanted)
 void ConfigWizard::priv::on_printer_pick(PagePrinters *page, const PrinterPickerEvent &evt)
 {
     if (check_sla_selected() != any_sla_selected ||
-        check_fff_selected() != any_fff_selected ) {
+        check_fff_selected() != any_fff_selected) {
         any_fff_selected = check_fff_selected();
         any_sla_selected = check_sla_selected();
 
@@ -3273,15 +3272,6 @@ bool ConfigWizard::priv::check_sla_selected()
     return ret;
 }
 
-bool ConfigWizard::priv::check_wasp_selected()
-{
-    bool ret = page_wasp->any_selected();
-    for (const auto& printer: pages_3rdparty)
-        if (printer.second.first)               // wasp page
-            ret |= printer.second.first->any_selected();
-    return ret;
-}
-
 
 // Public
 
@@ -3351,13 +3341,6 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     p->add_page(p->page_msla);
     if (p->only_sla_mode) {
         p->page_msla->is_primary_printer_page = true;
-    }
-
-    p->page_wasp = new PagePrinters(this, _L("wasp FFF Technology Printers"), "wasp FFF", *vendor_prusa, 0, T_FFF);
-    p->only_sla_mode = !p->page_wasp->has_printers;
-    if (!p->only_sla_mode) {
-        p->add_page(p->page_wasp);
-        p->page_wasp->is_primary_printer_page = true;
     }
 
     if (!p->only_sla_mode) {
@@ -3436,7 +3419,6 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
         p->load_pages();
         p->page_fff->select_all(true, false);
         p->page_msla->select_all(true, false);
-        p->page_wasp->select_all(true, false);
         p->index->go_to(p->page_mode);
     });
 
