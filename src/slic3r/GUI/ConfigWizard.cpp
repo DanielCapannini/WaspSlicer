@@ -3350,7 +3350,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     p->page_fff = new PagePrinters(this, _L("Prusa FFF Technology Printers"), "Prusa FFF", *vendor_prusa, 0, T_FFF);
     p->only_sla_mode = !p->page_fff->has_printers;
     if (!p->only_sla_mode) {
-        p->add_page(p->page_fff);
+        //p->add_page(p->page_fff);
         p->page_fff->is_primary_printer_page = true;
     }
   
