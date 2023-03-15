@@ -612,6 +612,7 @@ struct ConfigWizard::priv
     PageWelcome      *page_welcome = nullptr;
     PagePrinters     *page_fff = nullptr;
     PagePrinters     *page_msla = nullptr;
+    PagePrinters     *page_wasp = nullptr;
     PageMaterials    *page_filaments = nullptr;
     PageMaterials    *page_sla_materials = nullptr;
     PageCustom       *page_custom = nullptr;
