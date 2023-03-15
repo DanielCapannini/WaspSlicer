@@ -504,7 +504,7 @@ GCode::ObjectsLayerToPrint GCode::collect_layers_to_print(const PrintObject& obj
                 + layer_to_print.layer()->height
                 + std::max(0., extra_gap);
             // Negative support_contact_z is not taken into account, it can result in false positives in cases
-            // where previous layer has object extrusions too (https://github.com/prusa3d/WaspSlicer/issues/2752)
+            // where previous layer has object extrusions too (https://github.com/prusa3d/PrusaSlicer/issues/2752)
 
             if (has_extrusions && layer_to_print.print_z() > maximal_print_z + 2. * EPSILON)
                 warning_ranges.emplace_back(std::make_pair((last_extrusion_layer ? last_extrusion_layer->print_z() : 0.), layers_to_print.back().print_z()));
@@ -818,7 +818,7 @@ namespace DoExport {
                     {
                         // Minimal volumetric flow should not be calculated over ironing extrusions.
                         // Use following lambda instead of the built-it method.
-                        // https://github.com/prusa3d/WaspSlicer/issues/5082
+                        // https://github.com/prusa3d/PrusaSlicer/issues/5082
                         auto min_mm3_per_mm_no_ironing = [](const ExtrusionEntityCollection& eec) -> double {
                             double min = std::numeric_limits<double>::max();
                             for (const ExtrusionEntity* ee : eec.entities)
@@ -1311,7 +1311,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
                     }
                 } else {
                     // This is not Marlin, M1 command is probably not supported.
-                    // (See https://github.com/prusa3d/WaspSlicer/issues/5441.)
+                    // (See https://github.com/prusa3d/PrusaSlicer/issues/5441.)
                     if (overlap) {
                         print.active_step_add_warning(PrintStateBase::WarningLevel::CRITICAL,
                             _(L("Your print is very close to the priming regions. "
@@ -1364,7 +1364,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     file.write(m_writer.postamble());
 
     // From now to the end of G-code, the G-code find / replace post-processor will be disabled.
-    // Thus the WaspSlicer generated config will NOT be processed by the G-code post-processor, see GH issue #7952.
+    // Thus the PrusaSlicer generated config will NOT be processed by the G-code post-processor, see GH issue #7952.
     file.find_replace_supress();
 
     // adds tags for time estimators
@@ -1390,7 +1390,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     file.write_format(";%s\n", GCodeProcessor::reserved_tag(GCodeProcessor::ETags::Estimated_Printing_Time_Placeholder).c_str());
 
     // Append full config, delimited by two 'phony' configuration keys prusaslicer_config = begin and prusaslicer_config = end.
-    // The delimiters are structured as configuration key / value pairs to be parsable by older versions of WaspSlicer G-code viewer.
+    // The delimiters are structured as configuration key / value pairs to be parsable by older versions of PrusaSlicer G-code viewer.
     {
         file.write("\n; prusaslicer_config = begin\n");
         std::string full_config;
@@ -1671,7 +1671,7 @@ void GCode::print_machine_envelope(GCodeOutputStream &file, Print &print)
             factor == 60 ? "mm / min" : "mm / sec");
 
         // Now M204 - acceleration. This one is quite hairy thanks to how Marlin guys care about
-        // backwards compatibility: https://github.com/prusa3d/WaspSlicer/issues/1089
+        // backwards compatibility: https://github.com/prusa3d/PrusaSlicer/issues/1089
         // Legacy Marlin should export travel acceleration the same as printing acceleration.
         // MarlinFirmware has the two separated.
         int travel_acc = flavor == gcfMarlinLegacy
@@ -1939,14 +1939,14 @@ namespace Skirt {
             assert(valid);
             // This print_z has not been extruded yet (sequential print)
             // FIXME: The skirt_done should not be empty at this point. The check is a workaround
-            // of https://github.com/prusa3d/WaspSlicer/issues/5652, but it deserves a real fix.
+            // of https://github.com/prusa3d/PrusaSlicer/issues/5652, but it deserves a real fix.
             if (valid) {
 #if 0
                 // Prime just the first printing extruder. This is original Slic3r's implementation.
                 skirt_loops_per_extruder_out[layer_tools.extruders.front()] = std::pair<size_t, size_t>(0, print.config().skirts.value);
 #else
                 // Prime all extruders planned for this layer, see
-                // https://github.com/prusa3d/WaspSlicer/issues/469#issuecomment-322450619
+                // https://github.com/prusa3d/PrusaSlicer/issues/469#issuecomment-322450619
                 skirt_loops_per_extruder_all_printing(print, layer_tools, skirt_loops_per_extruder_out);
 #endif
                 assert(!skirt_done.empty());

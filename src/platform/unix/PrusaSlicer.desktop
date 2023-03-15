@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=WaspSlicer
+Name=PrusaSlicer
 GenericName=3D Printing Software
-Icon=WaspSlicer
+Icon=PrusaSlicer
 Exec=prusa-slicer %F
 Terminal=false
 Type=Application
