@@ -135,22 +135,6 @@ BundleMap BundleMap::load()
             res.emplace(PresetBundle::PRUSA_BUNDLE, std::move(prusa_bundle)); 
     }
 
-    auto wasp_bundle_path = (vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-    BundleLocation prusa_bundle_loc = BundleLocation::IN_VENDOR;
-    if (! boost::filesystem::exists(wasp_bundle_path)) {
-        wasp_bundle_path = (archive_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-        wasp_bundle_loc = BundleLocation::IN_ARCHIVE;
-    }
-    if (!boost::filesystem::exists(wasp_bundle_path)) {
-        wasp_bundle_path = (rsrc_vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-        wasp_bundle_loc = BundleLocation::IN_RESOURCES;
-    }
-    {
-        Bundle wasp_bundle;
-        if (wasp_bundle.load(std::move(wasp_bundle_path), wasp_bundle_loc, true))
-            res.emplace(PresetBundle::WASP_BUNDLE, std::move(wasp_bundle)); 
-    }
-
     // Load the other bundles in the datadir/vendor directory
     // and then additionally from datadir/cache/vendor (archive) and resources/profiles.
     // Should we concider case where archive has older profiles than resources (shouldnt happen)?
@@ -3289,6 +3273,15 @@ bool ConfigWizard::priv::check_sla_selected()
     return ret;
 }
 
+bool ConfigWizard::priv::check_wasp_selected()
+{
+    bool ret = page_wasp->any_selected();
+    for (const auto& printer: pages_3rdparty)
+        if (printer.second.first)               // wasp page
+            ret |= printer.second.first->any_selected();
+    return ret;
+}
+
 
 // Public
 
@@ -3341,9 +3334,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
 
     const auto prusa_it = p->bundles.find("PrusaResearch");
     wxCHECK_RET(prusa_it != p->bundles.cend(), "Vendor PrusaResearch not found");
-    const auto wasp_it = p->bundles.find("WaspResearch");
     const VendorProfile *vendor_prusa = prusa_it->second.vendor_profile;
-    const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
 
     p->add_page(p->page_welcome = new PageWelcome(this));
 
@@ -3362,7 +3353,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
         p->page_msla->is_primary_printer_page = true;
     }
 
-    p->page_wasp = new PagePrinters(this, _L("wasp FFF Technology Printers"), "wasp FFF", *vendor_wasp, 0, T_FFF);
+    p->page_wasp = new PagePrinters(this, _L("wasp FFF Technology Printers"), "wasp FFF", *vendor_prusa, 0, T_FFF);
     p->only_sla_mode = !p->page_wasp->has_printers;
     if (!p->only_sla_mode) {
         p->add_page(p->page_wasp);
