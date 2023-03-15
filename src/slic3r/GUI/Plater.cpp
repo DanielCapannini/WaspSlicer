@@ -762,7 +762,7 @@ Sidebar::Sidebar(Plater *parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(42 * wxGetApp().em_unit(), -1)), p(new priv(parent))
 {
     p->scrolled = new wxScrolledWindow(this);
-//    p->scrolled->SetScrollbars(0, 100, 1, 2); // ys_DELETE_after_testing. pixelsPerUnitY = 100 from https://github.com/prusa3d/PrusaSlicer/commit/8f019e5fa992eac2c9a1e84311c990a943f80b01, 
+//    p->scrolled->SetScrollbars(0, 100, 1, 2); // ys_DELETE_after_testing. pixelsPerUnitY = 100 from https://github.com/prusa3d/WaspSlicer/commit/8f019e5fa992eac2c9a1e84311c990a943f80b01, 
     // but this cause the bad layout of the sidebar, when all infoboxes appear.
     // As a result we can see the empty block at the bottom of the sidebar
     // But if we set this value to 5, layout will be better
@@ -1304,7 +1304,7 @@ void Sidebar::show_info_sizer()
         if (vol_idxs.size() != 1)
             // Case when this fuction is called between update selection in ObjectList and on Canvas
             // Like after try to delete last solid part in object, the object is selected in ObjectLIst when just a part is still selected on Canvas
-            // see https://github.com/prusa3d/PrusaSlicer/issues/7408
+            // see https://github.com/prusa3d/WaspSlicer/issues/7408
             return;
         vol = model_object->volumes[vol_idxs[0]];
         t = model_object->instances[inst_idx]->get_matrix() * vol->get_matrix();
@@ -1739,13 +1739,13 @@ struct Plater::priv
                         if (dialog.IsCheckBoxChecked()) {
                             wxString preferences_item = _L("Ask for unsaved changes in project");
                             wxString msg =
-                                _L("PrusaSlicer will remember your choice.") + "\n\n" +
+                                _L("WaspSlicer will remember your choice.") + "\n\n" +
                                 _L("You will not be asked about it again, when: \n"
-                                    "- Closing PrusaSlicer,\n"
+                                    "- Closing WaspSlicer,\n"
                                     "- Loading or creating a new project") + "\n\n" +
                                 format_wxstr(_L("Visit \"Preferences\" and check \"%1%\"\nto changes your choice."), preferences_item);
 
-                            MessageDialog msg_dlg(mainframe, msg, _L("PrusaSlicer: Don't ask me again"), wxOK | wxCANCEL | wxICON_INFORMATION);
+                            MessageDialog msg_dlg(mainframe, msg, _L("WaspSlicer: Don't ask me again"), wxOK | wxCANCEL | wxICON_INFORMATION);
                             if (msg_dlg.ShowModal() == wxID_CANCEL)
                                 return wxID_CANCEL;
 
@@ -2425,8 +2425,8 @@ void Plater::check_selected_presets_visibility(PrinterTechnology loaded_printer_
 
     // show notification about temporarily installed presets
     if (!names.empty()) {
-        std::string notif_text = into_u8(_L_PLURAL("The preset below was temporarily installed on the active instance of PrusaSlicer",
-            "The presets below were temporarily installed on the active instance of PrusaSlicer", names.size())) + ":";
+        std::string notif_text = into_u8(_L_PLURAL("The preset below was temporarily installed on the active instance of WaspSlicer",
+            "The presets below were temporarily installed on the active instance of WaspSlicer", names.size())) + ":";
         for (std::string& name : names)
             notif_text += "\n - " + name;
         get_notification_manager()->push_notification(NotificationType::CustomNotification,
@@ -2620,9 +2620,9 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                     if (answer_convert_from_meters == wxOK_DEFAULT) {
                         RichMessageDialog dlg(q, format_wxstr(_L_PLURAL(
                             "The dimensions of the object from file %s seem to be defined in meters.\n"
-                            "The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate the dimensions of the object?",
+                            "The internal unit of WaspSlicer is a millimeter. Do you want to recalculate the dimensions of the object?",
                             "The dimensions of some objects from file %s seem to be defined in meters.\n"
-                            "The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate the dimensions of these objects?", model.objects.size()), from_path(filename)) + "\n",
+                            "The internal unit of WaspSlicer is a millimeter. Do you want to recalculate the dimensions of these objects?", model.objects.size()), from_path(filename)) + "\n",
                             _L("The object is too small"), wxICON_QUESTION | wxYES_NO);
                         dlg.ShowCheckBox(_L("Apply to all the remaining small objects being loaded."));
                         int answer = dlg.ShowModal();
@@ -2642,9 +2642,9 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
                     if (answer_convert_from_imperial_units == wxOK_DEFAULT) {
                         RichMessageDialog dlg(q, format_wxstr(_L_PLURAL(
                             "The dimensions of the object from file %s seem to be defined in inches.\n"
-                            "The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate the dimensions of the object?",
+                            "The internal unit of WaspSlicer is a millimeter. Do you want to recalculate the dimensions of the object?",
                             "The dimensions of some objects from file %s seem to be defined in inches.\n"
-                            "The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate the dimensions of these objects?", model.objects.size()), from_path(filename)) + "\n",
+                            "The internal unit of WaspSlicer is a millimeter. Do you want to recalculate the dimensions of these objects?", model.objects.size()), from_path(filename)) + "\n",
                             _L("The object is too small"), wxICON_QUESTION | wxYES_NO);
                         dlg.ShowCheckBox(_L("Apply to all the remaining small objects being loaded."));
                         int answer = dlg.ShowModal();
@@ -3035,7 +3035,7 @@ bool Plater::priv::delete_object_from_model(size_t obj_idx)
         InfoDialog dialog(q, _L("Delete object which is a part of cut object"), 
                              _L("You try to delete an object which is a part of a cut object.\n"
                                 "This action will break a cut correspondence.\n"
-                                "After that PrusaSlicer can't guarantee model consistency"), 
+                                "After that WaspSlicer can't guarantee model consistency"), 
                                 false, wxYES | wxCANCEL | wxCANCEL_DEFAULT | wxICON_WARNING);
         dialog.SetButtonLabel(wxID_YES, _L("Delete object"));
         if (dialog.ShowModal() == wxID_CANCEL)
@@ -4000,7 +4000,7 @@ void Plater::priv::on_select_preset(wxCommandEvent &evt)
     PlaterPresetComboBox* combo = static_cast<PlaterPresetComboBox*>(evt.GetEventObject());
     Preset::Type preset_type    = combo->get_type();
 
-    // see https://github.com/prusa3d/PrusaSlicer/issues/3889
+    // see https://github.com/prusa3d/WaspSlicer/issues/3889
     // Under OSX: in case of use of a same names written in different case (like "ENDER" and "Ender"),
     // m_presets_choice->GetSelection() will return first item, because search in PopupListCtrl is case-insensitive.
     // So, use GetSelection() from event parameter 
@@ -4051,7 +4051,7 @@ void Plater::priv::on_select_preset(wxCommandEvent &evt)
 #ifdef __WXMSW__
     // From the Win 2004 preset combobox lose a focus after change the preset selection
     // and that is why the up/down arrow doesn't work properly
-    // (see https://github.com/prusa3d/PrusaSlicer/issues/5531 ).
+    // (see https://github.com/prusa3d/WaspSlicer/issues/5531 ).
     // So, set the focus to the combobox explicitly
     combo->SetFocus();
 #endif
@@ -5484,7 +5484,7 @@ LoadProjectsDialog::LoadProjectsDialog(const std::vector<fs::path>& paths)
     id++;
     // all new window
     if (instances_allowed) {
-        btn = new wxRadioButton(this, wxID_ANY, _L("Start new PrusaSlicer instance"), wxDefaultPosition, wxDefaultSize, id == 0 ? wxRB_GROUP : 0);
+        btn = new wxRadioButton(this, wxID_ANY, _L("Start new WaspSlicer instance"), wxDefaultPosition, wxDefaultSize, id == 0 ? wxRB_GROUP : 0);
         btn->SetValue(id == m_action);
         btn->Bind(wxEVT_RADIOBUTTON, [this, id, contains_projects](wxCommandEvent&) {
             m_action = id;
@@ -5836,7 +5836,7 @@ ProjectDropDialog::ProjectDropDialog(const std::string& filename)
     choices.Add(_L("Import geometry only"));
     choices.Add(_L("Import config only"));
     if (!single_instance_only)
-        choices.Add(_L("Start new PrusaSlicer instance"));
+        choices.Add(_L("Start new WaspSlicer instance"));
 
     main_sizer->Add(new wxStaticText(this, wxID_ANY,
         get_wraped_wxString(_L("Select an action to apply to the file") + ": " + from_u8(filename))), 0, wxEXPAND | wxALL, 10);

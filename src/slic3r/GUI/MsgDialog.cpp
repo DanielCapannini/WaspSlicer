@@ -101,7 +101,7 @@ void MsgDialog::apply_style(long style)
 
     std::string icon_name = style & wxICON_WARNING        ? "exclamation" :
                             style & wxICON_INFORMATION    ? "info"        :
-                            style & wxICON_QUESTION       ? "question"    : "PrusaSlicer";
+                            style & wxICON_QUESTION       ? "question"    : "WaspSlicer";
     logo->SetBitmap(*get_bmp_bundle(icon_name, 64));
 }
 
@@ -143,8 +143,8 @@ static void add_msg_content(wxWindow* parent, wxBoxSizer* content_sizer, wxStrin
 
 #ifdef __APPLE__
     // On macOS 10.13 and older the background color returned by wxWidgets
-    // is wrong, which leads to https://github.com/prusa3d/PrusaSlicer/issues/7603
-    // and https://github.com/prusa3d/PrusaSlicer/issues/3775. wxSYS_COLOUR_WINDOW
+    // is wrong, which leads to https://github.com/prusa3d/WaspSlicer/issues/7603
+    // and https://github.com/prusa3d/WaspSlicer/issues/3775. wxSYS_COLOUR_WINDOW
     // may not match the window background exactly, but it seems to never end up
     // as black on black.
     

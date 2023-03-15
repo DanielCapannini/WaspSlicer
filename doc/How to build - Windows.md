@@ -2,7 +2,7 @@
 
 ### Install the tools
 
-Install Visual Studio Community 2019 from [visualstudio.microsoft.com/vs/](https://visualstudio.microsoft.com/vs/). Older versions are not supported as PrusaSlicer requires support for C++17.
+Install Visual Studio Community 2019 from [visualstudio.microsoft.com/vs/](https://visualstudio.microsoft.com/vs/). Older versions are not supported as WaspSlicer requires support for C++17.
 Select all workload options for C++ and make sure to launch Visual Studio after install (to ensure that the full setup completes).
 
 Install git for Windows from [gitforwindows.org](https://gitforwindows.org/)
@@ -10,11 +10,11 @@ Download and run the exe accepting all defaults
 
 ### Download sources
 
-Clone the respository.  To place it in C:\src\PrusaSlicer, run:
+Clone the respository.  To place it in C:\src\WaspSlicer, run:
 ```
 c:> mkdir src
 c:> cd src
-c:\src> git clone https://github.com/prusa3d/PrusaSlicer.git
+c:\src> git clone https://github.com/prusa3d/WaspSlicer.git
 ```
 
 ### Run the automatic build script
@@ -22,12 +22,12 @@ c:\src> git clone https://github.com/prusa3d/PrusaSlicer.git
 The script `build_win.bat` will automatically find the default Visual Studio installation, set up the build environment, and then run both CMake and MSBuild to generate the dependencies and application as needed. If you'd rather do these steps manually, you can skip to the [Manual Build Instructions](#manual-build-instructions) in the next section. Otherwise, just run the following command to get everything going with the default configs:
 
 ```
-c:\src>cd c:\src\PrusaSlicer
-c:\src\PrusaSlicer>build_win.bat -d=..\PrusaSlicer-deps -r=console
+c:\src>cd c:\src\WaspSlicer
+c:\src\WaspSlicer>build_win.bat -d=..\WaspSlicer-deps -r=console
 ```
 
 The build script will run for a while (over an hour, depending on your machine) and automatically perform the following steps:
-1. Configure and build [deps](#compile-the-dependencies) as RelWithDebInfo with `c:\src\PrusaSlicer-deps` as the destination directory
+1. Configure and build [deps](#compile-the-dependencies) as RelWithDebInfo with `c:\src\WaspSlicer-deps` as the destination directory
 2. Configure and build all [application targets](#compile-prusaslicer) as RelWithDebInfo
 3. Launch the resulting `prusa-slicer-console.exe` binary
 
@@ -54,31 +54,31 @@ You're best off initiating builds from within Visual Studio for day-to-day devel
 _Follow the steps below if you want to understand how to perform a manual build, or if you're troubleshooting issues with the automatic build script._
 
 ### Compile the dependencies.
-Dependencies are updated seldomly, thus they are compiled out of the PrusaSlicer source tree.
+Dependencies are updated seldomly, thus they are compiled out of the WaspSlicer source tree.
 Go to the Windows Start Menu and Click on "Visual Studio 2019" folder, then select the ->"x64 Native Tools Command Prompt" to open a command window and run the following:
 ```
-cd c:\src\PrusaSlicer\deps
+cd c:\src\WaspSlicer\deps
 mkdir build
 cd build
-cmake .. -G "Visual Studio 16 2019" -DDESTDIR="c:\src\PrusaSlicer-deps"
+cmake .. -G "Visual Studio 16 2019" -DDESTDIR="c:\src\WaspSlicer-deps"
 
 msbuild /m ALL_BUILD.vcxproj // This took 13.5 minutes on my machine: core I7-7700K @ 4.2Ghz with 32GB main memory and 20min on a average laptop
 ```
 
-### Generate Visual Studio project file for PrusaSlicer, referencing the precompiled dependencies.
+### Generate Visual Studio project file for WaspSlicer, referencing the precompiled dependencies.
 Go to the Windows Start Menu and Click on "Visual Studio 2019" folder, then select the ->"x64 Native Tools Command Prompt" to open a command window and run the following:
 ```
-cd c:\src\PrusaSlicer\
+cd c:\src\WaspSlicer\
 mkdir build
 cd build
-cmake .. -G "Visual Studio 16 2019" -DCMAKE_PREFIX_PATH="c:\src\PrusaSlicer-deps\usr\local"
+cmake .. -G "Visual Studio 16 2019" -DCMAKE_PREFIX_PATH="c:\src\WaspSlicer-deps\usr\local"
 ```
 
-Note that `CMAKE_PREFIX_PATH` must be absolute path. A relative path like "..\..\PrusaSlicer-deps\usr\local" does not work.
+Note that `CMAKE_PREFIX_PATH` must be absolute path. A relative path like "..\..\WaspSlicer-deps\usr\local" does not work.
 
-### Compile PrusaSlicer. 
+### Compile WaspSlicer. 
 
-Double-click c:\src\PrusaSlicer\build\PrusaSlicer.sln to open in Visual Studio 2019.
+Double-click c:\src\WaspSlicer\build\WaspSlicer.sln to open in Visual Studio 2019.
 OR
 Open Visual Studio for C++ development (VS asks this the first time you start it).
 
@@ -88,7 +88,7 @@ Run Build->Rebuild Solution once to populate all required dependency modules.  T
 
 Debug->Start Debugging or press F5
 
-PrusaSlicer should start. You're up and running!
+WaspSlicer should start. You're up and running!
 
 note: Thanks to @douggorgen for the original guide, as an answer for a issue 
 
@@ -106,9 +106,9 @@ Thank you for understanding.
 
 ---
 
-# Building PrusaSlicer on Microsoft Windows
+# Building WaspSlicer on Microsoft Windows
 
-~~The currently supported way of building PrusaSlicer on Windows is with CMake and MS Visual Studio 2013.
+~~The currently supported way of building WaspSlicer on Windows is with CMake and MS Visual Studio 2013.
 You can use the free [Visual Studio 2013 Community Edition](https://www.visualstudio.com/vs/older-downloads/).
 CMake installer can be downloaded from [the official website](https://cmake.org/download/).~~
 
@@ -118,7 +118,7 @@ _Note:_ Thanks to [**@supermerill**](https://github.com/supermerill) for testing
 
 ### Dependencies
 
-On Windows PrusaSlicer is built against statically built libraries.
+On Windows WaspSlicer is built against statically built libraries.
 ~~We provide a prebuilt package of all the needed dependencies. This package only works on Visual Studio 2013, so~~ if you are using a newer version of Visual Studio, you need to compile the dependencies yourself as per [below](#building-the-dependencies-package-yourself).
 The package comes in a several variants:
 
@@ -133,14 +133,14 @@ If you're unsure where to unpack the package, unpack it into `C:\local\` (but it
 
 Alternatively you can also compile the dependencies yourself, see below.
 
-### Building PrusaSlicer with Visual Studio
+### Building WaspSlicer with Visual Studio
 
-First obtain the PrusaSlicer sources via either git or by extracting the source archive.
+First obtain the WaspSlicer sources via either git or by extracting the source archive.
 
 Then you will need to note down the so-called 'prefix path' to the dependencies, this is the location of the dependencies packages + `\usr\local` appended.
 For example on 64 bits this would be `C:\local\destdir-64\usr\local`. The prefix path will need to be passed to CMake.
 
-When ready, open the relevant Visual Studio command line and `cd` into the directory with PrusaSlicer sources.
+When ready, open the relevant Visual Studio command line and `cd` into the directory with WaspSlicer sources.
 Use these commands to prepare Visual Studio solution file:
 
     mkdir build
@@ -151,16 +151,16 @@ Note that if you're building a 32-bit variant, you will need to change the `"Vis
 
 Conversely, if you're using Visual Studio version other than 2013, the version number will need to be changed accordingly.
 
-If `cmake` has finished without errors, go to the build directory and open the `PrusaSlicer.sln` solution file in Visual Studio.
+If `cmake` has finished without errors, go to the build directory and open the `WaspSlicer.sln` solution file in Visual Studio.
 Before building, make sure you're building the right project (use one of those starting with `PrusaSlicer_app_...`) and that you're building
 with the right configuration, i.e. _Release_ vs. _Debug_. When unsure, choose _Release_.
 Note that you won't be able to build a _Debug_ variant against a _Release_-only dependencies package.
 
 #### Installing using the `INSTALL` project
 
-PrusaSlicer can be run from the Visual Studio or from Visual Studio's build directory (`src\Release` or `src\Debug`),
+WaspSlicer can be run from the Visual Studio or from Visual Studio's build directory (`src\Release` or `src\Debug`),
 but for longer-term usage you might want to install somewhere using the `INSTALL` project.
-By default, this installs into `C:\Program Files\PrusaSlicer`.
+By default, this installs into `C:\Program Files\WaspSlicer`.
 To customize the install path, use the `-DCMAKE_INSTALL_PREFIX=<path of your choice>` when invoking `cmake`.
 
 ### Building from the command line
@@ -182,10 +182,10 @@ To install, use `msbuild /P:Configuration=Release INSTALL.vcxproj` , `ninja inst
 
 ### Building the dependencies package yourself
 
-The dependencies package is built using CMake scripts inside the `deps` subdirectory of PrusaSlicer sources.
+The dependencies package is built using CMake scripts inside the `deps` subdirectory of WaspSlicer sources.
 (This is intentionally not interconnected with the CMake scripts in the rest of the sources.)
 
-Open the preferred Visual Studio command line (64 or 32 bit variant) and `cd` into the directory with PrusaSlicer sources.
+Open the preferred Visual Studio command line (64 or 32 bit variant) and `cd` into the directory with WaspSlicer sources.
 Then `cd` into the `deps` directory and use these commands to build:
 
     mkdir build

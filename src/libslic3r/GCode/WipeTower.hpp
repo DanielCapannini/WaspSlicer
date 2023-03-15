@@ -60,7 +60,7 @@ public:
         // Pass a polyline so that normal G-code generator can do a wipe for us.
         // The wipe cannot be done by the wipe tower because it has to pass back
         // a loaded extruder, so it would have to either do a wipe with no retraction
-        // (leading to https://github.com/prusa3d/PrusaSlicer/issues/2834) or do
+        // (leading to https://github.com/prusa3d/WaspSlicer/issues/2834) or do
         // an extra retraction-unretraction pair.
         std::vector<Vec2f> wipe_path;
 
