@@ -54,7 +54,7 @@
 #include "libslic3r/Thread.hpp"
 #include "libslic3r/BlacklistedLibraryCheck.hpp"
 
-#include "WaspSlicer.hpp"
+#include "PrusaSlicer.hpp"
 
 #ifdef SLIC3R_GUI
     #include "slic3r/GUI/GUI_Init.hpp"
@@ -714,18 +714,18 @@ bool CLI::setup(int argc, char **argv)
     detect_platform();
 
 #ifdef WIN32
-    // Notify user that a blacklisted DLL was injected into WaspSlicer process (for example Nahimic, see GH #5573).
-    // We hope that if a DLL is being injected into a WaspSlicer process, it happens at the very start of the application,
+    // Notify user that a blacklisted DLL was injected into PrusaSlicer process (for example Nahimic, see GH #5573).
+    // We hope that if a DLL is being injected into a PrusaSlicer process, it happens at the very start of the application,
     // thus we shall detect them now.
     if (BlacklistedLibraryCheck::get_instance().perform_check()) {
-        std::wstring text = L"Following DLLs have been injected into the WaspSlicer process:\n\n";
+        std::wstring text = L"Following DLLs have been injected into the PrusaSlicer process:\n\n";
         text += BlacklistedLibraryCheck::get_instance().get_blacklisted_string();
         text += L"\n\n"
-                L"WaspSlicer is known to not run correctly with these DLLs injected. "
+                L"PrusaSlicer is known to not run correctly with these DLLs injected. "
                 L"We suggest stopping or uninstalling these services if you experience "
-                L"crashes or unexpected behaviour while using WaspSlicer.\n"
-                L"For example, ASUS Sonic Studio injects a Nahimic driver, which makes WaspSlicer "
-                L"to crash on a secondary monitor, see WaspSlicer github issue #5573";
+                L"crashes or unexpected behaviour while using PrusaSlicer.\n"
+                L"For example, ASUS Sonic Studio injects a Nahimic driver, which makes PrusaSlicer "
+                L"to crash on a secondary monitor, see PrusaSlicer github issue #5573";
         MessageBoxW(NULL, text.c_str(), L"Warning"/*L"Incopatible library found"*/, MB_OK);
     }
 #endif
@@ -812,7 +812,7 @@ void CLI::print_help(bool include_print_options, PrinterTechnology printer_techn
         << " (without GUI support)"
 #endif /* SLIC3R_GUI */
         << std::endl
-        << "https://github.com/prusa3d/WaspSlicer" << std::endl << std::endl
+        << "https://github.com/prusa3d/PrusaSlicer" << std::endl << std::endl
         << "Usage: prusa-slicer [ ACTIONS ] [ TRANSFORM ] [ OPTIONS ] [ file.stl ... ]" << std::endl
         << std::endl
         << "Actions:" << std::endl;
@@ -919,7 +919,7 @@ extern "C" {
 
 #if defined(SLIC3R_UBSAN)
 extern "C" {
-    // Enable printing stacktrace by default. It can be disabled by running WaspSlicer with "UBSAN_OPTIONS=print_stacktrace=0".
+    // Enable printing stacktrace by default. It can be disabled by running PrusaSlicer with "UBSAN_OPTIONS=print_stacktrace=0".
     const char *__ubsan_default_options() {
         return "print_stacktrace=1";
     }
