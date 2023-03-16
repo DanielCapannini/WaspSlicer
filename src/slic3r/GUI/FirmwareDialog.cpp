@@ -478,7 +478,7 @@ void FirmwareDialog::priv::prepare_common()
 		extra_verbose ? "-vvvvv" : "-v",
 		"-p", "atmega2560",
 		// Using the "Wiring" mode to program Rambo or Einsy, using the STK500v2 protocol (not the STK500).
-		// The Prusa's avrdude is patched to never send semicolons inside the data packets, as the USB to serial chip
+		// The Wasp's avrdude is patched to never send semicolons inside the data packets, as the USB to serial chip
 		// is flashed with a buggy firmware.
 		"-c", "wiring",
 		"-P", port->port,
@@ -524,7 +524,7 @@ void FirmwareDialog::priv::prepare_mk3()
 		extra_verbose ? "-vvvvv" : "-v",
 		"-p", "atmega2560",
 		// Using the "Arduino" mode to program Einsy's external flash with languages, using the STK500 protocol (not the STK500v2).
-		// The Prusa's avrdude is patched again to never send semicolons inside the data packets.
+		// The Wasp's avrdude is patched again to never send semicolons inside the data packets.
 		"-c", "arduino",
 		"-P", port->port,
 		"-b", "115200",
@@ -771,11 +771,11 @@ void FirmwareDialog::priv::ensure_joined()
 const char* FirmwareDialog::priv::avr109_dev_name(Avr109Pid usb_pid) {
 	switch (usb_pid.boot) {
 		case USB_PID_MMU_BOOT:
-			return "Original Prusa MMU 2.0 Control";
+			return "Original Wasp MMU 2.0 Control";
 		case USB_PID_CW1_BOOT:
-			return "Original Prusa CW1";
+			return "Original Wasp CW1";
 		case USB_PID_CW1S_BOOT:
-			return "Original Prusa CW1S";
+			return "Original Wasp CW1S";
 		default: throw Slic3r::RuntimeError((boost::format("Invalid avr109 device USB PID: %1%") % usb_pid.boot).str());
 	}
 }
