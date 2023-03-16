@@ -3329,10 +3329,13 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     const auto wasp_it = p->bundles.find("Wasp");
     const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
 
+    const auto waspClay_it = p->bundles.find("WaspClay");
+    const VendorProfile *vendor_waspClay = waspClay_it->second.vendor_profile;
+
     p->add_page(p->page_welcome = new PageWelcome(this));
 
     
-    p->page_fff = new PagePrinters(this, _L("Prusa FFF Technology Printers"), "Prusa FFF", *vendor_prusa, 0, T_FFF);
+    p->page_fff = new PagePrinters(this, _L("Wasp Clay Technology Printers"), "Wasp Clay", *vendor_waspClay, 0, T_ANY);
     p->only_sla_mode = !p->page_fff->has_printers;
     if (!p->only_sla_mode) {
         p->add_page(p->page_fff);
