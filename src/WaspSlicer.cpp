@@ -122,7 +122,7 @@ int CLI::run(int argc, char **argv)
 #ifdef _WIN32
             false;
 #else
-            // On Unix systems, the prusa-slicer binary may be symlinked to give the application a different meaning.
+            // On Unix systems, the wasp-slicer binary may be symlinked to give the application a different meaning.
             boost::algorithm::iends_with(boost::filesystem::path(argv[0]).filename().string(), "gcodeviewer");
 #endif // _WIN32
 #if ENABLE_GL_CORE_PROFILE
@@ -226,7 +226,7 @@ int CLI::run(int argc, char **argv)
         }
     if (!start_as_gcodeviewer) {
         for (const std::string& file : m_input_files) {
-            if (boost::starts_with(file, "prusaslicer://")) {
+            if (boost::starts_with(file, "waspslicer://")) {
                 start_downloader = true;
                 download_url = file;
                 continue;
@@ -730,7 +730,7 @@ bool CLI::setup(int argc, char **argv)
     }
 #endif
 
-    // See Invoking prusa-slicer from $PATH environment variable crashes #5542
+    // See Invoking wasp-slicer from $PATH environment variable crashes #5542
     // boost::filesystem::path path_to_binary = boost::filesystem::system_complete(argv[0]);
     boost::filesystem::path path_to_binary = boost::dll::program_location();
 
@@ -812,8 +812,8 @@ void CLI::print_help(bool include_print_options, PrinterTechnology printer_techn
         << " (without GUI support)"
 #endif /* SLIC3R_GUI */
         << std::endl
-        << "https://github.com/prusa3d/WaspSlicer" << std::endl << std::endl
-        << "Usage: prusa-slicer [ ACTIONS ] [ TRANSFORM ] [ OPTIONS ] [ file.stl ... ]" << std::endl
+        << "https://github.com/wasp3d/WaspSlicer" << std::endl << std::endl
+        << "Usage: wasp-slicer [ ACTIONS ] [ TRANSFORM ] [ OPTIONS ] [ file.stl ... ]" << std::endl
         << std::endl
         << "Actions:" << std::endl;
     cli_actions_config_def.print_cli_help(boost::nowide::cout, false);

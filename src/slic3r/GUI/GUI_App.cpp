@@ -273,7 +273,7 @@ private:
             // credits infornation
             credits = title + " " +
                 _L("is based on Slic3r by Alessandro Ranellucci and the RepRap community.") + "\n" +
-                _L("Developed by Prusa Research.") + "\n\n" +
+                _L("Developed by Wasp Research.") + "\n\n" +
                 title + " " + _L("is licensed under the") + " " + _L("GNU Affero General Public License, version 3") + ".\n\n" +
                 _L("Contributions by Vojtech Bubnik, Enrico Turri, Oleksandra Iushchenko, Tamas Meszaros, Lukas Matena, Vojtech Kral, David Kocik and numerous others.") + "\n\n" +
                 _L("Artwork model by Creative Tools");
@@ -388,7 +388,7 @@ bool static check_old_linux_datadir(const wxString& app_name) {
     // If we are on Linux and the datadir does not exist yet, look into the old
     // location where the datadir was before version 2.3. If we find it there,
     // tell the user that he might wanna migrate to the new location.
-    // (https://github.com/prusa3d/WaspSlicer/issues/2911)
+    // (https://github.com/wasp3d/WaspSlicer/issues/2911)
     // To be precise, the datadir should exist, it is created when single instance
     // lock happens. Instead of checking for existence, check the contents.
 
@@ -443,8 +443,8 @@ bool static check_old_linux_datadir(const wxString& app_name) {
 static bool run_updater_win()
 {
     // find updater exe
-    boost::filesystem::path path_updater = boost::dll::program_location().parent_path() / "prusaslicer-updater.exe";
-    // run updater. Original args: /silent -restartapp prusa-slicer.exe -startappfirst
+    boost::filesystem::path path_updater = boost::dll::program_location().parent_path() / "waspslicer-updater.exe";
+    // run updater. Original args: /silent -restartapp wasp-slicer.exe -startappfirst
     std::string msg;
     bool res = create_process(path_updater, L"/silent", msg);
     if (!res)
@@ -831,7 +831,7 @@ void GUI_App::post_init()
         });
     }
 
-    // Set WaspSlicer version and save to WaspSlicer.ini or PrusaSlicerGcodeViewer.ini.
+    // Set WaspSlicer version and save to WaspSlicer.ini or WaspSlicerGcodeViewer.ini.
     app_config->set("version", SLIC3R_VERSION);
 
 #ifdef _WIN32
@@ -930,7 +930,7 @@ void GUI_App::init_app_config()
             set_data_dir(wxStandardPaths::Get().GetUserDataDir().ToUTF8().data());
         #else
             // Since version 2.3, config dir on Linux is in ${XDG_CONFIG_HOME}.
-            // https://github.com/prusa3d/WaspSlicer/issues/2911
+            // https://github.com/wasp3d/WaspSlicer/issues/2911
             wxString dir;
             if (! wxGetEnv(wxS("XDG_CONFIG_HOME"), &dir) || dir.empty() )
                 dir = wxFileName::GetHomeDir() + wxS("/.config");
@@ -957,7 +957,7 @@ void GUI_App::init_app_config()
             }
             else {
                 throw Slic3r::RuntimeError(
-                    _u8L("Error parsing PrusaGCodeViewer config file, it is probably corrupted. "
+                    _u8L("Error parsing WaspGCodeViewer config file, it is probably corrupted. "
                         "Try to manually delete the file to recover from the error.") +
                     "\n\n" + app_config->config_path() + "\n\n" + error);
             }
@@ -1054,7 +1054,7 @@ std::string GUI_App::check_older_app_config(Semver current_version, bool backup)
             }
             else {
                 throw Slic3r::RuntimeError(
-                    _u8L("Error parsing PrusaGCodeViewer config file, it is probably corrupted. "
+                    _u8L("Error parsing WaspGCodeViewer config file, it is probably corrupted. "
                         "Try to manually delete the file to recover from the error.") +
                     "\n\n" + app_config->config_path() + "\n\n" + error);
             }
@@ -1094,7 +1094,7 @@ bool GUI_App::on_init_inner()
         RichMessageDialog dlg(nullptr,
             _L("You are running a 32 bit build of WaspSlicer on 64-bit Windows."
                 "\n32 bit build of WaspSlicer will likely not be able to utilize all the RAM available in the system."
-                "\nPlease download and install a 64 bit build of WaspSlicer from https://www.prusa3d.cz/prusaslicer/."
+                "\nPlease download and install a 64 bit build of WaspSlicer from https://www.wasp3d.cz/waspslicer/."
                 "\nDo you wish to continue?"),
             "WaspSlicer", wxICON_QUESTION | wxYES_NO);
         if (dlg.ShowModal() != wxID_YES)
@@ -1256,7 +1256,7 @@ bool GUI_App::on_init_inner()
                         , NotificationManager::NotificationLevel::ImportantNotificationLevel
                         , Slic3r::format(_u8L("New prerelease version %1% is available."), evt_string)
                         , _u8L("See Releases page.")
-                        , [](wxEvtHandler* evnthndlr) {wxGetApp().open_browser_with_warning_dialog("https://github.com/prusa3d/WaspSlicer/releases"); return true; }
+                        , [](wxEvtHandler* evnthndlr) {wxGetApp().open_browser_with_warning_dialog("https://github.com/wasp3d/WaspSlicer/releases"); return true; }
                     );
                 }
             }
@@ -1400,8 +1400,8 @@ bool GUI_App::on_init_inner()
                 "To avoid this problem, consider disabling \"%4%\" in \"Preferences\". "
                 "Otherwise, the application will most likely crash again next time."),
                 "<b>" + from_u8(crash_reason) + "</b>",
-                "<a href=http://github.com/prusa3d/WaspSlicer/issues/2939>#2939</a>",
-                "<a href=http://github.com/prusa3d/WaspSlicer/issues/5573>#5573</a>",
+                "<a href=http://github.com/wasp3d/WaspSlicer/issues/2939>#2939</a>",
+                "<a href=http://github.com/wasp3d/WaspSlicer/issues/5573>#5573</a>",
                 "<b>" + preferences_item + "</b>"),
             true, wxYES_NO);
 
@@ -2308,7 +2308,7 @@ bool GUI_App::load_language(wxString language, bool initial)
     {
         // ysFIXME after fix for wxWidgets issue (https://github.com/wxWidgets/wxWidgets/issues/23210)
         // UKR Localization specific workaround till the wxWidgets doesn't fixed:
-        // From wxWidgets 3.1.6 calls setlocation(0, wxInfoLanguage->LocaleTag), see (https://github.com/prusa3d/wxWidgets/commit/deef116a09748796711d1e3509965ee208dcdf0b#diff-7de25e9a71c4dce61bbf76492c589623d5b93fd1bb105ceaf0662075d15f4472),
+        // From wxWidgets 3.1.6 calls setlocation(0, wxInfoLanguage->LocaleTag), see (https://github.com/wasp3d/wxWidgets/commit/deef116a09748796711d1e3509965ee208dcdf0b#diff-7de25e9a71c4dce61bbf76492c589623d5b93fd1bb105ceaf0662075d15f4472),
         // where LocaleTag is a Tag of locale in BCP 47 - like notation.
         // For Ukrainian Language LocaleTag is "uk".
         // But setlocale(0, "uk") returns "English_United Kingdom.1252" instead of "uk",
@@ -2435,7 +2435,7 @@ void GUI_App::add_config_menu(wxMenuBar *menu)
         local_menu->AppendSeparator();
         local_menu->Append(config_id_base + ConfigMenuFlashFirmware, _L("Flash Printer &Firmware"), _L("Upload a firmware image into an Arduino based printer"));
         // TODO: for when we're able to flash dictionaries
-        // local_menu->Append(config_id_base + FirmwareMenuDict,  _L("Flash Language File"),    _L("Upload a language dictionary file into a Prusa printer"));
+        // local_menu->Append(config_id_base + FirmwareMenuDict,  _L("Flash Language File"),    _L("Upload a language dictionary file into a Wasp printer"));
     }
 
     local_menu->Bind(wxEVT_MENU, [this, config_id_base](wxEvent &event) {
@@ -2988,7 +2988,7 @@ int GUI_App::extruders_edited_cnt() const
 
 wxString GUI_App::current_language_code_safe() const
 {
-	// Translate the language code to a code, for which Prusa Research maintains translations.
+	// Translate the language code to a code, for which Wasp Research maintains translations.
 	const std::map<wxString, wxString> mapping {
 		{ "cs", 	"cs_CZ", },
 		{ "sk", 	"cs_CZ", },
@@ -3357,17 +3357,17 @@ bool GUI_App::open_browser_with_warning_dialog(const wxString& url, wxWindow* pa
 #ifdef __WXMSW__
 void GUI_App::associate_3mf_files()
 {
-    associate_file_type(L".3mf", L"Prusa.Slicer.1", L"WaspSlicer", true);
+    associate_file_type(L".3mf", L"Wasp.Slicer.1", L"WaspSlicer", true);
 }
 
 void GUI_App::associate_stl_files()
 {
-    associate_file_type(L".stl", L"Prusa.Slicer.1", L"WaspSlicer", true);
+    associate_file_type(L".stl", L"Wasp.Slicer.1", L"WaspSlicer", true);
 }
 
 void GUI_App::associate_gcode_files()
 {
-    associate_file_type(L".gcode", L"WaspSlicer.GCodeViewer.1", L"PrusaSlicerGCodeViewer", true);
+    associate_file_type(L".gcode", L"WaspSlicer.GCodeViewer.1", L"WaspSlicerGCodeViewer", true);
 }
 #endif // __WXMSW__
 
@@ -3401,7 +3401,7 @@ void GUI_App::on_version_read(wxCommandEvent& evt)
         , NotificationManager::NotificationLevel::ImportantNotificationLevel
         , Slic3r::format(_u8L("New release version %1% is available."), evt.GetString())
         , _u8L("See Download page.")
-        , [](wxEvtHandler* evnthndlr) {wxGetApp().open_web_page_localized("https://www.prusa3d.com/slicerweb"); return true; }
+        , [](wxEvtHandler* evnthndlr) {wxGetApp().open_web_page_localized("https://www.wasp3d.com/slicerweb"); return true; }
     );
     */
     // updater 

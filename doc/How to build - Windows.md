@@ -14,7 +14,7 @@ Clone the respository.  To place it in C:\src\WaspSlicer, run:
 ```
 c:> mkdir src
 c:> cd src
-c:\src> git clone https://github.com/prusa3d/WaspSlicer.git
+c:\src> git clone https://github.com/wasp3d/WaspSlicer.git
 ```
 
 ### Run the automatic build script
@@ -28,11 +28,11 @@ c:\src\WaspSlicer>build_win.bat -d=..\WaspSlicer-deps -r=console
 
 The build script will run for a while (over an hour, depending on your machine) and automatically perform the following steps:
 1. Configure and build [deps](#compile-the-dependencies) as RelWithDebInfo with `c:\src\WaspSlicer-deps` as the destination directory
-2. Configure and build all [application targets](#compile-prusaslicer) as RelWithDebInfo
-3. Launch the resulting `prusa-slicer-console.exe` binary
+2. Configure and build all [application targets](#compile-waspslicer) as RelWithDebInfo
+3. Launch the resulting `wasp-slicer-console.exe` binary
 
 You can change the above command line options to do things like:
-* Change the destination for the dependencies by pointing `-d` to a different directory such as: `build_win.bat -d=s:\PrusaSlicerDeps`
+* Change the destination for the dependencies by pointing `-d` to a different directory such as: `build_win.bat -d=s:\WaspSlicerDeps`
 * Open the solution in Visual Studio after the build completes by changing the `-r` switch to `-r=ide`
 * Generate a release build without debug info by adding `-c=Release` or a full debug build with `-c=Debug`
 * Perform an incremental application build (the default) with: `build_win.bat -s=app-dirty`
@@ -82,7 +82,7 @@ Double-click c:\src\WaspSlicer\build\WaspSlicer.sln to open in Visual Studio 201
 OR
 Open Visual Studio for C++ development (VS asks this the first time you start it).
 
-Select PrusaSlicer_app_gui as your startup project (right-click->Set as Startup Project).
+Select WaspSlicer_app_gui as your startup project (right-click->Set as Startup Project).
 
 Run Build->Rebuild Solution once to populate all required dependency modules.  This is NOT done automatically when you build/run.  If you run both Debug and Release variants, you will need to do this once for each.
 
@@ -152,7 +152,7 @@ Note that if you're building a 32-bit variant, you will need to change the `"Vis
 Conversely, if you're using Visual Studio version other than 2013, the version number will need to be changed accordingly.
 
 If `cmake` has finished without errors, go to the build directory and open the `WaspSlicer.sln` solution file in Visual Studio.
-Before building, make sure you're building the right project (use one of those starting with `PrusaSlicer_app_...`) and that you're building
+Before building, make sure you're building the right project (use one of those starting with `WaspSlicer_app_...`) and that you're building
 with the right configuration, i.e. _Release_ vs. _Debug_. When unsure, choose _Release_.
 Note that you won't be able to build a _Debug_ variant against a _Release_-only dependencies package.
 

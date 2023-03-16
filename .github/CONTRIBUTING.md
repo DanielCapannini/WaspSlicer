@@ -1,8 +1,8 @@
 Did you encounter an issue with using WaspSlicer? Fear not! This guide will help you to write a good bug report in just a few, simple steps.
 
-There is a good chance that the issue, you have encountered, is already reported. Please check the [list of reported issues](https://github.com/prusa3d/WaspSlicer/issues) before creating a new issue report. If you find an existing issue report, feel free to add further information to that report.
+There is a good chance that the issue, you have encountered, is already reported. Please check the [list of reported issues](https://github.com/wasp3d/WaspSlicer/issues) before creating a new issue report. If you find an existing issue report, feel free to add further information to that report.
 
-If possible, please include the following information when [reporting an issue](https://github.com/prusa3d/WaspSlicer/issues/new):
+If possible, please include the following information when [reporting an issue](https://github.com/wasp3d/WaspSlicer/issues/new):
 * WaspSlicer version (See the about dialog for the version number. If running from git, please include the git commit ID from `git rev-parse HEAD` also.)
 * Operating system type + version
 * Steps to reproduce the issue, including:

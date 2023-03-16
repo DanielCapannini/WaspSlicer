@@ -1287,12 +1287,12 @@ msgid "Cancel"
 msgstr "İptal"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Prusa FFF Teknoloji Yazıcılar"
+msgid "Wasp FFF Technology Printers"
+msgstr "Wasp FFF Teknoloji Yazıcılar"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
-msgstr "Prusa MSLA Teknoloji Yazıcılar"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Wasp MSLA Teknoloji Yazıcılar"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
 msgid "Filament Profiles Selection"
@@ -4335,7 +4335,7 @@ msgid "is based on Slic3r by Alessandro Ranellucci and the RepRap community."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
+msgid "Developed by Wasp Research."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:278
@@ -4422,7 +4422,7 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
 
@@ -4470,7 +4470,7 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 
@@ -6737,12 +6737,12 @@ msgid "based on Slic3r"
 msgstr "slic3r uygulamasına dayalı"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Prusa 3D ve Sürücüler"
+msgid "Wasp 3D &Drivers"
+msgstr "Wasp 3D ve Sürücüler"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Prusa3D sürücüleri indirme sayfasını tarayıcınızda açar"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Wasp3D sürücüleri indirme sayfasını tarayıcınızda açar"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -7737,7 +7737,7 @@ msgstr ""
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -11292,19 +11292,19 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "Not: OctoPrint sürümü en az 1.1.0 gereklidir."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Prusa SLA ile bağlantı kurulamadı"
+msgid "Could not connect to Wasp SLA"
+msgstr "Wasp SLA ile bağlantı kurulamadı"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
+msgid "Connection to WaspLink works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
+msgid "Could not connect to WaspLink"
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
@@ -13764,12 +13764,12 @@ msgstr "Kalan süreleri destekler"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Yazılımın kalan süreyi doğru göstermesi için M73 P [yazdırılan yüzde] R "
 "[dakika cinsinden kalan süre], G-code içine 1 dakikalık aralıklarla "
-"uygulanır. Şu an itibariyle sadece Prusa i3 MK3 yazılımı M73'ü tanıyor. "
+"uygulanır. Şu an itibariyle sadece Wasp i3 MK3 yazılımı M73'ü tanıyor. "
 "Ayrıca i3 MK3 üretici yazılımı sessiz mod için M73 Qxx Sxx'i destekler."
 
 #: src/libslic3r/PrintConfig.cpp:1686

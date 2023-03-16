@@ -659,7 +659,7 @@ msgstr "활동중"
 
 #: src/slic3r/GUI/ConfigSnapshotDialog.cpp:59
 msgid "WaspSlicer version"
-msgstr "Prusa슬라이서 버전"
+msgstr "Wasp슬라이서 버전"
 
 #: src/slic3r/GUI/ConfigSnapshotDialog.cpp:63 src/libslic3r/Preset.cpp:1480
 msgid "print"
@@ -1035,7 +1035,7 @@ msgid ""
 "regular 3D printing. The other two offer progressively more sophisticated "
 "fine-tuning, they are suitable for advanced and expert users, respectively."
 msgstr ""
-"PrusaSlicer의 사용자 인터페이스는 세 가지 변형으로 제공됩니다.\n"
+"WaspSlicer의 사용자 인터페이스는 세 가지 변형으로 제공됩니다.\n"
 "간단하고 고급, 전문가.\n"
 "단순 모드는 일반 3D 인쇄와 관련된 가장 자주 사용되는 설정만 표시합니다. 다른 "
 "두 가지는 점진적으로 더 정교한 미세 조정을 제공하며, 각각 고급 및 전문가 사용"
@@ -1307,12 +1307,12 @@ msgid "Cancel"
 msgstr "취소"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Prusa FFF 방식 프린터"
+msgid "Wasp FFF Technology Printers"
+msgstr "Wasp FFF 방식 프린터"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
-msgstr "Prusa MSLA 방식 프린터"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Wasp MSLA 방식 프린터"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
 msgid "Filament Profiles Selection"
@@ -4354,7 +4354,7 @@ msgid "is based on Slic3r by Alessandro Ranellucci and the RepRap community."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
+msgid "Developed by Wasp Research."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:278
@@ -4448,7 +4448,7 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
 
@@ -4496,7 +4496,7 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 
@@ -6749,12 +6749,12 @@ msgid "based on Slic3r"
 msgstr "Slic3r 기반"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
+msgid "Wasp 3D &Drivers"
 msgstr "푸르사 3D 드라이버"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "브라우저에서 Prusa3D 드라이버 다운로드 페이지를 엽니다"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "브라우저에서 Wasp3D 드라이버 다운로드 페이지를 엽니다"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -7745,7 +7745,7 @@ msgstr "그래픽 카드 드라이버를 업데이트해야 할 수 있습니다
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -11310,19 +11310,19 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "참고 : OctoPrint 버전 1.1.0 이상이 필요합니다."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Prusa SLA에 연결할 수 없습니다"
+msgid "Could not connect to Wasp SLA"
+msgstr "Wasp SLA에 연결할 수 없습니다"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
+msgid "Connection to WaspLink works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
+msgid "Could not connect to WaspLink"
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
@@ -13457,7 +13457,7 @@ msgid ""
 msgstr ""
 "온도 제어 및 기타 를 포함한 일부 G/M 코드 명령은 범용이 아닙니다. 호환되는 출"
 "력을 얻으려면 프린터의 펌웨어로 이 옵션을 설정합니다. \"돌출 없음\" 맛은 "
-"PrusaSlicer가 압출 값을 전혀 내보내지 못하게 합니다."
+"WaspSlicer가 압출 값을 전혀 내보내지 못하게 합니다."
 
 #: src/libslic3r/PrintConfig.cpp:1416
 msgid "No extrusion"
@@ -13768,11 +13768,11 @@ msgstr "남은 시간 지원"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "G 코드에 1 분 간격으로 M73 P [퍼센트 인쇄] R[remaining time in minutes]을 방"
-"출하여 펌웨어가 정확한 잔여 시간을 표시 하도록 합니다. 현재만 Prusa i3 MK3 펌"
+"출하여 펌웨어가 정확한 잔여 시간을 표시 하도록 합니다. 현재만 Wasp i3 MK3 펌"
 "웨어는 M73를 인식 하 고 있습니다. 또한 i3 MK3 펌웨어는 자동 모드에서 M73 Qxx "
 "Sxx를 지원 합니다."
 
@@ -14732,7 +14732,7 @@ msgid ""
 "put a \"M109 S[first_layer_temperature]\" command wherever you want."
 msgstr ""
 "이 시작 절차는 배드가 목표 온도에 도달하고 압출기가 방금 가열을 시작한 후 압"
-"출기가열가 완료되기 전에 처음에 삽입됩니다. PrusaSlicer사용자 지정 코드에서 "
+"출기가열가 완료되기 전에 처음에 삽입됩니다. WaspSlicer사용자 지정 코드에서 "
 "M104 또는 M190을 감지하는 경우 이러한 명령이 자동으로 준비되지 않으므로 가열 "
 "명령 및 기타 사용자 지정 작업의 순서를 자유롭게 사용자 지정할 수 있습니다. 모"
 "든 WaspSlicer 설정에 자리 표시자 변수를 사용할 수 있으므로 원하는 위치에 "
@@ -14752,7 +14752,7 @@ msgid ""
 msgstr ""
 "이 시작 절차는 프린터가 gcode를 시작한 후(그리고 다중 재질 프린터의 경우 이 "
 "필라멘트에 대한 도구 변경 후) 처음에 삽입됩니다. 특정 필라멘트에 대한 설정을 "
-"재정의하는 데 사용됩니다. PrusaSlicer가 사용자 지정 코드에서 M104, M109, "
+"재정의하는 데 사용됩니다. WaspSlicer가 사용자 지정 코드에서 M104, M109, "
 "M140 또는 M190을 감지하면 이러한 명령이 자동으로 준비되지 않으므로 가열 명령 "
 "및 기타 사용자 지정 작업의 순서를 자유롭게 사용자 지정할 수 있습니다. 모든 "
 "WaspSlicer 설정에 자리 표시자 변수를 사용할 수 있으므로 원하는 위치에 "

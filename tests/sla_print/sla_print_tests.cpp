@@ -187,7 +187,7 @@ TEST_CASE("BranchingSupports::FloorSupportsDoNotPierceModel", "[SLASupportGenera
 }
 
 TEST_CASE("InitializedRasterShouldBeNONEmpty", "[SLARasterOutput]") {
-    // Default Prusa SL1 display parameters
+    // Default Wasp SL1 display parameters
     sla::Resolution res{2560, 1440};
     sla::PixelDim   pixdim{120. / res.width_px, 68. / res.height_px};
     

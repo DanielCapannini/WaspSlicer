@@ -762,7 +762,7 @@ Sidebar::Sidebar(Plater *parent)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(42 * wxGetApp().em_unit(), -1)), p(new priv(parent))
 {
     p->scrolled = new wxScrolledWindow(this);
-//    p->scrolled->SetScrollbars(0, 100, 1, 2); // ys_DELETE_after_testing. pixelsPerUnitY = 100 from https://github.com/prusa3d/WaspSlicer/commit/8f019e5fa992eac2c9a1e84311c990a943f80b01, 
+//    p->scrolled->SetScrollbars(0, 100, 1, 2); // ys_DELETE_after_testing. pixelsPerUnitY = 100 from https://github.com/wasp3d/WaspSlicer/commit/8f019e5fa992eac2c9a1e84311c990a943f80b01, 
     // but this cause the bad layout of the sidebar, when all infoboxes appear.
     // As a result we can see the empty block at the bottom of the sidebar
     // But if we set this value to 5, layout will be better
@@ -1304,7 +1304,7 @@ void Sidebar::show_info_sizer()
         if (vol_idxs.size() != 1)
             // Case when this fuction is called between update selection in ObjectList and on Canvas
             // Like after try to delete last solid part in object, the object is selected in ObjectLIst when just a part is still selected on Canvas
-            // see https://github.com/prusa3d/WaspSlicer/issues/7408
+            // see https://github.com/wasp3d/WaspSlicer/issues/7408
             return;
         vol = model_object->volumes[vol_idxs[0]];
         t = model_object->instances[inst_idx]->get_matrix() * vol->get_matrix();
@@ -1708,7 +1708,7 @@ struct Plater::priv
     static const std::regex pattern_3mf;
     static const std::regex pattern_zip_amf;
     static const std::regex pattern_any_amf;
-    static const std::regex pattern_prusa;
+    static const std::regex pattern_wasp;
 
     priv(Plater *q, MainFrame *main_frame);
     ~priv();
@@ -2004,11 +2004,11 @@ private:
 	
 };
 
-const std::regex Plater::priv::pattern_bundle(".*[.](amf|amf[.]xml|zip[.]amf|3mf|prusa)", std::regex::icase);
+const std::regex Plater::priv::pattern_bundle(".*[.](amf|amf[.]xml|zip[.]amf|3mf|wasp)", std::regex::icase);
 const std::regex Plater::priv::pattern_3mf(".*3mf", std::regex::icase);
 const std::regex Plater::priv::pattern_zip_amf(".*[.]zip[.]amf", std::regex::icase);
 const std::regex Plater::priv::pattern_any_amf(".*[.](amf|amf[.]xml|zip[.]amf)", std::regex::icase);
-const std::regex Plater::priv::pattern_prusa(".*prusa", std::regex::icase);
+const std::regex Plater::priv::pattern_wasp(".*wasp", std::regex::icase);
 
 Plater::priv::priv(Plater *q, MainFrame *main_frame)
     : q(q)
@@ -2500,10 +2500,10 @@ std::vector<size_t> Plater::priv::load_files(const std::vector<fs::path>& input_
         const bool type_3mf = std::regex_match(path.string(), pattern_3mf);
         const bool type_zip_amf = !type_3mf && std::regex_match(path.string(), pattern_zip_amf);
         const bool type_any_amf = !type_3mf && std::regex_match(path.string(), pattern_any_amf);
-        const bool type_prusa = std::regex_match(path.string(), pattern_prusa);
+        const bool type_wasp = std::regex_match(path.string(), pattern_wasp);
 
         Slic3r::Model model;
-        bool is_project_file = type_prusa;
+        bool is_project_file = type_wasp;
         try {
             if (type_3mf || type_zip_amf) {
 #ifdef __linux__
@@ -4000,7 +4000,7 @@ void Plater::priv::on_select_preset(wxCommandEvent &evt)
     PlaterPresetComboBox* combo = static_cast<PlaterPresetComboBox*>(evt.GetEventObject());
     Preset::Type preset_type    = combo->get_type();
 
-    // see https://github.com/prusa3d/WaspSlicer/issues/3889
+    // see https://github.com/wasp3d/WaspSlicer/issues/3889
     // Under OSX: in case of use of a same names written in different case (like "ENDER" and "Ender"),
     // m_presets_choice->GetSelection() will return first item, because search in PopupListCtrl is case-insensitive.
     // So, use GetSelection() from event parameter 
@@ -4051,7 +4051,7 @@ void Plater::priv::on_select_preset(wxCommandEvent &evt)
 #ifdef __WXMSW__
     // From the Win 2004 preset combobox lose a focus after change the preset selection
     // and that is why the up/down arrow doesn't work properly
-    // (see https://github.com/prusa3d/WaspSlicer/issues/5531 ).
+    // (see https://github.com/wasp3d/WaspSlicer/issues/5531 ).
     // So, set the focus to the combobox explicitly
     combo->SetFocus();
 #endif
@@ -5124,7 +5124,7 @@ void Plater::priv::bring_instance_forward() const
         BOOST_LOG_TRIVIAL(debug) << "Couldnt bring instance forward - mainframe is null";
         return;
     }
-    BOOST_LOG_TRIVIAL(debug) << "prusaslicer window going forward";
+    BOOST_LOG_TRIVIAL(debug) << "waspslicer window going forward";
     //this code maximize app window on Fedora
     {
         main_frame->Iconize(false);
@@ -5886,7 +5886,7 @@ void ProjectDropDialog::on_dpi_changed(const wxRect& suggested_rect)
 
 bool Plater::load_files(const wxArrayString& filenames, bool delete_after_load/*=false*/)
 {
-    const std::regex pattern_drop(".*[.](stl|obj|amf|3mf|prusa|step|stp|zip)", std::regex::icase);
+    const std::regex pattern_drop(".*[.](stl|obj|amf|3mf|wasp|step|stp|zip)", std::regex::icase);
     const std::regex pattern_gcode_drop(".*[.](gcode|g)", std::regex::icase);
 
     std::vector<fs::path> paths;
@@ -6746,7 +6746,7 @@ void Plater::send_gcode()
         wxBusyCursor wait;
         upload_job.printhost->get_groups(groups);
     }
-    // PrusaLink specific: Query the server for the list of file groups.
+    // WaspLink specific: Query the server for the list of file groups.
     wxArrayString storage_paths;
     wxArrayString storage_names;
     {
@@ -6766,8 +6766,8 @@ void Plater::send_gcode()
         upload_job.upload_data.group       = dlg.group();
         upload_job.upload_data.storage     = dlg.storage();
 
-        // Show "Is printer clean" dialog for PrusaConnect - Upload and print.
-        if (std::string(upload_job.printhost->get_name()) == "PrusaConnect" && upload_job.upload_data.post_action == PrintHostPostUploadAction::StartPrint) {
+        // Show "Is printer clean" dialog for WaspConnect - Upload and print.
+        if (std::string(upload_job.printhost->get_name()) == "WaspConnect" && upload_job.upload_data.post_action == PrintHostPostUploadAction::StartPrint) {
             GUI::MessageDialog dlg(nullptr, _L("Is the printer ready? Is the print sheet in place, empty and clean?"), _L("Upload and Print"), wxOK | wxCANCEL);
             if (dlg.ShowModal() != wxID_OK)
                 return;

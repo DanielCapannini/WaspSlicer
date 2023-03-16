@@ -1322,11 +1322,11 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
+msgid "Wasp FFF Technology Printers"
 msgstr "Принтери технології FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
+msgid "Wasp MSLA Technology Printers"
 msgstr "Принтери технології MSLA"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
@@ -4417,7 +4417,7 @@ msgid "is based on Slic3r by Alessandro Ranellucci and the RepRap community."
 msgstr "заснований на Slic3r від Alessandro Ranellucci та спільноти RepRap."
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
+msgid "Developed by Wasp Research."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:278
@@ -4532,10 +4532,10 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Помилка під час розбору файлу конфігурації PrusaGCodeViewer, можливо, він "
+"Помилка під час розбору файлу конфігурації WaspGCodeViewer, можливо, він "
 "пошкоджений. Спробуйте вручну видалити файл, щоб оговтатися від помилки."
 
 #: src/slic3r/GUI/GUI_App.cpp:1006
@@ -4582,7 +4582,7 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 
@@ -6898,12 +6898,12 @@ msgid "based on Slic3r"
 msgstr "на основі Slic3r"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Драйвери Prusa3D"
+msgid "Wasp 3D &Drivers"
+msgstr "Драйвери Wasp3D"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Відкрити сторінку завантаження драйверів Prusa3D у своєму браузері"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Відкрити сторінку завантаження драйверів Wasp3D у своєму браузері"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -6911,7 +6911,7 @@ msgstr "Релізи ПЗ"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Open the software releases page in your browser"
-msgstr "Відкрити сторінку релізів PrusaEdition у своєму браузері"
+msgstr "Відкрити сторінку релізів WaspEdition у своєму браузері"
 
 #: src/slic3r/GUI/MainFrame.cpp:1158
 #, c-format, boost-format
@@ -7912,7 +7912,7 @@ msgstr "Можливо, вам доведеться оновити драйве�
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -11596,19 +11596,19 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "Зауважте: Необхідна версія OctoPrint - принаймні 1.1.0."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Не можливо підключитися до Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "Не можливо підключитися до Wasp SLA"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
+msgid "Connection to WaspLink works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
+msgid "Could not connect to WaspLink"
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
@@ -14170,12 +14170,12 @@ msgstr "Підтримує час, що залишився"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Публікувати M73 P[відсоток друку] R[час, що залишився у хвилинах] з "
 "інтервалом у 1 хвилину в G-код, щоб прошивка показувала точний час, що "
-"залишився. На сьогоднішній день лише прошивка Prusa i3 MK3 розпізнає M73. "
+"залишився. На сьогоднішній день лише прошивка Wasp i3 MK3 розпізнає M73. "
 "Також прошивка i3 MK3 підтримує M73 Qxx Sxx для тихого режиму."
 
 #: src/libslic3r/PrintConfig.cpp:1686

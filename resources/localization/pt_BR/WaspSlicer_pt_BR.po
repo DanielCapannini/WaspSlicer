@@ -1220,7 +1220,7 @@ msgstr "Materiais"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2464
 msgid "FFF Technology Printers"
-msgstr "Impressoras de tecnologia Prusa FFF"
+msgstr "Impressoras de tecnologia Wasp FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2469
 msgid "SLA Technology Printers"
@@ -1341,12 +1341,12 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Impressoras de tecnologia Prusa FFF"
+msgid "Wasp FFF Technology Printers"
+msgstr "Impressoras de tecnologia Wasp FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
-msgstr "Impressoras de tecnologia Prusa MSLA"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Impressoras de tecnologia Wasp MSLA"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
 msgid "Filament Profiles Selection"
@@ -4484,8 +4484,8 @@ msgstr ""
 "é baseado no Slic3r criado por Alessandro Ranellucci e a comunidade RepRap."
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
-msgstr "Desenvolvido por Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Desenvolvido por Wasp Research."
 
 #: src/slic3r/GUI/GUI_App.cpp:278
 msgid ""
@@ -4600,10 +4600,10 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Erro de análise PrusaGCodeViewer, ele provavelmente está corrompido. Tente "
+"Erro de análise WaspGCodeViewer, ele provavelmente está corrompido. Tente "
 "excluir manualmente o arquivo para recuperar do erro."
 
 #: src/slic3r/GUI/GUI_App.cpp:1006
@@ -4661,7 +4661,7 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "Você está executando uma compilação de 32 bits do WaspSlicer no Windows de "
@@ -4669,7 +4669,7 @@ msgstr ""
 "A compilação de 32 bits do WaspSlicer provavelmente não poderá utilizar "
 "toda a RAM disponível no sistema.\n"
 "Faça o download e instale uma versão de 64 bits do WaspSlicer em https://"
-"www.prusa3d.cz/prusaslicer/.\n"
+"www.wasp3d.cz/waspslicer/.\n"
 "Você deseja continuar?"
 
 #: src/slic3r/GUI/GUI_App.cpp:1182
@@ -7010,12 +7010,12 @@ msgid "based on Slic3r"
 msgstr "baseado no Slic3r"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Drivers 3D &Prusa"
+msgid "Wasp 3D &Drivers"
+msgstr "Drivers 3D &Wasp"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Abrir a página para baixar os drivers da Prusa3D no seu navegador"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Abrir a página para baixar os drivers da Wasp3D no seu navegador"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -8025,10 +8025,10 @@ msgstr "Você pode ter que atualizar os drivers da sua placa de vídeo."
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "Como solução alternativa, você pode executar o WaspSlicer com um software "
-"renderizado em 3D gráficos executando prusa-slicer.exe com o parâmetro --sw-"
+"renderizado em 3D gráficos executando wasp-slicer.exe com o parâmetro --sw-"
 "renderer."
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -9140,7 +9140,7 @@ msgid ""
 "If enabled, sets WaspSlicer G-code Viewer as default application to open ."
 "gcode files."
 msgstr ""
-"Se ativado, define o Visualizador de G-code PrusaSLicer como aplicação "
+"Se ativado, define o Visualizador de G-code WaspSLicer como aplicação "
 "padrão para abrir arquivos .gcode."
 
 #: src/slic3r/GUI/Preferences.cpp:390
@@ -11822,20 +11822,20 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "Nota: OctoPrint versão pelo menos 1.1.0 é necessária."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "A conexão com Prusa SL1 / SL1S funciona corretamente."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "A conexão com Wasp SL1 / SL1S funciona corretamente."
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Não foi possível conectar-se a Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "Não foi possível conectar-se a Wasp SLA"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
-msgstr "A conexão com o PrusaLink funciona corretamente."
+msgid "Connection to WaspLink works correctly."
+msgstr "A conexão com o WaspLink funciona corretamente."
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
-msgstr "Não foi possível conectar ao PrusaLink"
+msgid "Could not connect to WaspLink"
+msgstr "Não foi possível conectar ao WaspLink"
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
 msgid "Storages found:"
@@ -14486,12 +14486,12 @@ msgstr "Tempo de impressão restante"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Emita M73 P [porcentagem impressa] R [tempo restante em minutos] em "
 "intervalos de 1 minuto no G-code para permitir que o firmware mostre o tempo "
-"restante exato. A partir de agora apenas o firmware Prusa i3 MK3 reconhece "
+"restante exato. A partir de agora apenas o firmware Wasp i3 MK3 reconhece "
 "M73. Além disso, o firmware i3 MK3 suporta M73 QXX Sxx para o modo "
 "silencioso."
 

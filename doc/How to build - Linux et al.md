@@ -1,11 +1,11 @@
 
 # Building WaspSlicer on UNIX/Linux
 
-Please understand that WaspSlicer team cannot support compilation on all possible Linux distros. Namely, we cannot help troubleshoot OpenGL driver issues or dependency issues if compiled against distro provided libraries. **We can only support WaspSlicer statically linked against the dependencies compiled with the `deps` scripts**, the same way we compile WaspSlicer for our [binary builds](https://github.com/prusa3d/WaspSlicer/releases).
+Please understand that WaspSlicer team cannot support compilation on all possible Linux distros. Namely, we cannot help troubleshoot OpenGL driver issues or dependency issues if compiled against distro provided libraries. **We can only support WaspSlicer statically linked against the dependencies compiled with the `deps` scripts**, the same way we compile WaspSlicer for our [binary builds](https://github.com/wasp3d/WaspSlicer/releases).
 
 If you have some reason to link dynamically to your system libraries, you are free to do so, but we can not and will not troubleshoot any issues you possibly run into.
 
-Instead of compiling WaspSlicer from source code, one may also consider to install WaspSlicer [pre-compiled by contributors](https://github.com/prusa3d/WaspSlicer/wiki/WaspSlicer-on-Linux---binary-distributions).
+Instead of compiling WaspSlicer from source code, one may also consider to install WaspSlicer [pre-compiled by contributors](https://github.com/wasp3d/WaspSlicer/wiki/WaspSlicer-on-Linux---binary-distributions).
 
 ## Step by step guide
 
@@ -36,7 +36,7 @@ The names of the packages may be different on different distros.
 
 Cloning the repository is simple thanks to git and Github. Simply `cd` into wherever you want to clone WaspSlicer code base and run
 ```
-git clone https://www.github.com/prusa3d/WaspSlicer
+git clone https://www.github.com/wasp3d/WaspSlicer
 cd WaspSlicer
 ```
 This will download the source code into a new directory and `cd` into it. You can now optionally select a tag/branch/commit to build using `git checkout`. Otherwise, `master` branch will be built.
@@ -69,7 +69,7 @@ Now when the dependencies are compiled, all that is needed is to tell CMake that
 And that's it. It is now possible to run the freshly built WaspSlicer binary:
 
     cd src
-    ./prusa-slicer
+    ./wasp-slicer
 
 
 
@@ -119,7 +119,7 @@ If you instead want WaspSlicer installed in a structure according to the File Sy
 
     cmake .. -DSLIC3R_FHS=1
 
-This will make WaspSlicer look for a fixed-location `share/slic3r-prusa3d` directory instead (note that the location becomes hardcoded).
+This will make WaspSlicer look for a fixed-location `share/slic3r-wasp3d` directory instead (note that the location becomes hardcoded).
 
 You can then use the `make install` target to install WaspSlicer.
 

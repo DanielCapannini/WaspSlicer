@@ -119,7 +119,7 @@ enum class NotificationType
 	NetfabbFinished,
 	// Short meesage to fill space between start and finish of export
 	ExportOngoing,
-	// Progressbar of download from prusaslicer:// url
+	// Progressbar of download from waspslicer:// url
 	URLDownload,
 	// MacOS specific - PS comes forward even when downloader is not allowed
 	URLNotRegistered,
@@ -929,7 +929,7 @@ private:
 		} },
 
 			//{NotificationType::NewAppAvailable, NotificationLevel::ImportantNotificationLevel, 20,  _u8L("New version is available."),  _u8L("See Releases page."), [](wxEvtHandler* evnthndlr) {
-			//	wxGetApp().open_browser_with_warning_dialog("https://github.com/prusa3d/WaspSlicer/releases"); return true; }},
+			//	wxGetApp().open_browser_with_warning_dialog("https://github.com/wasp3d/WaspSlicer/releases"); return true; }},
 			//{NotificationType::NewAppAvailable, NotificationLevel::ImportantNotificationLevel, 20,  _u8L("New vesion of WaspSlicer is available.",  _u8L("Download page.") },
 			//{NotificationType::LoadingFailed, NotificationLevel::RegularNotificationLevel, 20,  _u8L("Loading of model has Failed") },
 			//{NotificationType::DeviceEjected, NotificationLevel::RegularNotificationLevel, 10,  _u8L("Removable device has been safely ejected")} // if we want changeble text (like here name of device), we need to do it as CustomNotification

@@ -7,7 +7,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n"
 "%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || n%10 == 1 || (n%10 >= 5 && n"
 "%10 <=9)) || (n%100 >= 12 && n%100 <= 14)) ? 2 : 3);\n"
-"X-Generator: Prusalator\n"
+"X-Generator: Wasplator\n"
 
 #: src/libslic3r/PrintConfig.cpp:487 src/libslic3r/PrintConfig.cpp:1114
 #: src/libslic3r/PrintConfig.cpp:1601 src/libslic3r/PrintConfig.cpp:1793
@@ -1352,10 +1352,10 @@ msgstr ""
 #: src/slic3r/GUI/OpenGLManager.cpp:264
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "Jako obejście problemu, można uruchomić WaspSlicer z programowo renderowaną "
-"grafiką 3D poprzez uruchomienie prusa-slicer.exe z parametrem --sw-renderer."
+"grafiką 3D poprzez uruchomienie wasp-slicer.exe z parametrem --sw-renderer."
 
 #: src/slic3r/GUI/Preferences.cpp:249
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:895
@@ -2437,7 +2437,7 @@ msgstr "Zamykanie WaspSlicer. Bieżący projekt został zmodyfikowany."
 #: src/slic3r/GUI/MainFrame.cpp:232
 msgid "Closing WaspSlicer while some presets are modified."
 msgstr ""
-"Zamknięcie PrusaSlicera podczas modyfikacji niektórych zestawów ustawień."
+"Zamknięcie WaspSlicera podczas modyfikacji niektórych zestawów ustawień."
 
 #: src/libslic3r/PrintConfig.cpp:2717
 msgid "Closing radius"
@@ -2769,12 +2769,12 @@ msgid "Connection to printers connected via the print host failed."
 msgstr "Niepowodzenie połączenia z drukarką podłączoną do serwera druku."
 
 #: src/slic3r/Utils/OctoPrint.cpp:336
-msgid "Connection to PrusaLink works correctly."
-msgstr "Połączenie z PrusaLink działa prawidłowo."
+msgid "Connection to WaspLink works correctly."
+msgstr "Połączenie z WaspLink działa prawidłowo."
 
 #: src/slic3r/Utils/OctoPrint.cpp:292
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "Połączenie z Prusa SL1 / SL1S działa prawidłowo."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "Połączenie z Wasp SL1 / SL1S działa prawidłowo."
 
 #: src/slic3r/Utils/Repetier.cpp:84
 msgid "Connection to Repetier works correctly."
@@ -3025,12 +3025,12 @@ msgid "Could not connect to OctoPrint"
 msgstr "Nie można połączyć się z OctoPrint"
 
 #: src/slic3r/Utils/OctoPrint.cpp:342
-msgid "Could not connect to PrusaLink"
-msgstr "Nie można połączyć się z PrusaLink"
+msgid "Could not connect to WaspLink"
+msgstr "Nie można połączyć się z WaspLink"
 
 #: src/slic3r/Utils/OctoPrint.cpp:298
-msgid "Could not connect to Prusa SLA"
-msgstr "Nie można połączyć się z Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "Nie można połączyć się z Wasp SLA"
 
 #: src/slic3r/Utils/Repetier.cpp:90
 msgid "Could not connect to Repetier"
@@ -3752,8 +3752,8 @@ msgstr ""
 "modele."
 
 #: src/slic3r/GUI/GUI_App.cpp:267
-msgid "Developed by Prusa Research."
-msgstr "Rozwijany przez Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Rozwijany przez Wasp Research."
 
 #: src/slic3r/GUI/Mouse3DController.cpp:464
 msgid "Device:"
@@ -4324,12 +4324,12 @@ msgstr "Akcje wytłaczania"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Umieść M73 P[postęp w procentach] R[pozostały czas w minutach] co 1 minutę w "
 "G-code, aby pozwolić firmware na wyświetlanie dokładnego pozostałego czasu. "
-"Na ten moment jedynie firmware drukarki Prusa i3 MK3 rozpoznaje komendę M73. "
+"Na ten moment jedynie firmware drukarki Wasp i3 MK3 rozpoznaje komendę M73. "
 "Firmware i3 MK3 wspiera również M73 Qxx Sxx dla trybu Stealth."
 
 #: src/libslic3r/PrintConfig.cpp:1661
@@ -4688,10 +4688,10 @@ msgstr "BŁĄD: brak zasobów do wykonania nowego zadania."
 
 #: src/slic3r/GUI/GUI_App.cpp:915 src/slic3r/GUI/GUI_App.cpp:1013
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Błąd przetwarzania pliku konfiguracyjnego PrusaGCodeViewer. Prawdopodobnie "
+"Błąd przetwarzania pliku konfiguracyjnego WaspGCodeViewer. Prawdopodobnie "
 "jest uszkodzony. Spróbuj ręcznie usunąć plik, aby pozbyć się błędu."
 
 #: src/slic3r/GUI/GUI_App.cpp:909 src/slic3r/GUI/GUI_App.cpp:1007
@@ -10151,8 +10151,8 @@ msgid "Open the dialog to modify shape gallery"
 msgstr "Otwórz okno dialogowe, aby zmodyfikować galerię kształtów"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Otwórz stronę Prusa3D ze sterownikami w przeglądarce"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Otwórz stronę Wasp3D ze sterownikami w przeglądarce"
 
 #: src/slic3r/GUI/MainFrame.cpp:1075
 msgid "Open the software releases page in your browser"
@@ -11400,16 +11400,16 @@ msgid "Project is loading"
 msgstr "Projekt jest wczytywany"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Prusa 3D &Drivers"
-msgstr "Sterowniki Prusa 3&D"
+msgid "Wasp 3D &Drivers"
+msgstr "Sterowniki Wasp 3&D"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2884
-msgid "Prusa FFF Technology Printers"
-msgstr "Drukarki Prusa w technologii FFF"
+msgid "Wasp FFF Technology Printers"
+msgstr "Drukarki Wasp w technologii FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2892
-msgid "Prusa MSLA Technology Printers"
-msgstr "Drukarki Prusa w technologii MSLA"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Drukarki Wasp w technologii MSLA"
 
 #: src/slic3r/GUI/GUI_App.cpp:1339
 #, boost-format
@@ -16971,8 +16971,8 @@ msgid ""
 "the list of supported firmware flavors. One may decide to bail out or to "
 "substitute an unknown value with a default silently or verbosely."
 msgstr ""
-"Ta wersja PrusaSlicera może nie rozumieć konfiguracji tworzonych przez "
-"najnowsze wersje PrusaSlicera. Na przykład, nowszy WaspSlicer może "
+"Ta wersja WaspSlicera może nie rozumieć konfiguracji tworzonych przez "
+"najnowsze wersje WaspSlicera. Na przykład, nowszy WaspSlicer może "
 "rozszerzyć listę obsługiwanych rodzajów firmware. Możesz zdecydować się na "
 "rezygnację lub zastąpienie nieznanej wartości wartością domyślną po cichu "
 "lub z powiadomieniem."
@@ -18557,15 +18557,15 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "WaspSlicer dla architektury 32-bitowej został uruchomiony w systemie 64-"
 "bitowym.\n"
 "32-bitowa wersja prawdopodobnie nie będzie w stanie wykorzystać w pełni "
 "pamięci RAM zainstalowanej w komputerze.\n"
-"Pobierz i zainstaluj wersję 64-bitową z https://www.prusa3d.pl/"
-"prusaslicer/.\n"
+"Pobierz i zainstaluj wersję 64-bitową z https://www.wasp3d.pl/"
+"waspslicer/.\n"
 "Czy chcesz kontynuować?"
 
 #: src/slic3r/GUI/Plater.cpp:5097

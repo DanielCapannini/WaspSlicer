@@ -266,10 +266,10 @@ void PresetUpdater::priv::get_missing_resource(const std::string& vendor, const 
 	if (filename.empty() || vendor.empty())
 		return;
 
-	if (!boost::starts_with(url, "http://files.prusa3d.com/wp-content/uploads/repository/") &&
-		!boost::starts_with(url, "https://files.prusa3d.com/wp-content/uploads/repository/"))
+	if (!boost::starts_with(url, "http://files.wasp3d.com/wp-content/uploads/repository/") &&
+		!boost::starts_with(url, "https://files.wasp3d.com/wp-content/uploads/repository/"))
 	{
-		throw Slic3r::CriticalException(GUI::format("URL outside prusa3d.com network: %1%", url));
+		throw Slic3r::CriticalException(GUI::format("URL outside wasp3d.com network: %1%", url));
 	}
 
 	std::string escaped_filename = escape_string_url(filename);
@@ -320,10 +320,10 @@ void PresetUpdater::priv::get_or_copy_missing_resource(const std::string& vendor
 		return;
 	}
 	if (!fs::exists(file_in_cache)) { // No file to copy. Download it to straight to the vendor dir.
-		if (!boost::starts_with(url, "http://files.prusa3d.com/wp-content/uploads/repository/") &&
-			!boost::starts_with(url, "https://files.prusa3d.com/wp-content/uploads/repository/"))
+		if (!boost::starts_with(url, "http://files.wasp3d.com/wp-content/uploads/repository/") &&
+			!boost::starts_with(url, "https://files.wasp3d.com/wp-content/uploads/repository/"))
 		{
-			throw Slic3r::CriticalException(GUI::format("URL outside prusa3d.com network: %1%", url));
+			throw Slic3r::CriticalException(GUI::format("URL outside wasp3d.com network: %1%", url));
 		}
 		BOOST_LOG_TRIVIAL(info) << "Downloading resources missing in cache directory: " << vendor << " / " << filename;
 
@@ -361,8 +361,8 @@ void PresetUpdater::priv::sync_config(const VendorMap vendors, const std::string
 	}
 	BOOST_LOG_TRIVIAL(info) << "Downloading vedor profiles archive zip from " << index_archive_url;
 	//check if idx_url is leading to our site 
-	if (!boost::starts_with(index_archive_url, "http://files.prusa3d.com/wp-content/uploads/repository/") &&
-		!boost::starts_with(index_archive_url, "https://files.prusa3d.com/wp-content/uploads/repository/"))
+	if (!boost::starts_with(index_archive_url, "http://files.wasp3d.com/wp-content/uploads/repository/") &&
+		!boost::starts_with(index_archive_url, "https://files.wasp3d.com/wp-content/uploads/repository/"))
 	{
 		BOOST_LOG_TRIVIAL(error) << "Unsafe url path for vedor profiles archive zip. Download is rejected.";
 		return;

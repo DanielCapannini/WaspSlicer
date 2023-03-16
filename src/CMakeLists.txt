@@ -144,7 +144,7 @@ endif (MINGW)
 
 if (NOT WIN32 AND NOT APPLE)
     # Binary name on unix like systems (Linux, Unix)
-    set_target_properties(WaspSlicer PROPERTIES OUTPUT_NAME "prusa-slicer")
+    set_target_properties(WaspSlicer PROPERTIES OUTPUT_NAME "wasp-slicer")
 endif ()
 
 target_link_libraries(WaspSlicer libslic3r libcereal)
@@ -190,35 +190,35 @@ if (WIN32)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -municode")
     endif()
 
-    add_executable(PrusaSlicer_app_gui WIN32 PrusaSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/WaspSlicer.rc)
+    add_executable(WaspSlicer_app_gui WIN32 WaspSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/WaspSlicer.rc)
     # Generate debug symbols even in release mode.
     if(MSVC)
-        target_link_options(PrusaSlicer_app_gui PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
+        target_link_options(WaspSlicer_app_gui PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
     endif()
-    target_compile_definitions(PrusaSlicer_app_gui PRIVATE -DSLIC3R_WRAPPER_NOCONSOLE)
-    add_dependencies(PrusaSlicer_app_gui WaspSlicer)
-    set_target_properties(PrusaSlicer_app_gui PROPERTIES OUTPUT_NAME "prusa-slicer")
-    target_link_libraries(PrusaSlicer_app_gui PRIVATE boost_headeronly)
+    target_compile_definitions(WaspSlicer_app_gui PRIVATE -DSLIC3R_WRAPPER_NOCONSOLE)
+    add_dependencies(WaspSlicer_app_gui WaspSlicer)
+    set_target_properties(WaspSlicer_app_gui PROPERTIES OUTPUT_NAME "wasp-slicer")
+    target_link_libraries(WaspSlicer_app_gui PRIVATE boost_headeronly)
 
-    add_executable(PrusaSlicer_app_console PrusaSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/WaspSlicer.rc)
+    add_executable(WaspSlicer_app_console WaspSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/WaspSlicer.rc)
     # Generate debug symbols even in release mode.
     if (MSVC)
-        target_link_options(PrusaSlicer_app_console PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
+        target_link_options(WaspSlicer_app_console PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
     endif ()
-    target_compile_definitions(PrusaSlicer_app_console PRIVATE -DSLIC3R_WRAPPER_CONSOLE)
-    add_dependencies(PrusaSlicer_app_console WaspSlicer)
-    set_target_properties(PrusaSlicer_app_console PROPERTIES OUTPUT_NAME "prusa-slicer-console")
-    target_link_libraries(PrusaSlicer_app_console PRIVATE boost_headeronly)
+    target_compile_definitions(WaspSlicer_app_console PRIVATE -DSLIC3R_WRAPPER_CONSOLE)
+    add_dependencies(WaspSlicer_app_console WaspSlicer)
+    set_target_properties(WaspSlicer_app_console PROPERTIES OUTPUT_NAME "wasp-slicer-console")
+    target_link_libraries(WaspSlicer_app_console PRIVATE boost_headeronly)
 
-    add_executable(PrusaSlicer_app_gcodeviewer WIN32 PrusaSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/WaspSlicer-gcodeviewer.rc)
+    add_executable(WaspSlicer_app_gcodeviewer WIN32 WaspSlicer_app_msvc.cpp ${CMAKE_CURRENT_BINARY_DIR}/WaspSlicer-gcodeviewer.rc)
     # Generate debug symbols even in release mode.
     if (MSVC)
-        target_link_options(PrusaSlicer_app_gcodeviewer PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
+        target_link_options(WaspSlicer_app_gcodeviewer PUBLIC "$<$<CONFIG:RELEASE>:/DEBUG>")
     endif ()
-    target_compile_definitions(PrusaSlicer_app_gcodeviewer PRIVATE -DSLIC3R_WRAPPER_NOCONSOLE -DSLIC3R_WRAPPER_GCODEVIEWER)
-    add_dependencies(PrusaSlicer_app_gcodeviewer WaspSlicer)
-    set_target_properties(PrusaSlicer_app_gcodeviewer PROPERTIES OUTPUT_NAME "prusa-gcodeviewer")
-    target_link_libraries(PrusaSlicer_app_gcodeviewer PRIVATE boost_headeronly)
+    target_compile_definitions(WaspSlicer_app_gcodeviewer PRIVATE -DSLIC3R_WRAPPER_NOCONSOLE -DSLIC3R_WRAPPER_GCODEVIEWER)
+    add_dependencies(WaspSlicer_app_gcodeviewer WaspSlicer)
+    set_target_properties(WaspSlicer_app_gcodeviewer PROPERTIES OUTPUT_NAME "wasp-gcodeviewer")
+    target_link_libraries(WaspSlicer_app_gcodeviewer PRIVATE boost_headeronly)
 endif ()
 
 # Link the resources dir to where Slic3r GUI expects it
@@ -247,22 +247,22 @@ if (WIN32)
     endif ()
 
     # This has to be a separate target due to the windows command line lenght limits
-    add_custom_target(PrusaSlicerDllsCopy ALL DEPENDS WaspSlicer)
-    prusaslicer_copy_dlls(PrusaSlicerDllsCopy)
+    add_custom_target(WaspSlicerDllsCopy ALL DEPENDS WaspSlicer)
+    waspslicer_copy_dlls(WaspSlicerDllsCopy)
 
 else ()
     if (APPLE)
         # On OSX, the name of the binary matches the name of the Application.
         add_custom_command(TARGET WaspSlicer POST_BUILD
-            COMMAND ln -sf WaspSlicer prusa-slicer
-            COMMAND ln -sf WaspSlicer prusa-gcodeviewer
-            COMMAND ln -sf WaspSlicer PrusaGCodeViewer
+            COMMAND ln -sf WaspSlicer wasp-slicer
+            COMMAND ln -sf WaspSlicer wasp-gcodeviewer
+            COMMAND ln -sf WaspSlicer WaspGCodeViewer
             WORKING_DIRECTORY "$<TARGET_FILE_DIR:WaspSlicer>"
-            COMMENT "Symlinking the G-code viewer to WaspSlicer, symlinking to prusa-slicer and prusa-gcodeviewer"
+            COMMENT "Symlinking the G-code viewer to WaspSlicer, symlinking to wasp-slicer and wasp-gcodeviewer"
             VERBATIM)
     else ()
         add_custom_command(TARGET WaspSlicer POST_BUILD
-            COMMAND ln -sf prusa-slicer prusa-gcodeviewer
+            COMMAND ln -sf wasp-slicer wasp-gcodeviewer
             WORKING_DIRECTORY "$<TARGET_FILE_DIR:WaspSlicer>"
             COMMENT "Symlinking the G-code viewer to WaspSlicer"
             VERBATIM)
@@ -283,12 +283,12 @@ endif ()
 if (WIN32)
     install(TARGETS WaspSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
     if (MSVC)
-        install(TARGETS PrusaSlicer_app_gui RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
-        install(TARGETS PrusaSlicer_app_console RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
+        install(TARGETS WaspSlicer_app_gui RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
+        install(TARGETS WaspSlicer_app_console RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}")
     endif ()
 else ()
     install(TARGETS WaspSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
     # Install the symlink for gcodeviewer
-    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink prusa-slicer prusa-gcodeviewer WORKING_DIRECTORY \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})")
+    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink wasp-slicer wasp-gcodeviewer WORKING_DIRECTORY \$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})")
 endif ()

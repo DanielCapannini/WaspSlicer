@@ -39,7 +39,7 @@ static void start_new_slicer_or_gcodeviewer(const NewSlicerInstanceType instance
 	wxString path;
 	wxFileName::SplitPath(wxStandardPaths::Get().GetExecutablePath(), &path, nullptr, nullptr, wxPATH_NATIVE);
 	path += "\\";
-	path += (instance_type == NewSlicerInstanceType::Slicer) ? "prusa-slicer.exe" : "prusa-gcodeviewer.exe";
+	path += (instance_type == NewSlicerInstanceType::Slicer) ? "wasp-slicer.exe" : "wasp-gcodeviewer.exe";
 	std::vector<const wchar_t*> args;
 	args.reserve(4);
 	args.emplace_back(path.wc_str());
@@ -63,9 +63,9 @@ static void start_new_slicer_or_gcodeviewer(const NewSlicerInstanceType instance
 	boost::filesystem::path bin_path = into_path(wxStandardPaths::Get().GetExecutablePath());
 #if defined(__APPLE__)
 	{
-		// Maybe one day we will be able to run PrusaGCodeViewer, but for now the Apple notarization 
+		// Maybe one day we will be able to run WaspGCodeViewer, but for now the Apple notarization 
 		// process refuses Apps with multiple binaries and Vojtech does not know any workaround.
-		// ((instance_type == NewSlicerInstanceType::Slicer) ? "WaspSlicer" : "PrusaGCodeViewer");
+		// ((instance_type == NewSlicerInstanceType::Slicer) ? "WaspSlicer" : "WaspGCodeViewer");
 		// Just run WaspSlicer and give it a --gcodeviewer parameter.
 		bin_path = bin_path.parent_path() / "WaspSlicer";
 		// On Apple the wxExecute fails, thus we use boost::process instead.
@@ -114,7 +114,7 @@ static void start_new_slicer_or_gcodeviewer(const NewSlicerInstanceType instance
 		std::string my_path;
 		if (args.empty()) {
 			// Binary path was not set to the AppImage in the Linux specific block above, call the application directly.
-			my_path = (bin_path.parent_path() / ((instance_type == NewSlicerInstanceType::Slicer) ? "prusa-slicer" : "prusa-gcodeviewer")).string();
+			my_path = (bin_path.parent_path() / ((instance_type == NewSlicerInstanceType::Slicer) ? "wasp-slicer" : "wasp-gcodeviewer")).string();
 			args.emplace_back(my_path.c_str());
 		}
 		std::string to_open;

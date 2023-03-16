@@ -69,8 +69,8 @@ static const t_config_enum_values s_keys_map_MachineLimitsUsage {
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(MachineLimitsUsage)
 
 static const t_config_enum_values s_keys_map_PrintHostType {
-    { "prusalink",      htPrusaLink },
-    { "prusaconnect",   htPrusaConnect },
+    { "wasplink",      htWaspLink },
+    { "waspconnect",   htWaspConnect },
     { "octoprint",      htOctoPrint },
     { "duet",           htDuet },
     { "flashair",       htFlashAir },
@@ -1677,7 +1677,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Supports remaining times");
     def->tooltip = L("Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute"
                      " intervals into the G-code to let the firmware show accurate remaining time."
-                     " As of now only the Prusa i3 MK3 firmware recognizes M73."
+                     " As of now only the Wasp i3 MK3 firmware recognizes M73."
                      " Also the i3 MK3 firmware supports M73 Qxx Sxx for the silent mode.");
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionBool(false));
@@ -1944,8 +1944,8 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Slic3r can upload G-code files to a printer host. This field must contain "
                    "the kind of the host.");
     def->set_enum<PrintHostType>({
-        { "prusalink",      "PrusaLink" },
-        { "prusaconnect",   "PrusaConnect" },
+        { "wasplink",      "WaspLink" },
+        { "waspconnect",   "WaspConnect" },
         { "octoprint",      "OctoPrint" },
         { "duet",           "Duet" },
         { "flashair",       "FlashAir" },
@@ -1955,7 +1955,7 @@ void PrintConfigDef::init_fff_params()
     });
     def->mode = comAdvanced;
     def->cli = ConfigOptionDef::nocli;
-    def->set_default_value(new ConfigOptionEnum<PrintHostType>(htPrusaLink));
+    def->set_default_value(new ConfigOptionEnum<PrintHostType>(htWaspLink));
 
     def = this->add("only_retract_when_crossing_perimeters", coBool);
     def->label = L("Only retract when crossing perimeters");
@@ -4423,7 +4423,7 @@ std::string validate(const FullPrintConfig &cfg)
         if (em <= 0)
             return "Invalid value for --extrusion-multiplier";
 
-    // The following test was commented out after 482841b, see also https://github.com/prusa3d/WaspSlicer/pull/6743.
+    // The following test was commented out after 482841b, see also https://github.com/wasp3d/WaspSlicer/pull/6743.
     // The backend should now handle this case correctly. I.e., zero default_acceleration behaves as if all others
     // were zero too. This is now consistent with what the UI said would happen.
     // The UI already grays the fields out, there is no more reason to reject it here. This function validates the

@@ -1365,11 +1365,11 @@ msgid "Cancel"
 msgstr "Cancel·lar"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Impressores Prusa de tecnologia FFF"
+msgid "Wasp FFF Technology Printers"
+msgstr "Impressores Wasp de tecnologia FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
+msgid "Wasp MSLA Technology Printers"
 msgstr "Impressores Prussa de tecnologia MSLA"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
@@ -4504,8 +4504,8 @@ msgid "is based on Slic3r by Alessandro Ranellucci and the RepRap community."
 msgstr "està basat en Slic3r d'Alessandro Ranellucci i la comunitat RepRap."
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
-msgstr "Desenvolupat per Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Desenvolupat per Wasp Research."
 
 #: src/slic3r/GUI/GUI_App.cpp:278
 msgid ""
@@ -4621,10 +4621,10 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Error en analitzar el fitxer de configuració de PrusaGCodeViewer, "
+"Error en analitzar el fitxer de configuració de WaspGCodeViewer, "
 "probablement estigui danyat. Intenta eliminar manualment el fitxer per "
 "recuperar-se de l'error."
 
@@ -4683,14 +4683,14 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "Està executant una versió de 32 bits de WaspSlicer a Windows de 64 bits.\n"
 "La versió de 32 bits de WaspSlicer probablement no podrà utilitzar tota la "
 "RAM disponible al sistema.\n"
 "Si us plau, descarrega i instal·la una versió de 64 bits de WaspSlicer des "
-"de https://www.prusa3d.cz/prusaslicer/.\n"
+"de https://www.wasp3d.cz/waspslicer/.\n"
 "Voleu continuar?"
 
 #: src/slic3r/GUI/GUI_App.cpp:1182
@@ -7034,12 +7034,12 @@ msgid "based on Slic3r"
 msgstr "basat en Slic3r"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Controladors de Prusa 3&D"
+msgid "Wasp 3D &Drivers"
+msgstr "Controladors de Wasp 3&D"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Obrir la pàgina de descàrrega dels controladors Prusa3D al navegador"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Obrir la pàgina de descàrrega dels controladors Wasp3D al navegador"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -8051,10 +8051,10 @@ msgstr "Potser necessiteu actualitzar la vostra targeta gràfica."
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "Com a solució, podeu executar WaspSlicer amb gràfics 3D renderitzats per "
-"programari executant prusa-slicer.exe amb el paràmetre --sw-renderer."
+"programari executant wasp-slicer.exe amb el paràmetre --sw-renderer."
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
 msgid "Unsupported OpenGL version"
@@ -11899,20 +11899,20 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "Nota: Es requereix com a mínim la versió OctoPrint 1.1.0."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "La connexió a Prusa SL1 / SL1S funciona correctament."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "La connexió a Wasp SL1 / SL1S funciona correctament."
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "No s'ha pogut connectar amb Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "No s'ha pogut connectar amb Wasp SLA"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
-msgstr "La connexió amb PrusaLink funciona correctament."
+msgid "Connection to WaspLink works correctly."
+msgstr "La connexió amb WaspLink funciona correctament."
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
-msgstr "No s'ha pogut connectar a PrusaLink"
+msgid "Could not connect to WaspLink"
+msgstr "No s'ha pogut connectar a WaspLink"
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
 msgid "Storages found:"
@@ -14583,12 +14583,12 @@ msgstr "Compatible amb temps restants"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Emetre M73 P[percentatge imprès] R[temps restant en minuts] en intervals d'1 "
 "minut al codi G per permetre que el firmware mostri el temps restant precís. "
-"A partir d'ara només el firmware Prusa i3 MK3 reconeix M73. També el "
+"A partir d'ara només el firmware Wasp i3 MK3 reconeix M73. També el "
 "firmware i3 MK3 és compatible amb M73 Qxx Sxx per a la manera silenciosa."
 
 #: src/libslic3r/PrintConfig.cpp:1686
@@ -17671,7 +17671,7 @@ msgid ""
 "the \"single_instance\" configuration value from application preferences."
 msgstr ""
 "Si s'habilita, els arguments de la línia de comandes s'envien a una "
-"instància existent de la interfície gràfica d'usuari prusaSlicer o s'activa "
+"instància existent de la interfície gràfica d'usuari waspSlicer o s'activa "
 "una finestra del WaspSlicer existent. Substitueix el valor de configuració "
 "\"single_instance\" de les preferències de l'aplicació."
 

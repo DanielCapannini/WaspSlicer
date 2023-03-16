@@ -27,7 +27,7 @@ SCENARIO("Export+Import geometry to/from 3mf file cycle", "[3mf]") {
     GIVEN("world vertices coordinates before save") {
         // load a model from stl file
         Model src_model;
-        std::string src_file = std::string(TEST_DATA_DIR) + "/test_3mf/Prusa.stl";
+        std::string src_file = std::string(TEST_DATA_DIR) + "/test_3mf/Wasp.stl";
         load_stl(src_file.c_str(), &src_model);
         src_model.add_default_instances();
 
@@ -51,7 +51,7 @@ SCENARIO("Export+Import geometry to/from 3mf file cycle", "[3mf]") {
 
         WHEN("model is saved+loaded to/from 3mf file") {
             // save the model to 3mf file
-            std::string test_file = std::string(TEST_DATA_DIR) + "/test_3mf/prusa.3mf";
+            std::string test_file = std::string(TEST_DATA_DIR) + "/test_3mf/wasp.3mf";
             store_3mf(test_file.c_str(), &src_model, nullptr, false);
 
             // load back the model from the 3mf file
@@ -84,7 +84,7 @@ SCENARIO("2D convex hull of sinking object", "[3mf]") {
     GIVEN("model") {
         // load a model
         Model model;
-        std::string src_file = std::string(TEST_DATA_DIR) + "/test_3mf/Prusa.stl";
+        std::string src_file = std::string(TEST_DATA_DIR) + "/test_3mf/Wasp.stl";
         load_stl(src_file.c_str(), &model);
         model.add_default_instances();
 

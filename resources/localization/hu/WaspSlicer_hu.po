@@ -96,7 +96,7 @@ msgid ""
 "Please save your project and restart WaspSlicer. We would be glad if you "
 "reported the issue."
 msgstr ""
-"Mentse el a projektet, és indítsa újra a PrusaSlicert. Örülnénk, ha "
+"Mentse el a projektet, és indítsa újra a WaspSlicert. Örülnénk, ha "
 "jelentené a problémát."
 
 #: src/slic3r/GUI/BackgroundSlicingProcess.cpp:162
@@ -1041,11 +1041,11 @@ msgstr "Fájl társítás"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1563 src/slic3r/GUI/Preferences.cpp:292
 msgid "Associate .3mf files to WaspSlicer"
-msgstr "Társítsa a .3mf fájlokat a PrusaSlicerhez"
+msgstr "Társítsa a .3mf fájlokat a WaspSlicerhez"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1564 src/slic3r/GUI/Preferences.cpp:297
 msgid "Associate .stl files to WaspSlicer"
-msgstr "Társítsa a .stl fájlokat a PrusaSlicerhez"
+msgstr "Társítsa a .stl fájlokat a WaspSlicerhez"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1574
 msgid "View mode"
@@ -1341,12 +1341,12 @@ msgid "Cancel"
 msgstr "Mégse"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Prusa FFF Technológiájú Nyomtatók"
+msgid "Wasp FFF Technology Printers"
+msgstr "Wasp FFF Technológiájú Nyomtatók"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
-msgstr "Prusa MSLA Technológiájú Nyomtatók"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Wasp MSLA Technológiájú Nyomtatók"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
 msgid "Filament Profiles Selection"
@@ -4486,8 +4486,8 @@ msgid "is based on Slic3r by Alessandro Ranellucci and the RepRap community."
 msgstr "_Alessandro Ranellucci és a RepRap közösség Slic3r-én alapul."
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
-msgstr "A Prusa Research fejlesztette ki."
+msgid "Developed by Wasp Research."
+msgstr "A Wasp Research fejlesztette ki."
 
 #: src/slic3r/GUI/GUI_App.cpp:278
 msgid ""
@@ -4602,10 +4602,10 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Hiba a PrusaGCodeViewer konfigurációs fájl elemzése során, valószínűleg "
+"Hiba a WaspGCodeViewer konfigurációs fájl elemzése során, valószínűleg "
 "sérült. Próbálja meg manuálisan törölni a fájlt a hiba elhárításához."
 
 #: src/slic3r/GUI/GUI_App.cpp:1006
@@ -4662,14 +4662,14 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "Ön a WaspSlicer 32 bites verzióját futtatja 64 bites Windows alatt.\n"
 "A WaspSlicer 32 bites változata valószínűleg nem fogja tudni kihasználni a "
 "rendszerben rendelkezésre álló összes RAM-ot.\n"
 "Kérjük, hogy töltse le és telepítse a WaspSlicer 64 bites verzióját a "
-"https://www.prusa3d.cz/prusaslicer/ oldalról.\n"
+"https://www.wasp3d.cz/waspslicer/ oldalról.\n"
 "Szeretné folytatni?"
 
 #: src/slic3r/GUI/GUI_App.cpp:1182
@@ -7023,12 +7023,12 @@ msgid "based on Slic3r"
 msgstr "a Slic3r alapján"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Prusa 3D Meghajtók"
+msgid "Wasp 3D &Drivers"
+msgstr "Wasp 3D Meghajtók"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "A Prusa3D illesztőprogramok letöltési oldalának megnyitása böngészőben"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "A Wasp3D illesztőprogramok letöltési oldalának megnyitása böngészőben"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -8038,10 +8038,10 @@ msgstr "Lehet, hogy frissítenie kell a grafikus kártya illesztőprogramját."
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "Alternatív megoldásként a WaspSlicer szoftveresen renderelt 3D grafikával "
-"is használható, ha a prusa-slicer.exe programot a --sw-renderer paraméterrel "
+"is használható, ha a wasp-slicer.exe programot a --sw-renderer paraméterrel "
 "indítja el."
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -8395,7 +8395,7 @@ msgid ""
 "- Loading or creating a new project"
 msgstr ""
 "Nem fogunk többé kérdezni róla, amikor: \n"
-"- A PrusaSlicert bezárja,\n"
+"- A WaspSlicert bezárja,\n"
 "- Új projektet tölt be, vagy hoz létre"
 
 #: src/slic3r/GUI/Plater.cpp:2214
@@ -9002,13 +9002,13 @@ msgstr ""
 #: src/slic3r/GUI/Preferences.cpp:293
 msgid "If enabled, sets WaspSlicer as default application to open .3mf files."
 msgstr ""
-"Ha engedélyezve van, a PrusaSlicert alapértelmezett alkalmazásként állítja "
+"Ha engedélyezve van, a WaspSlicert alapértelmezett alkalmazásként állítja "
 "be a .3mf fájlok megnyitásához."
 
 #: src/slic3r/GUI/Preferences.cpp:298
 msgid "If enabled, sets WaspSlicer as default application to open .stl files."
 msgstr ""
-"Ha engedélyezve van, a PrusaSlicert alapértelmezett alkalmazásként állítja "
+"Ha engedélyezve van, a WaspSlicert alapértelmezett alkalmazásként állítja "
 "be a .stl fájlok megnyitásához."
 
 #: src/slic3r/GUI/Preferences.cpp:307
@@ -9105,7 +9105,7 @@ msgid ""
 "instead."
 msgstr ""
 "Ha ez engedélyezve van és a WaspSlicer indításakor ugyanannak a "
-"PrusaSlicernek egy másik példánya már fut, akkor az a példány lesz újra "
+"WaspSlicernek egy másik példánya már fut, akkor az a példány lesz újra "
 "aktiválva."
 
 #: src/slic3r/GUI/Preferences.cpp:355
@@ -11881,20 +11881,20 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "Megjegyzés: Az OctoPrint legalább 1.1.0-s verziója szükséges."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "A kapcsolat a Prusa SL1 / SL1S-sel megfelelően működik."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "A kapcsolat a Wasp SL1 / SL1S-sel megfelelően működik."
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Nem sikerült csatlakozni a Prusa SLA-hoz"
+msgid "Could not connect to Wasp SLA"
+msgstr "Nem sikerült csatlakozni a Wasp SLA-hoz"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
-msgstr "A kapcsolat a PrusaLinkkel megfelelően működik."
+msgid "Connection to WaspLink works correctly."
+msgstr "A kapcsolat a WaspLinkkel megfelelően működik."
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
-msgstr "Nem sikerült csatlakozni a PrusaLinkhez"
+msgid "Could not connect to WaspLink"
+msgstr "Nem sikerült csatlakozni a WaspLinkhez"
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
 msgid "Storages found:"
@@ -14546,12 +14546,12 @@ msgstr "Hátralévő idő támogatása"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Küldje az M73 P[nyomtatott százalék] R[hátralévő idő percben] értéket 1 "
 "perces időközönként a G-kódba, hogy a firmware pontosan mutassa a hátralévő "
-"időt. Jelenleg csak a Prusa i3 MK3 firmware ismeri fel az M73-at. Az i3 MK3 "
+"időt. Jelenleg csak a Wasp i3 MK3 firmware ismeri fel az M73-at. Az i3 MK3 "
 "firmware is támogatja az M73 Qxx Sxx Sxx-t a csendes módban."
 
 #: src/libslic3r/PrintConfig.cpp:1686
@@ -17709,7 +17709,7 @@ msgstr ""
 "Negatív térfogat\n"
 "Tudta, hogy a Negatív térfogat módosítóval kivonhat egy hálót egy másikból? "
 "Így például könnyen átméretezhető lyukakat hozhat létre közvetlenül a "
-"PrusaSlicerben. Bővebben a dokumentációban olvashat. (Haladó vagy szakértői "
+"WaspSlicerben. Bővebben a dokumentációban olvashat. (Haladó vagy szakértői "
 "módot igényel.)"
 
 #: resources/data/hints.ini: [hint:Simplify mesh]
@@ -17733,7 +17733,7 @@ msgid ""
 msgstr ""
 "Újratöltés lemezről\n"
 "Tudta, hogy ha elkészítette a modell egy újabb verzióját, egyszerűen újra "
-"betöltheti a PrusaSlicerben? Kattintson a jobb gombbal a modellre a 3D "
+"betöltheti a WaspSlicerben? Kattintson a jobb gombbal a modellre a 3D "
 "nézetben, és válassza az Újratöltés lemezről) lehetőséget. Bővebben a "
 "dokumentációban olvashat."
 

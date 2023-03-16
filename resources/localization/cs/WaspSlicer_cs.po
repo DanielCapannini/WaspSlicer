@@ -7,7 +7,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n"
 "%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || n%10 == 1 || (n%10 >= 5 && n"
 "%10 <=9)) || (n%100 >= 12 && n%100 <= 14)) ? 2 : 3);\n"
-"X-Generator: Prusalator\n"
+"X-Generator: Wasplator\n"
 
 #: src/libslic3r/PrintConfig.cpp:487 src/libslic3r/PrintConfig.cpp:1114
 #: src/libslic3r/PrintConfig.cpp:1601 src/libslic3r/PrintConfig.cpp:1793
@@ -771,7 +771,7 @@ msgstr "Povolit vestavěný downloader"
 
 #: src/slic3r/GUI/Preferences.cpp:208 src/slic3r/GUI/Preferences.cpp:212
 msgid "Allow just a single WaspSlicer instance"
-msgstr "Povolit pouze jednu instanci PrusaSliceru"
+msgstr "Povolit pouze jednu instanci WaspSliceru"
 
 #: src/slic3r/GUI/ExtruderSequenceDialog.cpp:172
 msgid "Allow next color repetition"
@@ -841,7 +841,7 @@ msgid ""
 "- Loading a new project while some presets are modified"
 msgstr ""
 "Vždy se dotázat na neuložené změny přednastavení během: \n"
-"- zavírání PrusaSliceru, pokud došlo k úpravě některých přednastavení,\n"
+"- zavírání WaspSliceru, pokud došlo k úpravě některých přednastavení,\n"
 "- načítání nového projektu,  pokud došlo k úpravě některých přednastavení."
 
 #: src/slic3r/GUI/Preferences.cpp:251
@@ -864,7 +864,7 @@ msgid ""
 "- Loading or creating a new project"
 msgstr ""
 "Vždy se dotázat na neuložené změny přednastavení během: \n"
-"- zavírání PrusaSliceru,\n"
+"- zavírání WaspSliceru,\n"
 "- načítání nebo vytváření nového projektu."
 
 #: src/libslic3r/Print.cpp:1242
@@ -1146,10 +1146,10 @@ msgstr ""
 #: src/slic3r/GUI/OpenGLManager.cpp:264
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "WaspSlicer můžete spustit se softwarovým vykreslováním 3D grafiky pomocí "
-"spuštění programu prusa-slicer.exe s parametrem --sw-renderer."
+"spuštění programu wasp-slicer.exe s parametrem --sw-renderer."
 
 #: src/slic3r/GUI/Preferences.cpp:249
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:895
@@ -1191,7 +1191,7 @@ msgstr ""
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1261 src/slic3r/GUI/Preferences.cpp:157
 msgid "Associate .3mf files to WaspSlicer"
-msgstr "Otevírat .3mf soubory v PrusaSliceru"
+msgstr "Otevírat .3mf soubory v WaspSliceru"
 
 #: src/slic3r/GUI/Preferences.cpp:258
 msgid "Associate .gcode files to WaspSlicer G-code Viewer"
@@ -1199,7 +1199,7 @@ msgstr "Otevírat .gcode soubory v prohlížeči WaspSlicer G-code Vieweru"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1262 src/slic3r/GUI/Preferences.cpp:164
 msgid "Associate .stl files to WaspSlicer"
-msgstr "Otevírat .stl soubory v PrusaSliceru"
+msgstr "Otevírat .stl soubory v WaspSliceru"
 
 #: src/slic3r/GUI/GLCanvas3D.cpp:6435
 msgid "A toolpath outside the print area was detected."
@@ -1574,7 +1574,7 @@ msgid ""
 "Printer Settings anymore.\n"
 "Settings will be available in physical printers settings."
 msgstr ""
-"Ale od této verze PrusaSliceru již nebudeme tyto informace zobrazovat v "
+"Ale od této verze WaspSliceru již nebudeme tyto informace zobrazovat v "
 "Nastavení tiskárny.\n"
 "Nastavení bude k dispozici v nastavení fyzických tiskáren."
 
@@ -1998,11 +1998,11 @@ msgstr "Vzdálenost uzavření"
 
 #: src/slic3r/GUI/MainFrame.cpp:225
 msgid "Closing WaspSlicer. Current project is modified."
-msgstr "Zavírání PrusaSliceru. Aktuální projekt je upravený."
+msgstr "Zavírání WaspSliceru. Aktuální projekt je upravený."
 
 #: src/slic3r/GUI/MainFrame.cpp:232
 msgid "Closing WaspSlicer while some presets are modified."
-msgstr "Zavírání PrusaSliceru. Některá přednastavení jsou změněná."
+msgstr "Zavírání WaspSliceru. Některá přednastavení jsou změněná."
 
 #: src/libslic3r/PrintConfig.cpp:2717
 msgid "Closing radius"
@@ -2315,12 +2315,12 @@ msgstr ""
 "nezdařilo."
 
 #: src/slic3r/Utils/OctoPrint.cpp:336
-msgid "Connection to PrusaLink works correctly."
-msgstr "Připojení k PrusaLinku funguje správně."
+msgid "Connection to WaspLink works correctly."
+msgstr "Připojení k WaspLinku funguje správně."
 
 #: src/slic3r/Utils/OctoPrint.cpp:292
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "Připojení k tiskárně Prusa SL1 /SL1S funguje správně."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "Připojení k tiskárně Wasp SL1 /SL1S funguje správně."
 
 #: src/slic3r/Utils/Repetier.cpp:84
 msgid "Connection to Repetier works correctly."
@@ -2540,12 +2540,12 @@ msgid "Could not connect to OctoPrint"
 msgstr "Nelze se spojit s OctoPrintem"
 
 #: src/slic3r/Utils/OctoPrint.cpp:342
-msgid "Could not connect to PrusaLink"
-msgstr "Nelze se připojit k PrusaLinku"
+msgid "Could not connect to WaspLink"
+msgstr "Nelze se připojit k WaspLinku"
 
 #: src/slic3r/Utils/OctoPrint.cpp:298
-msgid "Could not connect to Prusa SLA"
-msgstr "Nelze se připojit k Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "Nelze se připojit k Wasp SLA"
 
 #: src/slic3r/Utils/Repetier.cpp:90
 msgid "Could not connect to Repetier"
@@ -3163,8 +3163,8 @@ msgstr ""
 "objektů."
 
 #: src/slic3r/GUI/GUI_App.cpp:267
-msgid "Developed by Prusa Research."
-msgstr "Vyvinula společnost Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Vyvinula společnost Wasp Research."
 
 #: src/slic3r/GUI/Mouse3DController.cpp:464
 msgid "Device:"
@@ -3591,12 +3591,12 @@ msgstr ""
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Vkládání M73 P[počet vytištěných procent] R[zbývající čas v minutách] v 1 "
 "minutových intervalech do G-codu, aby firmware ukázal přesný zbývající čas. "
-"M73 nyní rozpoznává pouze firmware tiskárny Prusa i3 MK3. Firmware i3 MK3 "
+"M73 nyní rozpoznává pouze firmware tiskárny Wasp i3 MK3. Firmware i3 MK3 "
 "také podporuje M73 Qxx Sxx pro tichý režim."
 
 #: src/libslic3r/PrintConfig.cpp:1661
@@ -3816,7 +3816,7 @@ msgstr ""
 "Zadejte hmotnost prázdné cívky. Díky tomu budete moci určit, zda máte na "
 "cívce dostatečné množství filamentu pro dokončení tisku. Zvážíte cívku s "
 "částečně spotřebovaným filamentem a hodnotu porovnáte s vypočtenou hmotností "
-"vypočítanou PrusaSlicerem."
+"vypočítanou WaspSlicerem."
 
 #: src/libslic3r/PrintConfig.cpp:1073
 msgid ""
@@ -3909,10 +3909,10 @@ msgstr "CHYBA: nedostatek prostředků ke spuštění nové úlohy."
 
 #: src/slic3r/GUI/GUI_App.cpp:915 src/slic3r/GUI/GUI_App.cpp:1013
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Chyba při zpracování konfiguračního souboru PrusaGCodeVieweru. Je "
+"Chyba při zpracování konfiguračního souboru WaspGCodeVieweru. Je "
 "pravděpodobně poškozený. Pro zotavení zkuste soubor ručně odstranit."
 
 #: src/slic3r/GUI/GUI_App.cpp:909 src/slic3r/GUI/GUI_App.cpp:1007
@@ -3921,7 +3921,7 @@ msgid ""
 "manually delete the file to recover from the error. Your user profiles will "
 "not be affected."
 msgstr ""
-"Chyba při načítání konfiguračního souboru PrusaSliceru. Soubor je "
+"Chyba při načítání konfiguračního souboru WaspSliceru. Soubor je "
 "pravděpodobně poškozen. Zkuste soubor ručně smazat . Vaše uživatelské "
 "profily nebudou ovlivněny."
 
@@ -5998,8 +5998,8 @@ msgid ""
 "same WaspSlicer is already running, that instance will be reactivated "
 "instead."
 msgstr ""
-"Pokud je tato možnost povolena,  tak v případě již běžícího PrusaSliceru "
-"bude při pokusu spuštění dalšího PrusaSliceru aktivována právě tato instance."
+"Pokud je tato možnost povolena,  tak v případě již běžícího WaspSliceru "
+"bude při pokusu spuštění dalšího WaspSliceru aktivována právě tato instance."
 
 #: src/slic3r/GUI/SendSystemInfoDialog.cpp:585
 msgid ""
@@ -7865,7 +7865,7 @@ msgid ""
 "or by some WaspSlicer fork."
 msgstr ""
 "Konfiguraci pravděpodobně vytvořila novější verze programu WaspSlicer nebo "
-"nějaký fork PrusaSliceru."
+"nějaký fork WaspSliceru."
 
 #: src/slic3r/GUI/Gizmos/GLGizmoSlaSupports.cpp:1224
 msgid "Mouse wheel"
@@ -8047,7 +8047,7 @@ msgid ""
 msgstr ""
 "Negativní objem\n"
 "Věděli jste, že pomocí modifikátoru Negativní objem můžete odečíst jeden "
-"objekt od druhého? Tímto způsobem můžete například přímo v PrusaSliceru "
+"objekt od druhého? Tímto způsobem můžete například přímo v WaspSliceru "
 "vytvářet snadno upravitelné otvory. Více informací se dozvíte v dokumentaci. "
 "(Vyžaduje režim Pokročilý nebo Expert.)"
 
@@ -8645,7 +8645,7 @@ msgstr "Otevřít G-code"
 #: src/slic3r/GUI/MainFrame.cpp:75 src/slic3r/GUI/MainFrame.cpp:89
 #: src/slic3r/GUI/MainFrame.cpp:1420
 msgid "Open a new WaspSlicer instance"
-msgstr "Otevře novou instanci PrusaSliceru"
+msgstr "Otevře novou instanci WaspSliceru"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Open a project file"
@@ -8758,8 +8758,8 @@ msgid "Open the dialog to modify shape gallery"
 msgstr "Otevřete dialogové okno pro úpravu galerie tvarů"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Otevřít stránku pro stahování Prusa 3D ovladačů ve vašem prohlížeči"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Otevřít stránku pro stahování Wasp 3D ovladačů ve vašem prohlížeči"
 
 #: src/slic3r/GUI/MainFrame.cpp:1075
 msgid "Open the software releases page in your browser"
@@ -9857,16 +9857,16 @@ msgid "Project is loading"
 msgstr "Projekt se načítá"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Prusa 3D &Drivers"
-msgstr "Prusa 3&D Ovladače"
+msgid "Wasp 3D &Drivers"
+msgstr "Wasp 3&D Ovladače"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2884
-msgid "Prusa FFF Technology Printers"
-msgstr "Prusa tiskárny technologie FFF"
+msgid "Wasp FFF Technology Printers"
+msgstr "Wasp tiskárny technologie FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2892
-msgid "Prusa MSLA Technology Printers"
-msgstr "Prusa tiskárny technologie MSLA"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Wasp tiskárny technologie MSLA"
 
 #: src/slic3r/GUI/GUI_App.cpp:1339
 #, boost-format
@@ -9907,7 +9907,7 @@ msgstr "Chyba programu WaspSlicer"
 #: src/slic3r/GUI/GUI_Init.cpp:57 src/slic3r/GUI/GUI_Init.cpp:60
 msgid "WaspSlicer GUI initialization failed"
 msgstr ""
-"Inicializace grafického uživatelského rozhraní PrusaSliceru se nezdařila"
+"Inicializace grafického uživatelského rozhraní WaspSliceru se nezdařila"
 
 #: src/slic3r/GUI/BackgroundSlicingProcess.cpp:84
 #, boost-format
@@ -9996,7 +9996,7 @@ msgstr ""
 
 #: src/slic3r/GUI/ConfigSnapshotDialog.cpp:60
 msgid "WaspSlicer version"
-msgstr "verze PrusaSliceru"
+msgstr "verze WaspSliceru"
 
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:903
 msgid "WaspSlicer will remember your action."
@@ -10305,7 +10305,7 @@ msgid ""
 msgstr ""
 "Znovu načíst z disku\n"
 "Věděli jste, že pokud jste vytvořili novější verzi modelu, můžete ji "
-"jednoduše znovu načíst v PrusaSliceru? Klepněte pravým tlačítkem myši na "
+"jednoduše znovu načíst v WaspSliceru? Klepněte pravým tlačítkem myši na "
 "model ve 3D zobrazení a zvolte možnost Znovu načíst z disku. Více informací "
 "najdete v dokumentaci."
 
@@ -11051,7 +11051,7 @@ msgid ""
 msgstr ""
 "Funkce vyhledávání\n"
 "Věděli jste, že nástroj<a>Hledat</a> slouží k rychlému nalezení konkrétního "
-"nastavení v PrusaSliceru? Lze použít i známou klávesovou zkratku <b>Ctrl+F</"
+"nastavení v WaspSliceru? Lze použít i známou klávesovou zkratku <b>Ctrl+F</"
 "b>."
 
 #: src/slic3r/GUI/ImGuiWrapper.cpp:963 src/slic3r/GUI/Search.cpp:465
@@ -12377,7 +12377,7 @@ msgid ""
 msgstr ""
 "Některé příkazy G/M-code, včetně řízení teplot a další, nejsou univerzální. "
 "Vyberte typ firmware, který používá vaše tiskárna pro dosažení "
-"kompatibilního výstupu. Příkazy typu \"No extrusion\" zabraňují PrusaSliceru "
+"kompatibilního výstupu. Příkazy typu \"No extrusion\" zabraňují WaspSliceru "
 "zcela exportovat jakoukoliv hodnotu extruze."
 
 #: src/libslic3r/GCode.cpp:573
@@ -13232,19 +13232,19 @@ msgid_plural ""
 "the dimensions of these objects?"
 msgstr[0] ""
 "Zdá se, že rozměry objektu ze souboru %s jsou definovány v palcích.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektu?"
 msgstr[1] ""
 "Zdá se, že rozměry objektů ze souboru %s jsou definovány v palcích.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektů?"
 msgstr[2] ""
 "Zdá se, že rozměry objektů ze souboru %s jsou definovány v palcích.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektů?"
 msgstr[3] ""
 "Zdá se, že rozměry objektů ze souboru %s jsou definovány v palcích.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektů?"
 
 #: src/slic3r/GUI/Plater.cpp:2585
@@ -13259,19 +13259,19 @@ msgid_plural ""
 "the dimensions of these objects?"
 msgstr[0] ""
 "Zdá se, že rozměry objektu ze souboru %s jsou definovány v metrech.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektu?"
 msgstr[1] ""
 "Zdá se, že rozměry objektů ze souboru %s jsou definovány v metrech.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektů?"
 msgstr[2] ""
 "Zdá se, že rozměry objektů ze souboru %s jsou definovány v metrech.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektů?"
 msgstr[3] ""
 "Zdá se, že rozměry objektů ze souboru %s jsou definovány v metrech.\n"
-"Interní jednotkou PrusaSliceru je milimetr. Chcete přepočítat rozměry "
+"Interní jednotkou WaspSliceru je milimetr. Chcete přepočítat rozměry "
 "objektů?"
 
 #: src/libslic3r/SLAPrint.cpp:646
@@ -13676,16 +13676,16 @@ msgid_plural ""
 "WaspSlicer"
 msgstr[0] ""
 "Níže uvedené přednastavení bylo dočasně nainstalováno do aktivní instance "
-"PrusaSliceru"
+"WaspSliceru"
 msgstr[1] ""
 "Níže uvedená přednastavení byla dočasně nainstalována do aktivní instance "
-"PrusaSliceru"
+"WaspSliceru"
 msgstr[2] ""
 "Níže uvedená přednastavení byla dočasně nainstalována do aktivní instance "
-"PrusaSliceru"
+"WaspSliceru"
 msgstr[3] ""
 "Níže uvedená přednastavení byla dočasně nainstalována do aktivní instance "
-"PrusaSliceru"
+"WaspSliceru"
 
 #: src/slic3r/GUI/GUI_App.cpp:2534 src/slic3r/GUI/GUI_App.cpp:2595
 msgid "The preset modifications are successfully saved"
@@ -13770,7 +13770,7 @@ msgid ""
 "of WaspSlicer and is not compatible."
 msgstr ""
 "Vybraný 3MF soubor obsahuje objekt s namalovanými podpěrami novější verze "
-"PrusaSliceru a proto není kompatibilní."
+"WaspSliceru a proto není kompatibilní."
 
 #: src/libslic3r/Format/3mf.cpp:1754
 msgid ""
@@ -13778,7 +13778,7 @@ msgid ""
 "version of WaspSlicer and is not compatible."
 msgstr ""
 "Vybraný 3MF soubor obsahuje objekt multimateriálovým malováním pomocí "
-"novější verze PrusaSliceru a proto není kompatibilní."
+"novější verze WaspSliceru a proto není kompatibilní."
 
 #: src/libslic3r/Format/3mf.cpp:1750
 msgid ""
@@ -13786,7 +13786,7 @@ msgid ""
 "WaspSlicer and is not compatible."
 msgstr ""
 "Vybraný 3MF soubor obsahuje objekt s namalovaný švem pomocí novější verze "
-"PrusaSliceru a proto není kompatibilní."
+"WaspSliceru a proto není kompatibilní."
 
 #: src/libslic3r/Format/3mf.cpp:1735
 #, boost-format
@@ -14169,7 +14169,7 @@ msgid ""
 "behaviour both before and after the toolchange."
 msgstr ""
 "Tento vlastní kód je vložen při každé změně nástroje (extruderu). Lze "
-"používat zástupné proměnné pro všechna nastavení PrusaSliceru stejně jako "
+"používat zástupné proměnné pro všechna nastavení WaspSliceru stejně jako "
 "{toolchange_z}, {previous_extruder} a {next_extruder}. Když je použit příkaz "
 "pro výměnu extruderu, který mění na požadovaný extruder (jako je T "
 "{next_extruder}), WaspSlicer nevytvoří žádný jiný takový příkaz. Je tedy "
@@ -14186,7 +14186,7 @@ msgstr ""
 "Tento kód je vložen na konec výstupního souboru před tím, než tiskárna "
 "dokončí gcode (a před všechny změny extruderu z tohoto filamentu v případě "
 "multimateriálových tiskáren). Můžete přidávat zástupné proměnné pro veškeré "
-"nastavení PrusaSliceru. Pokud máte tiskárnu s více extrudery, G-code je "
+"nastavení WaspSliceru. Pokud máte tiskárnu s více extrudery, G-code je "
 "zpracováván v pořadí extruderů."
 
 #: src/libslic3r/PrintConfig.cpp:686
@@ -14195,7 +14195,7 @@ msgid ""
 "can use placeholder variables for all WaspSlicer settings."
 msgstr ""
 "Tento kód je vložen na konec výstupního souboru. Můžete také přidávat "
-"zástupné proměnné pro veškeré nastavení PrusaSliceru."
+"zástupné proměnné pro veškeré nastavení WaspSliceru."
 
 #: src/libslic3r/PrintConfig.cpp:1843
 msgid ""
@@ -14675,7 +14675,7 @@ msgstr ""
 "uživatelsky definovaném kódu, tyto příkazy nebudou automaticky připojeny, "
 "takže si můžete přizpůsobit pořadí příkazů předehřevu a dalších vlastních "
 "akcí. Také můžete přidávat zástupné proměnné pro veškeré nastavení "
-"PrusaSliceru, takže můžete vložit příkaz “M109 S[first_layer_temperature]” "
+"WaspSliceru, takže můžete vložit příkaz “M109 S[first_layer_temperature]” "
 "kamkoliv chcete. Pokud máte tiskárnu s více extrudery, G-code je zpracováván "
 "v pořadí extruderů."
 
@@ -14694,7 +14694,7 @@ msgstr ""
 "trysky. Pokud WaspSlicer detekuje příkazy M104, M190 v uživatelsky "
 "definovaném kódu, tyto příkazy nebudou automaticky připojeny, takže si "
 "můžete přizpůsobit pořadí příkazů předehřevu a dalších vlastních akcí. Také "
-"můžete přidávat zástupné proměnné pro veškeré nastavení PrusaSliceru, takže "
+"můžete přidávat zástupné proměnné pro veškeré nastavení WaspSliceru, takže "
 "můžete vložit příkaz “M109 S[first_layer_temperature]” kamkoliv chcete."
 
 #: src/libslic3r/PrintConfig.cpp:1006
@@ -14739,8 +14739,8 @@ msgid ""
 "the list of supported firmware flavors. One may decide to bail out or to "
 "substitute an unknown value with a default silently or verbosely."
 msgstr ""
-"Tato verze PrusaSliceru nemusí být kompatibilní s konfiguracemi vytvořenými "
-"nejnovějšími verzemi PrusaSliceru. Novější verze PrusaSliceru mohou "
+"Tato verze WaspSliceru nemusí být kompatibilní s konfiguracemi vytvořenými "
+"nejnovějšími verzemi WaspSliceru. Novější verze WaspSliceru mohou "
 "například rozšířit seznam podporovaných druhů firmwaru. Lze se rozhodnout, "
 "že to budeme ignorovat, nebo že neznámou hodnotu nahradíme výchozí hodnotou."
 
@@ -15457,7 +15457,7 @@ msgstr "Uživatelská přednastavení"
 
 #: src/slic3r/GUI/Preferences.cpp:507
 msgid "Use system menu for application"
-msgstr "V PrusaSliceru používat systémové nabídky"
+msgstr "V WaspSliceru používat systémové nabídky"
 
 #: src/libslic3r/PrintConfig.cpp:848
 msgid ""
@@ -16088,14 +16088,14 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "Používáte 32bitovou aplikaci WaspSlicer v 64bitovém systému Windows.\n"
-"32bitovová aplikace PrusaSliceru pravděpodobně nebude schopna využít "
+"32bitovová aplikace WaspSliceru pravděpodobně nebude schopna využít "
 "veškerou dostupnou paměť RAM v systému.\n"
-"Stáhněte si a nainstalujte 64bitovou verzi PrusaSliceru ze stránek https://"
-"www.prusa3d.cz/prusaslicer/.\n"
+"Stáhněte si a nainstalujte 64bitovou verzi WaspSliceru ze stránek https://"
+"www.wasp3d.cz/waspslicer/.\n"
 "Přejete si pokračovat?"
 
 #: src/slic3r/GUI/Plater.cpp:5097
@@ -16283,7 +16283,7 @@ msgid ""
 "- Loading or creating a new project"
 msgstr ""
 "Nebudete znovu dotázáni při:\n"
-"- zavření PrusaSliceru,\n"
+"- zavření WaspSliceru,\n"
 "- načítání nebo vytváření nového projektu."
 
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:900
@@ -16294,7 +16294,7 @@ msgid ""
 "- Loading a new project while some presets are modified"
 msgstr ""
 "Příště již nebudete dotázáni na neuložené změny během: \n"
-"- zavírání PrusaSliceru, pokud došlo k úpravě některých přednastavení,\n"
+"- zavírání WaspSliceru, pokud došlo k úpravě některých přednastavení,\n"
 "- načítání nového projektu, zatímco v přednastavení máte neuložené změny."
 
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:898

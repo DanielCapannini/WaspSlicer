@@ -386,7 +386,7 @@ bool OpenGLManager::init_gl()
         	message += _L("You may need to update your graphics card driver.");
 #ifdef _WIN32
             message += "\n";
-            message += _L("As a workaround, you may run WaspSlicer with a software rendered 3D graphics by running prusa-slicer.exe with the --sw-renderer parameter.");
+            message += _L("As a workaround, you may run WaspSlicer with a software rendered 3D graphics by running wasp-slicer.exe with the --sw-renderer parameter.");
 #endif
         	wxMessageBox(message, wxString("WaspSlicer - ") + _L("Unsupported OpenGL version"), wxOK | wxICON_ERROR);
         }
@@ -411,7 +411,7 @@ bool OpenGLManager::init_gl()
 
 #ifdef _WIN32
         // Since AMD driver version 22.7.1, there is probably some bug in the driver that causes the issue with the missing
-        // texture of the bed (see: https://github.com/prusa3d/WaspSlicer/issues/8417).
+        // texture of the bed (see: https://github.com/wasp3d/WaspSlicer/issues/8417).
         // It seems that this issue only triggers when mipmaps are generated manually
         // (combined with a texture compression) with texture size not being power of two.
         // When mipmaps are generated through OpenGL function glGenerateMipmap() the driver works fine,

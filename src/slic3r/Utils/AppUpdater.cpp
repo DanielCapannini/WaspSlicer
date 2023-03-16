@@ -124,7 +124,7 @@ struct AppUpdater::priv {
 	// gets version file via http
 	void version_check(const std::string& version_check_url);
 #if 0
-	// parsing of Prusaslicer.version2 
+	// parsing of Waspslicer.version2 
 	void parse_version_string_old(const std::string& body) const;
 #endif
 	// parses ini tree of version file, saves to m_online_version_data and queue event(s) to UI 

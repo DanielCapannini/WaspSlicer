@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Prusa GCode viewer
-Exec=prusa-slicer --gcodeviewer %F
+Name=Wasp GCode viewer
+Exec=wasp-slicer --gcodeviewer %F
 Icon=WaspSlicer-gcodeviewer
 Terminal=false
 Type=Application

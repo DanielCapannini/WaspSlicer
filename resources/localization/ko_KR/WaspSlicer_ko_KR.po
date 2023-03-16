@@ -1022,7 +1022,7 @@ msgstr "프라사슬라이서에 .3mf 파일 연결"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1564 src/slic3r/GUI/Preferences.cpp:297
 msgid "Associate .stl files to WaspSlicer"
-msgstr "PrusaSlicer에 .stl 파일을 연결"
+msgstr "WaspSlicer에 .stl 파일을 연결"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1574
 msgid "View mode"
@@ -1036,7 +1036,7 @@ msgid ""
 "regular 3D printing. The other two offer progressively more sophisticated "
 "fine-tuning, they are suitable for advanced and expert users, respectively."
 msgstr ""
-"PrusaSlicer의 사용자 인터페이스는 세 가지 변형으로 제공됩니다.\n"
+"WaspSlicer의 사용자 인터페이스는 세 가지 변형으로 제공됩니다.\n"
 "간단하고 고급적이며 전문가.\n"
 "단순 모드는 일반 3D 프린팅과 관련된 가장 자주 사용되는 설정만 표시됩니다. 다"
 "른 두 가지는 점진적으로 보다 정교한 미세 조정을 제공하며, 각각 고급 및 전문"
@@ -1316,11 +1316,11 @@ msgid "Cancel"
 msgstr "취소"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
+msgid "Wasp FFF Technology Printers"
 msgstr "프루사 FFF 방식 프린터"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
+msgid "Wasp MSLA Technology Printers"
 msgstr "프루사 MSLA 기술 프린터"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
@@ -4392,7 +4392,7 @@ msgstr ""
 "다."
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
+msgid "Developed by Wasp Research."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:278
@@ -4480,7 +4480,7 @@ msgid ""
 "\n"
 "The application will now terminate."
 msgstr ""
-"PrusaSlicer는 지역화 오류가 발생했습니다. WaspSlicer 팀에 보고하십시오, 어"
+"WaspSlicer는 지역화 오류가 발생했습니다. WaspSlicer 팀에 보고하십시오, 어"
 "떤 언어가 활성화되었고 어떤 시나리오에서이 문제가 일어났다. 감사합니다.\n"
 "\n"
 "이제 응용 프로그램이 종료됩니다."
@@ -4505,10 +4505,10 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"오류 구문 분석 PrusaGCodeViewer 컨피그 파일, 그것은 아마 손상. 오류를 복구하"
+"오류 구문 분석 WaspGCodeViewer 컨피그 파일, 그것은 아마 손상. 오류를 복구하"
 "기 위해 파일을 수동으로 삭제해 봅보십시오."
 
 #: src/slic3r/GUI/GUI_App.cpp:1006
@@ -4555,7 +4555,7 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 
@@ -4633,7 +4633,7 @@ msgid ""
 "Printer Settings anymore.\n"
 "Settings will be available in physical printers settings."
 msgstr ""
-"그러나 PrusaSlicer의이 버전 이후 우리는 더 이상 프린터 설정에이 정보를 표시하"
+"그러나 WaspSlicer의이 버전 이후 우리는 더 이상 프린터 설정에이 정보를 표시하"
 "지 않습니다.\n"
 "설정은 실제 프린터 설정에서 사용할 수 있습니다."
 
@@ -6830,12 +6830,12 @@ msgid "based on Slic3r"
 msgstr "Slic3r 기반"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
+msgid "Wasp 3D &Drivers"
 msgstr "프라사 3D 및 드라이버"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "브라우저에서 Prusa3D 드라이버 다운로드 페이지를 엽니다."
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "브라우저에서 Wasp3D 드라이버 다운로드 페이지를 엽니다."
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -7821,7 +7821,7 @@ msgid ""
 "WaspSlicer requires OpenGL 2.0 capable graphics driver to run correctly, \n"
 "while OpenGL version %s, render %s, vendor %s was detected."
 msgstr ""
-"PrusaSlicer는 OpenGL 2.0 유능한 그래픽 드라이버가 올바르게 실행되도록 요구합"
+"WaspSlicer는 OpenGL 2.0 유능한 그래픽 드라이버가 올바르게 실행되도록 요구합"
 "니다. \n"
 "OpenGL 버전은 %s, 렌더링 %s 동안, 공급 업체 %s 감지되었습니다."
 
@@ -7832,7 +7832,7 @@ msgstr "그래픽 카드 드라이버를 업데이트해야 할 수 있습니다
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -8726,13 +8726,13 @@ msgstr ""
 #: src/slic3r/GUI/Preferences.cpp:293
 msgid "If enabled, sets WaspSlicer as default application to open .3mf files."
 msgstr ""
-"활성화된 경우 PrusaSlicer를 기본 응용 프로그램으로 설정하여 .3mf 파일을 엽니"
+"활성화된 경우 WaspSlicer를 기본 응용 프로그램으로 설정하여 .3mf 파일을 엽니"
 "다."
 
 #: src/slic3r/GUI/Preferences.cpp:298
 msgid "If enabled, sets WaspSlicer as default application to open .stl files."
 msgstr ""
-"활성화된 경우 PrusaSlicer를 기본 응용 프로그램으로 설정하여 .stl 파일을 엽니"
+"활성화된 경우 WaspSlicer를 기본 응용 프로그램으로 설정하여 .stl 파일을 엽니"
 "다."
 
 #: src/slic3r/GUI/Preferences.cpp:307
@@ -8806,7 +8806,7 @@ msgstr ""
 
 #: src/slic3r/GUI/Preferences.cpp:342 src/slic3r/GUI/Preferences.cpp:346
 msgid "Allow just a single WaspSlicer instance"
-msgstr "하나의 Prusa슬라이스어 인스턴스만 허용"
+msgstr "하나의 Wasp슬라이스어 인스턴스만 허용"
 
 #: src/slic3r/GUI/Preferences.cpp:343
 msgid ""
@@ -8824,7 +8824,7 @@ msgid ""
 "same WaspSlicer is already running, that instance will be reactivated "
 "instead."
 msgstr ""
-"이 옵션을 사용하도록 설정하면 PrusaSlicer와 이미 실행 중인 PrusaSlicer의 다"
+"이 옵션을 사용하도록 설정하면 WaspSlicer와 이미 실행 중인 WaspSlicer의 다"
 "른 인스턴스를 시작할 때 해당 인스턴스가 다시 활성화됩니다."
 
 #: src/slic3r/GUI/Preferences.cpp:355
@@ -11452,19 +11452,19 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "참고: OctoPrint 버전 이상이 1.1.0 이상이 필요합니다."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Prusa SLA에 연결할 수 없습니다"
+msgid "Could not connect to Wasp SLA"
+msgstr "Wasp SLA에 연결할 수 없습니다"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
+msgid "Connection to WaspLink works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
+msgid "Could not connect to WaspLink"
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
@@ -11538,7 +11538,7 @@ msgid ""
 "Could not detect system SSL certificate store. WaspSlicer will be unable to "
 "establish secure network connections."
 msgstr ""
-"시스템 SSL 인증서 저장소를 감지할 수 없습니다. PrusaSlicer는 보안 네트워크 연"
+"시스템 SSL 인증서 저장소를 감지할 수 없습니다. WaspSlicer는 보안 네트워크 연"
 "결을 설정할 수 없습니다."
 
 #: src/slic3r/Utils/Http.cpp:78
@@ -11560,7 +11560,7 @@ msgid ""
 "CURL init has failed. WaspSlicer will be unable to establish network "
 "connections. See logs for additional details."
 msgstr ""
-"컬 이트인이 실패했습니다. PrusaSlicer는 네트워크 연결을 설정할 수 없습니다. "
+"컬 이트인이 실패했습니다. WaspSlicer는 네트워크 연결을 설정할 수 없습니다. "
 "자세한 내용은 로그를 참조하십시오."
 
 #: src/slic3r/Utils/Process.cpp:164
@@ -13622,7 +13622,7 @@ msgid ""
 msgstr ""
 "온도 제어 및 기타 명령을 포함한 일부 G/M 코드 명령은 범용적이지 않습니다. 이 "
 "옵션을 프린터의 펌웨어로 설정하여 호환되는 출력을 얻을 수 있습니다. \"압출 없"
-"음\" 맛은 PrusaSlicer가 압출 값을 전혀 내보내지 못하게 합니다."
+"음\" 맛은 WaspSlicer가 압출 값을 전혀 내보내지 못하게 합니다."
 
 #: src/libslic3r/PrintConfig.cpp:1416
 msgid "No extrusion"
@@ -13728,7 +13728,7 @@ msgid ""
 "perimeters connected to a single infill line."
 msgstr ""
 "채우기 줄을 내부 둘레에 연결하여 추가 둘레의 짧은 세그먼트를 연결합니다. 백분"
-"율로 표현된 경우(예: 15%) 채우기 압출 폭을 통해 계산됩니다. PrusaSlicer는 두 "
+"율로 표현된 경우(예: 15%) 채우기 압출 폭을 통해 계산됩니다. WaspSlicer는 두 "
 "개의 가까운 채우기 라인을 짧은 둘레 세그먼트에 연결하려고 합니다. "
 "infill_anchor_max 보다 짧은 경계 세그먼트가 발견되지 않으면 채우기 선이 한쪽"
 "의 경계 세그먼트에 만 연결되고 이동된 둘레 세그먼트의 길이는 이 매개 변수로 "
@@ -13775,7 +13775,7 @@ msgid ""
 "parameter. Set this parameter to zero to disable anchoring."
 msgstr ""
 "채우기 줄을 내부 둘레에 연결하여 추가 둘레의 짧은 세그먼트를 연결합니다. 백분"
-"율로 표현된 경우(예: 15%) 채우기 압출 폭을 통해 계산됩니다. PrusaSlicer는 두 "
+"율로 표현된 경우(예: 15%) 채우기 압출 폭을 통해 계산됩니다. WaspSlicer는 두 "
 "개의 가까운 채우기 라인을 짧은 둘레 세그먼트에 연결하려고 합니다. 이 매개 변"
 "수보다 짧은 경계 세그먼트가 발견되지 않으면 채우기 줄이 한쪽의 경계 세그먼트"
 "에 만 연결되고 촬영된 둘레 세그먼트의 길이는 infill_anchor 제한되지만 이 매"
@@ -13947,11 +13947,11 @@ msgstr "남은 시간 지원"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "G 코드에 1 분 간격으로 M73 P [퍼센트 인쇄] R[remaining time in minutes]을 방"
-"출하여 펌웨어가 정확한 잔여 시간을 표시 하도록 합니다. 현재만 Prusa i3 MK3 펌"
+"출하여 펌웨어가 정확한 잔여 시간을 표시 하도록 합니다. 현재만 Wasp i3 MK3 펌"
 "웨어는 M73를 인식 하 고 있습니다. 또한 i3 MK3 펌웨어는 자동 모드에서 M73 Qxx "
 "Sxx를 지원 합니다."
 
@@ -14919,7 +14919,7 @@ msgid ""
 "put a \"M109 S[first_layer_temperature]\" command wherever you want."
 msgstr ""
 "이 시작 절차는 처음에 삽입되며, 침대가 목표 온도에 도달한 후 압출기는 가열을 "
-"시작하고 압출기가 가열을 완료하기 전에 삽입됩니다. PrusaSlicer가 사용자 지정 "
+"시작하고 압출기가 가열을 완료하기 전에 삽입됩니다. WaspSlicer가 사용자 지정 "
 "코드에서 M104 또는 M190을 감지하면 이러한 명령이 자동으로 준비되지 않으므로 "
 "가열 명령 및 기타 사용자 지정 작업을 자유롭게 사용자 지정할 수 있습니다. 모"
 "든 WaspSlicer 설정에 자리 표시자 변수를 사용할 수 있으므로 원하는 모든 곳에 "
@@ -14939,7 +14939,7 @@ msgid ""
 msgstr ""
 "이 시작 절차는 프린터가 gcode를 시작한 후(그리고 다중 재질 프린터의 경우 이 "
 "필라멘트로 도구 변경 후)을 처음에 삽입합니다. 이 특정 필라멘트에 대 한 설정"
-"을 재정의 하는 데 사용 됩니다. PrusaSlicer가 사용자 지정 코드에서 M104, "
+"을 재정의 하는 데 사용 됩니다. WaspSlicer가 사용자 지정 코드에서 M104, "
 "M109, M140 또는 M190을 감지하면 이러한 명령이 자동으로 준비되지 않으므로 가"
 "열 명령 및 기타 사용자 지정 작업의 순서를 자유롭게 사용자 정의할 수 있습니"
 "다. 모든 WaspSlicer 설정에 자리 표시자 변수를 사용할 수 있으므로 원하는 모"
@@ -16805,7 +16805,7 @@ msgid ""
 "GUI WaspSlicer, or an existing WaspSlicer window is activated. Overrides "
 "the \"single_instance\" configuration value from application preferences."
 msgstr ""
-"사용하도록 설정하면 명령줄 인수가 GUI PrusaSlicer의 기존 인스턴스로 전송되거"
+"사용하도록 설정하면 명령줄 인수가 GUI WaspSlicer의 기존 인스턴스로 전송되거"
 "나 기존 WaspSlicer 창이 활성화됩니다. 응용 프로그램 기본 설정에서 "
 "\"single_instance\" 구성 값을 재정의합니다."
 

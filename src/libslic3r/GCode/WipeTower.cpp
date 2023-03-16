@@ -341,7 +341,7 @@ public:
 	// Let the firmware back up the active speed override value.
 	WipeTowerWriter& speed_override_backup()
     {
-        // This is only supported by Prusa at this point (https://github.com/prusa3d/WaspSlicer/issues/3114)
+        // This is only supported by Wasp at this point (https://github.com/wasp3d/WaspSlicer/issues/3114)
         if (m_gcode_flavor == gcfMarlinLegacy || m_gcode_flavor == gcfMarlinFirmware)
             m_gcode += "M220 B\n";
 		return *this;
@@ -624,7 +624,7 @@ std::vector<WipeTower::ToolChangeResult> WipeTower::prime(
 	this->set_layer(first_layer_height, first_layer_height, tools.size(), true, false);
 	m_current_tool 		= tools.front();
     
-    // The Prusa i3 MK2 has a working space of [0, -2.2] to [250, 210].
+    // The Wasp i3 MK2 has a working space of [0, -2.2] to [250, 210].
     // Due to the XYZ calibration, this working space may shrink slightly from all directions,
     // therefore the homing position is shifted inside the bed by 0.2 in the firmware to [0.2, -2.0].
 //	box_coordinates cleaning_box(xy(0.5f, - 1.5f), m_wipe_tower_width, wipe_area);
@@ -960,7 +960,7 @@ void WipeTower::toolchange_Change(
     // gcode could have left the extruder somewhere, we cannot just start extruding. We should also inform the
     // postprocessor that we absolutely want to have this in the gcode, even if it thought it is the same as before.
     Vec2f current_pos = writer.pos_rotated();
-    writer.feedrate(m_travel_speed * 60.f) // see https://github.com/prusa3d/WaspSlicer/issues/5483
+    writer.feedrate(m_travel_speed * 60.f) // see https://github.com/wasp3d/WaspSlicer/issues/5483
           .append(std::string("G1 X") + Slic3r::float_to_string_decimal_point(current_pos.x())
                              +  " Y"  + Slic3r::float_to_string_decimal_point(current_pos.y())
                              + never_skip_tag() + "\n");

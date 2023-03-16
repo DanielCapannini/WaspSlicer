@@ -720,7 +720,7 @@ void AMFParserContext::endElement(const char * /* name */)
 
             // Replacing the legacy function with load_from_ini_string_commented leads to issues when
             // parsing 3MFs from before WaspSlicer 2.0.0 (which can have duplicated entries in the INI.
-            // See https://github.com/prusa3d/WaspSlicer/issues/7155. We'll revert it for now.
+            // See https://github.com/wasp3d/WaspSlicer/issues/7155. We'll revert it for now.
             //m_config_substitutions->substitutions = m_config->load_from_ini_string_commented(std::move(m_value[1].c_str()), m_config_substitutions->rule);
             ConfigBase::load_from_gcode_string_legacy(*m_config, std::move(m_value[1].c_str()), *m_config_substitutions);
         }

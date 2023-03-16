@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Prusalator\n"
+"X-Generator: Wasplator\n"
 
 #: src/libslic3r/PrintConfig.cpp:487 src/libslic3r/PrintConfig.cpp:1114
 #: src/libslic3r/PrintConfig.cpp:1601 src/libslic3r/PrintConfig.cpp:1793
@@ -1318,10 +1318,10 @@ msgstr ""
 #: src/slic3r/GUI/OpenGLManager.cpp:264
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "Como solución, puedes ejecutar WaspSlicer con gráficos 3D renderizados por "
-"software ejecutando prusa-slicer.exe con el parámetro --sw-renderer."
+"software ejecutando wasp-slicer.exe con el parámetro --sw-renderer."
 
 #: src/slic3r/GUI/Preferences.cpp:249
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:895
@@ -2744,12 +2744,12 @@ msgstr ""
 "Falló la conexión a las impresoras conectadas a través del host de impresión."
 
 #: src/slic3r/Utils/OctoPrint.cpp:336
-msgid "Connection to PrusaLink works correctly."
-msgstr "La conexión con PrusaLink funciona correctamente."
+msgid "Connection to WaspLink works correctly."
+msgstr "La conexión con WaspLink funciona correctamente."
 
 #: src/slic3r/Utils/OctoPrint.cpp:292
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "La conexión con la Prusa SL1 / SL1S funciona correctamente."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "La conexión con la Wasp SL1 / SL1S funciona correctamente."
 
 #: src/slic3r/Utils/Repetier.cpp:84
 msgid "Connection to Repetier works correctly."
@@ -3008,12 +3008,12 @@ msgid "Could not connect to OctoPrint"
 msgstr "No puedo conectar con OctoPrint"
 
 #: src/slic3r/Utils/OctoPrint.cpp:342
-msgid "Could not connect to PrusaLink"
-msgstr "No se pudo conectar con PrusaLink"
+msgid "Could not connect to WaspLink"
+msgstr "No se pudo conectar con WaspLink"
 
 #: src/slic3r/Utils/OctoPrint.cpp:298
-msgid "Could not connect to Prusa SLA"
-msgstr "No se pudo conectar con la Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "No se pudo conectar con la Wasp SLA"
 
 #: src/slic3r/Utils/Repetier.cpp:90
 msgid "Could not connect to Repetier"
@@ -3737,8 +3737,8 @@ msgstr ""
 "en objetos separados."
 
 #: src/slic3r/GUI/GUI_App.cpp:267
-msgid "Developed by Prusa Research."
-msgstr "Desarrollado por Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Desarrollado por Wasp Research."
 
 #: src/slic3r/GUI/Mouse3DController.cpp:464
 msgid "Device:"
@@ -4317,12 +4317,12 @@ msgstr "Acciones de estampado"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Emitir M73 P[porcentaje impreso] R[tiempo restante en minutos] en intervalos "
 "de 1 minuto en el código G para permitir que el firmware muestre el tiempo "
-"restante preciso. A partir de ahora solo el firmware Prusa i3 MK3 reconoce "
+"restante preciso. A partir de ahora solo el firmware Wasp i3 MK3 reconoce "
 "M73. También el firmware i3 MK3 es compatible con M73 Qxx Sxx para el modo "
 "silencioso."
 
@@ -4689,10 +4689,10 @@ msgstr "ERROR: no hay suficientes recursos para ejecutar el trabajo."
 
 #: src/slic3r/GUI/GUI_App.cpp:915 src/slic3r/GUI/GUI_App.cpp:1013
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Error al analizar el archivo de configuración de PrusaGCodeViewer, "
+"Error al analizar el archivo de configuración de WaspGCodeViewer, "
 "probablemente esté dañado. Intenta eliminar manualmente el archivo para "
 "recuperarse del error."
 
@@ -10175,9 +10175,9 @@ msgid "Open the dialog to modify shape gallery"
 msgstr "Abre el diálogo para modificar la galería de formas"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Open the Prusa3D drivers download page in your browser"
+msgid "Open the Wasp3D drivers download page in your browser"
 msgstr ""
-"Abrir la página de descarga de los controladores Prusa3D en su navegador"
+"Abrir la página de descarga de los controladores Wasp3D en su navegador"
 
 #: src/slic3r/GUI/MainFrame.cpp:1075
 msgid "Open the software releases page in your browser"
@@ -11438,16 +11438,16 @@ msgid "Project is loading"
 msgstr "El proyecto se está cargando"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Prusa 3D &Drivers"
-msgstr "Controladores de Prusa 3&D"
+msgid "Wasp 3D &Drivers"
+msgstr "Controladores de Wasp 3&D"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2884
-msgid "Prusa FFF Technology Printers"
-msgstr "Impresoras Prusa de tecnología FFF"
+msgid "Wasp FFF Technology Printers"
+msgstr "Impresoras Wasp de tecnología FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2892
-msgid "Prusa MSLA Technology Printers"
-msgstr "Impresoras Prusa de tecnología MSLA"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Impresoras Wasp de tecnología MSLA"
 
 #: src/slic3r/GUI/GUI_App.cpp:1339
 #, boost-format
@@ -18624,15 +18624,15 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "Está ejecutando una versión de 32 bits de WaspSlicer en Windows de 64 "
 "bits.\n"
 "La versión de 32 bits de WaspSlicer probablemente no podrá utilizar toda la "
 "RAM disponible en el sistema.\n"
-"Por favor, descarga e instala una versión de 64 bits de PrusaSlice desde "
-"https://www.prusa3d.cz/prusaslicer/.\n"
+"Por favor, descarga e instala una versión de 64 bits de WaspSlice desde "
+"https://www.wasp3d.cz/waspslicer/.\n"
 "¿Desea continuar?"
 
 #: src/slic3r/GUI/Plater.cpp:5097

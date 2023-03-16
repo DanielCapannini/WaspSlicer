@@ -106,7 +106,7 @@ class ConfigWizard;
 static wxString dots("…", wxConvUTF8);
 
 // Does our wxWidgets version support markup?
-// https://github.com/prusa3d/WaspSlicer/issues/4282#issuecomment-634676371
+// https://github.com/wasp3d/WaspSlicer/issues/4282#issuecomment-634676371
 #if wxUSE_MARKUP && wxCHECK_VERSION(3, 1, 1)
     #define SUPPORTS_MARKUP
 #endif
@@ -282,7 +282,7 @@ public:
     void            load_current_presets(bool check_printer_presets = true);
 
     wxString        current_language_code() const { return m_wxLocale->GetCanonicalName(); }
-	// Translate the language code to a code, for which Prusa Research maintains translations. Defaults to "en_US".
+	// Translate the language code to a code, for which Wasp Research maintains translations. Defaults to "en_US".
     wxString 		current_language_code_safe() const;
     bool            is_localized() const { return m_wxLocale->GetLocale() != "English"; }
 
@@ -366,7 +366,7 @@ public:
 #endif // __WXMSW__
 
 
-    // URL download - WaspSlicer gets system call to open prusaslicer:// URL which should contain address of download
+    // URL download - WaspSlicer gets system call to open waspslicer:// URL which should contain address of download
     void            start_download(std::string url);
 
 private:

@@ -28,7 +28,7 @@ public:
 	// Rewrites if files already existed.
 	// if perform_downloader:
     // Creates Destktop files for WaspSlicer downloader feature
-	// Regiters WaspSlicer to start on prusaslicer:// URL
+	// Regiters WaspSlicer to start on waspslicer:// URL
 	static void perform_desktop_integration();
 	// Deletes Desktop files and icons for both WaspSlicer and GcodeViewer at paths stored in App Config.
 	static void undo_desktop_intgration();

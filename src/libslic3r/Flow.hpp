@@ -106,7 +106,7 @@ public:
     static float bridge_extrusion_spacing(float dmr);
 
     // Sane extrusion width defautl based on nozzle diameter.
-    // The defaults were derived from manual Prusa MK3 profiles.
+    // The defaults were derived from manual Wasp MK3 profiles.
     static float auto_extrusion_width(FlowRole role, float nozzle_diameter);
 
     // Extrusion width from full config, taking into account the defaults (when set to zero) and ratios (percentages).

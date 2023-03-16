@@ -94,7 +94,7 @@ Works on a fresh installation of MacOS Catalina 10.15.6
 brew update
 brew install cmake git gettext
 brew upgrade
-git clone https://github.com/prusa3d/WaspSlicer/
+git clone https://github.com/wasp3d/WaspSlicer/
 cd WaspSlicer/deps
 mkdir build
 cd build
@@ -105,5 +105,5 @@ mkdir build
 cd build
 cmake .. -DCMAKE_PREFIX_PATH="$PWD/../deps/build/destdir/usr/local"
 make
-src/prusa-slicer
+src/wasp-slicer
 ```

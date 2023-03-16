@@ -3,7 +3,7 @@
 
 #include "libslic3r_version.h"
 #define GCODEVIEWER_APP_NAME "WaspSlicer G-code Viewer"
-#define GCODEVIEWER_APP_KEY  "PrusaSlicerGcodeViewer"
+#define GCODEVIEWER_APP_KEY  "WaspSlicerGcodeViewer"
 
 // this needs to be included early for MSVC (listing it in Build.PL is not enough)
 #include <memory>

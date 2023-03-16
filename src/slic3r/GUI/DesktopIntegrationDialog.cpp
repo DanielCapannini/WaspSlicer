@@ -336,7 +336,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
         "Categories=Graphics;3DGraphics;Engineering;\n"
         "Keywords=3D;Printing;Slicer;slice;3D;printer;convert;gcode;stl;obj;amf;SLA\n"
         "StartupNotify=false\n"
-        "StartupWMClass=prusa-slicer\n", name_suffix, version_suffix, excutable_path);
+        "StartupWMClass=wasp-slicer\n", name_suffix, version_suffix, excutable_path);
 
     bool candidate_found = false;
     for (size_t i = 0; i < target_candidates.size(); ++i) {
@@ -404,7 +404,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
         // Desktop file
         std::string desktop_file_viewer = GUI::format(
             "[Desktop Entry]\n"
-            "Name=Prusa Gcode Viewer%1%\n"
+            "Name=Wasp Gcode Viewer%1%\n"
             "GenericName=3D Printing Software\n"
             "Icon=WaspSlicer-gcodeviewer%2%\n"
             "Exec=\"%3%\" --gcodeviewer %%F\n"
@@ -414,7 +414,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
             "Categories=Graphics;3DGraphics;\n"
             "Keywords=3D;Printing;Slicer;\n"
             "StartupNotify=false\n", name_suffix, version_suffix, excutable_path);
-        std::string desktop_path = GUI::format("%1%/applications/PrusaSlicerGcodeViewer%2%.desktop", target_dir_desktop, version_suffix);
+        std::string desktop_path = GUI::format("%1%/applications/WaspSlicerGcodeViewer%2%.desktop", target_dir_desktop, version_suffix);
         if (create_desktop_file(desktop_path, desktop_file_viewer))
             // save path to desktop file
             app_config->set("desktop_integration_app_viewer_path", desktop_path);
@@ -537,18 +537,18 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration()
         "Exec=\"%2%\" --single-instance %%u\n"
         "Terminal=false\n"
         "Type=Application\n"
-        "MimeType=x-scheme-handler/prusaslicer;\n"
+        "MimeType=x-scheme-handler/waspslicer;\n"
         "StartupNotify=false\n"
         "NoDisplay=true\n"
         , name_suffix, excutable_path);
 
     // desktop file for downloader as part of main app
-    std::string desktop_path = GUI::format("%1%/applications/PrusaSlicerURLProtocol%2%.desktop", target_dir_desktop, version_suffix);
+    std::string desktop_path = GUI::format("%1%/applications/WaspSlicerURLProtocol%2%.desktop", target_dir_desktop, version_suffix);
     if (create_desktop_file(desktop_path, desktop_file_downloader)) {
         // save path to desktop file
         app_config->set("desktop_integration_URL_path", desktop_path);
         // finish registration on mime type
-        std::string command = GUI::format("xdg-mime default PrusaSlicerURLProtocol%1%.desktop x-scheme-handler/prusaslicer", version_suffix);
+        std::string command = GUI::format("xdg-mime default WaspSlicerURLProtocol%1%.desktop x-scheme-handler/waspslicer", version_suffix);
         BOOST_LOG_TRIVIAL(debug) << "system command: " << command;
         int r = system(command.c_str());
         BOOST_LOG_TRIVIAL(debug) << "system result: " << r;
@@ -560,16 +560,16 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration()
         if (contains_path_dir(target_candidates[i], "applications")) {
             target_dir_desktop = target_candidates[i];
             // Write slicer desktop file
-            std::string path = GUI::format("%1%/applications/PrusaSlicerURLProtocol%2%.desktop", target_dir_desktop, version_suffix);
+            std::string path = GUI::format("%1%/applications/WaspSlicerURLProtocol%2%.desktop", target_dir_desktop, version_suffix);
             if (create_desktop_file(path, desktop_file_downloader)) {
                 app_config->set("desktop_integration_URL_path", path);
                 candidate_found = true;
-                BOOST_LOG_TRIVIAL(debug) << "PrusaSlicerURLProtocol.desktop file installation success.";
+                BOOST_LOG_TRIVIAL(debug) << "WaspSlicerURLProtocol.desktop file installation success.";
                 break;
             }
             else {
                 // write failed - try another path
-                BOOST_LOG_TRIVIAL(debug) << "Attempt to PrusaSlicerURLProtocol.desktop file installation failed. failed path: " << target_candidates[i];
+                BOOST_LOG_TRIVIAL(debug) << "Attempt to WaspSlicerURLProtocol.desktop file installation failed. failed path: " << target_candidates[i];
                 target_dir_desktop.clear();
             }
         }
@@ -580,7 +580,7 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration()
         create_path(boost::nowide::narrow(wxFileName::GetHomeDir()), ".local/share/applications");
         // create desktop file
         target_dir_desktop = GUI::format("%1%/.local/share", wxFileName::GetHomeDir());
-        std::string path = GUI::format("%1%/applications/PrusaSlicerURLProtocol%2%.desktop", target_dir_desktop, version_suffix);
+        std::string path = GUI::format("%1%/applications/WaspSlicerURLProtocol%2%.desktop", target_dir_desktop, version_suffix);
         if (contains_path_dir(target_dir_desktop, "applications")) {
             if (!create_desktop_file(path, desktop_file_downloader)) {
                 // Desktop file not written - end desktop integration
@@ -604,7 +604,7 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration()
     }
 
     // finish registration on mime type
-    std::string command = GUI::format("xdg-mime default PrusaSlicerURLProtocol%1%.desktop x-scheme-handler/prusaslicer", version_suffix);
+    std::string command = GUI::format("xdg-mime default WaspSlicerURLProtocol%1%.desktop x-scheme-handler/waspslicer", version_suffix);
     BOOST_LOG_TRIVIAL(debug) << "system command: " << command;
     int r = system(command.c_str());
     BOOST_LOG_TRIVIAL(debug) << "system result: " << r;

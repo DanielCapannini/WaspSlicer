@@ -1349,12 +1349,12 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Prusa FFF-printers"
+msgid "Wasp FFF Technology Printers"
+msgstr "Wasp FFF-printers"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
-msgstr "Prusa MSLA-printers"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Wasp MSLA-printers"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
 msgid "Filament Profiles Selection"
@@ -4491,8 +4491,8 @@ msgstr ""
 "is gebaseerd op Slic3R van Allessandro Ranellucci en de RepRap-community."
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
-msgstr "Ontwikkeld door Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Ontwikkeld door Wasp Research."
 
 #: src/slic3r/GUI/GUI_App.cpp:278
 msgid ""
@@ -4609,10 +4609,10 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Fout tijdens het lezen van PrusaGCodeViewer-configuratiebestand. Het is "
+"Fout tijdens het lezen van WaspGCodeViewer-configuratiebestand. Het is "
 "mogelijk beschadigd. Probeer het handmatig te verwijderen."
 
 #: src/slic3r/GUI/GUI_App.cpp:1006
@@ -4669,14 +4669,14 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 "U draait een 32-bit versie van WaspSlicer op 64-bit Windows.\n"
 "32-bit versies van WaspSlicer kunnen probelemen veroorzaken met het "
 "beschikbare RAM-geheugen in het systeem.\n"
 "Download en installeer alstublieft een 64-bit versie van WaspSlicer van "
-"https://www.prusa3d.com/prusaslicer/.\n"
+"https://www.wasp3d.com/waspslicer/.\n"
 "Wilt u doorgaan?"
 
 #: src/slic3r/GUI/GUI_App.cpp:1182
@@ -7003,12 +7003,12 @@ msgid "based on Slic3r"
 msgstr "gebaseerd op Slic3r"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Prusa 3D-stuurprogramma"
+msgid "Wasp 3D &Drivers"
+msgstr "Wasp 3D-stuurprogramma"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Open de Prusa3D drivers-downloadpagina in uw browser"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Open de Wasp3D drivers-downloadpagina in uw browser"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -8015,10 +8015,10 @@ msgstr "U moet mogelijk uw grafische kaart updaten."
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 "Als tijdelijke oplossing kunt u WaspSlicer draaien met software gerenderde "
-"modelweergave door prusa-slicer.exe te draaien met de --sw-renderer "
+"modelweergave door wasp-slicer.exe te draaien met de --sw-renderer "
 "parameter."
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -11827,20 +11827,20 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "Let op: de minimaal vereiste versie van OctoPrint is 1.1.0."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "Verbinding met Prusa SL1 / SL1S werkt naar behoren."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "Verbinding met Wasp SL1 / SL1S werkt naar behoren."
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "Kan niet verbinden met Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "Kan niet verbinden met Wasp SLA"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
-msgstr "Verbinding met PrusaLink werkt naar behoren."
+msgid "Connection to WaspLink works correctly."
+msgstr "Verbinding met WaspLink werkt naar behoren."
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
-msgstr "Kan niet verbinden met PrusaLink"
+msgid "Could not connect to WaspLink"
+msgstr "Kan niet verbinden met WaspLink"
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
 msgid "Storages found:"
@@ -14470,12 +14470,12 @@ msgstr "Ondersteunt resterende tijd"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Zet M73 P[geprint percentage] R[resterende tijd in minuten] na elke minuut "
 "in de G-code om de firmware de exacte resterende tijd te laten weten. Vanaf "
-"nu herkent de Prusa i3 MK3 de M73-commando's. Ook ondersteunt de i3 MK3 "
+"nu herkent de Wasp i3 MK3 de M73-commando's. Ook ondersteunt de i3 MK3 "
 "firmware M73 Qxx Sxx voor de stille modus."
 
 #: src/libslic3r/PrintConfig.cpp:1686

@@ -1252,12 +1252,12 @@ msgid "Cancel"
 msgstr "取消"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3332
-msgid "Prusa FFF Technology Printers"
-msgstr "Prusa FFF 技術印表機"
+msgid "Wasp FFF Technology Printers"
+msgstr "Wasp FFF 技術印表機"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3340
-msgid "Prusa MSLA Technology Printers"
-msgstr "Prusa MSLA 技術印表機"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Wasp MSLA 技術印表機"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:3360
 msgid "Filament Profiles Selection"
@@ -4294,7 +4294,7 @@ msgid "is based on Slic3r by Alessandro Ranellucci and the RepRap community."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:276
-msgid "Developed by Prusa Research."
+msgid "Developed by Wasp Research."
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:278
@@ -4381,7 +4381,7 @@ msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:960 src/slic3r/GUI/GUI_App.cpp:1057
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
 
@@ -4429,7 +4429,7 @@ msgid ""
 "32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
 "Please download and install a 64 bit build of WaspSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
 
@@ -6669,12 +6669,12 @@ msgid "based on Slic3r"
 msgstr ""
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Prusa 3D &Drivers"
-msgstr "Prusa 3D &驅動程序"
+msgid "Wasp 3D &Drivers"
+msgstr "Wasp 3D &驅動程序"
 
 #: src/slic3r/GUI/MainFrame.cpp:1150
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "在瀏覽器中打開Prusa3d 驅動程序下載頁"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "在瀏覽器中打開Wasp3d 驅動程序下載頁"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Software &Releases"
@@ -7662,7 +7662,7 @@ msgstr ""
 #: src/slic3r/GUI/OpenGLManager.cpp:389
 msgid ""
 "As a workaround, you may run WaspSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
 
 #: src/slic3r/GUI/OpenGLManager.cpp:391
@@ -11141,19 +11141,19 @@ msgid "Note: OctoPrint version at least 1.1.0 is required."
 msgstr "注意: 至少需要1.1.0 版本的 OctoPrint."
 
 #: src/slic3r/Utils/OctoPrint.cpp:528
-msgid "Connection to Prusa SL1 / SL1S works correctly."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:534
-msgid "Could not connect to Prusa SLA"
-msgstr "無法連接到 Prusa SLA"
+msgid "Could not connect to Wasp SLA"
+msgstr "無法連接到 Wasp SLA"
 
 #: src/slic3r/Utils/OctoPrint.cpp:573
-msgid "Connection to PrusaLink works correctly."
+msgid "Connection to WaspLink works correctly."
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:579
-msgid "Could not connect to PrusaLink"
+msgid "Could not connect to WaspLink"
 msgstr ""
 
 #: src/slic3r/Utils/OctoPrint.cpp:776
@@ -13500,11 +13500,11 @@ msgstr "支撐剩餘時間"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "以1分鐘的間隔發出M73 P[percent printed] R[remaining time in minutes]  進入 G-"
-"code , 讓固件顯示準確的剩餘時間。到目前爲止, 只有 Prusa i3 MK3 固件識別 M73。"
+"code , 讓固件顯示準確的剩餘時間。到目前爲止, 只有 Wasp i3 MK3 固件識別 M73。"
 "此外, i3 MK3 固件支持 M73 Qxx Sxx  的靜音模式。"
 
 #: src/libslic3r/PrintConfig.cpp:1686
