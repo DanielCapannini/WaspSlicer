@@ -1606,8 +1606,8 @@ void PageMode::serialize_mode(AppConfig *app_config) const
     std::string mode = "";
 
     if (radio_simple->GetValue()) { mode = "simple"; }
-    //if (radio_advanced->GetValue()) { mode = "advanced"; }
-    //if (radio_expert->GetValue()) { mode = "expert"; }
+    if (radio_advanced->GetValue()) { mode = "advanced"; }
+    if (radio_expert->GetValue()) { mode = "expert"; }
 
     app_config->set("view_mode", mode);
     app_config->set("use_inches", check_inch->GetValue() ? "1" : "0");
