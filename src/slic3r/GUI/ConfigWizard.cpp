@@ -1579,19 +1579,19 @@ PageMode::PageMode(ConfigWizard *parent)
         "they are suitable for advanced and expert users, respectively."));
 
     radio_simple = new wxRadioButton(this, wxID_ANY, _L("Simple mode"));
-    //radio_advanced = new wxRadioButton(this, wxID_ANY, _L("Advanced mode"));
-    //radio_expert = new wxRadioButton(this, wxID_ANY, _L("Expert mode"));
+    radio_advanced = new wxRadioButton(this, wxID_ANY, _L("Advanced mode"));
+    radio_expert = new wxRadioButton(this, wxID_ANY, _L("Expert mode"));
 
     std::string mode { "simple" };
     wxGetApp().app_config->get("", "view_mode", mode);
 
-    //if (mode == "advanced") { radio_advanced->SetValue(true); }
-    //else if (mode == "expert") { radio_expert->SetValue(true); }
-    //else { radio_simple->SetValue(true); }
+    if (mode == "advanced") { radio_advanced->SetValue(true); }
+    else if (mode == "expert") { radio_expert->SetValue(true); }
+    else { radio_simple->SetValue(true); }
 
     append(radio_simple);
-    //append(radio_advanced);
-    //append(radio_expert);
+    append(radio_advanced);
+    append(radio_expert);
 
     append_text("\n" + _L("The size of the object can be specified in inches"));
     check_inch = new wxCheckBox(this, wxID_ANY, _L("Use inches"));
