@@ -2047,12 +2047,12 @@ LayerResult GCode::process_layer(
     if(print.config().layer_range_min.value < m_last_layer_z && print.config().layer_range_max.value > m_last_layer_z)
     {
         gcode+="M109 S";
-        gcode+=std::to_string(print.config().layer_temperature.get_at(m_writer.extruder()->id()));
+        gcode+=std::to_string(print.config().layer_temperature.value);
     }
     else
     {
         gcode+="M109 S";
-        gcode+=std::to_string(print.config().temperature.get_at(m_writer.extruder()->id()));
+        gcode+=std::to_string(print.config().temperature.value);
     }
 
     // Set new layer - this will change Z and force a retraction if retract_layer_change is enabled.
