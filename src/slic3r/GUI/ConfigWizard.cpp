@@ -3322,9 +3322,9 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     wxGetApp().UpdateDarkUI(p->btn_finish);
     wxGetApp().UpdateDarkUI(p->btn_cancel);
 
-    const auto wasp_it = p->bundles.find("WaspResearch");
-    wxCHECK_RET(wasp_it != p->bundles.cend(), "Vendor WaspResearch not found");
-    const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
+    const auto prusa_it = p->bundles.find("PrusaResearch");
+    wxCHECK_RET(prusa_it != p->bundles.cend(), "Vendor PrusaResearch not found");
+    const VendorProfile *vendor_prusa = prusa_it->second.vendor_profile;
 
     const auto wasp_it = p->bundles.find("Wasp");
     const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
