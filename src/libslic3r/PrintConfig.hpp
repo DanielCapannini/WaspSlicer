@@ -810,7 +810,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionBool,               spiral_vase))
     ((ConfigOptionInt,                standby_temperature_delta))
     ((ConfigOptionInts,               temperature))
-    ((ConfigOptionInts,       layer_temperature))
+    ((ConfigOptionIntsNullable,       layer_temperature))
     ((ConfigOptionFloat,       layer_range_min))
     ((ConfigOptionFloat,       layer_range_max))
     ((ConfigOptionInt,                threads))
