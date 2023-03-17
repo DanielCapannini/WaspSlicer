@@ -94,7 +94,7 @@ void exportSVG(std::vector<std::reference_wrapper<Item>>& result, int idx = 0) {
 }
 }
 
-static std::vector<libnest2d::Item>& waspParts() {
+static std::vector<libnest2d::Item>& prusaParts() {
     using namespace libnest2d;
 
     static std::vector<Item> ret;
@@ -213,7 +213,7 @@ TEST_CASE("boundingCircle", "[Geometry]") {
     REQUIRE(getY(c.center()) == 10);
     REQUIRE(c.radius() == Approx(10));
 
-    auto parts = waspParts();
+    auto parts = prusaParts();
 
     int i = 0;
     for(auto& part : parts) {
@@ -544,7 +544,7 @@ TEST_CASE("BottomLeftStressTest", "[Geometry][NotWorking]") {
     using namespace libnest2d;
 
     const Coord SCALE = 1000000;
-    auto& input = waspParts();
+    auto& input = prusaParts();
 
     Box bin(210*SCALE, 250*SCALE);
     BottomLeftPlacer placer(bin);
@@ -590,10 +590,10 @@ TEST_CASE("convexHull", "[Geometry]") {
     REQUIRE(chull.size() == poly.size());
 }
 
-TEST_CASE("WaspPartsShouldFitIntoTwoBins", "[Nesting]") {
+TEST_CASE("PrusaPartsShouldFitIntoTwoBins", "[Nesting]") {
 
     // Get the input items and define the bin.
-    std::vector<Item> input = waspParts();
+    std::vector<Item> input = prusaParts();
     auto bin = Box(250000000, 210000000);
 
     // Do the nesting. Check in each step if the remaining items are less than
@@ -606,7 +606,7 @@ TEST_CASE("WaspPartsShouldFitIntoTwoBins", "[Nesting]") {
                                       pcount = cnt;
                                   }});
 
-    // For wasp parts, 2 bins should be enough...
+    // For prusa parts, 2 bins should be enough...
     REQUIRE(bins > 0u);
     REQUIRE(bins <= 2u);
 

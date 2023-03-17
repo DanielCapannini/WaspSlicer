@@ -171,7 +171,7 @@ VendorProfile VendorProfile::from_ini(const ptree &tree, const boost::filesystem
             }
 
             model.family = section.second.get<std::string>("family", std::string());
-            if (model.family.empty() && res.name == "Wasp Research") {
+            if (model.family.empty() && res.name == "Prusa Research") {
                 // If no family is specified, it can be inferred for known printers
                 const auto from_pre_map = pre_family_model_map.find(model.id);
                 if (from_pre_map != pre_family_model_map.end()) { model.family = from_pre_map->second; }
@@ -412,7 +412,7 @@ void Preset::set_visible_from_appconfig(const AppConfig &app_config)
     } else if (type == TYPE_FILAMENT || type == TYPE_SLA_MATERIAL) {
     	const std::string &section_name = (type == TYPE_FILAMENT) ? AppConfig::SECTION_FILAMENTS : AppConfig::SECTION_MATERIALS;
     	if (app_config.has_section(section_name)) {
-    		// Check whether this profile is marked as "installed" in WaspSlicer.ini,
+    		// Check whether this profile is marked as "installed" in PrusaSlicer.ini,
     		// or whether a profile is marked as "installed", which this profile may have been renamed from.
 	    	const std::map<std::string, std::string> &installed = app_config.get_section(section_name);
 	    	auto has = [&installed](const std::string &name) {
@@ -687,7 +687,7 @@ void PresetCollection::load_presets(
     PresetsConfigSubstitutions& substitutions, ForwardCompatibilitySubstitutionRule substitution_rule)
 {
     // Don't use boost::filesystem::canonical() on Windows, it is broken in regard to reparse points,
-    // see https://github.com/wasp3d/WaspSlicer/issues/732
+    // see https://github.com/prusa3d/PrusaSlicer/issues/732
     boost::filesystem::path dir = boost::filesystem::absolute(boost::filesystem::path(dir_path) / subdir).make_preferred();
     m_dir_path = dir.string();
     std::string errors_cummulative;
@@ -1754,7 +1754,7 @@ void PhysicalPrinterCollection::load_printers(
     PresetsConfigSubstitutions& substitutions, ForwardCompatibilitySubstitutionRule substitution_rule)
 {
     // Don't use boost::filesystem::canonical() on Windows, it is broken in regard to reparse points,
-    // see https://github.com/wasp3d/WaspSlicer/issues/732
+    // see https://github.com/prusa3d/PrusaSlicer/issues/732
     boost::filesystem::path dir = boost::filesystem::absolute(boost::filesystem::path(dir_path) / subdir).make_preferred();
     m_dir_path = dir.string();
     std::string errors_cummulative;

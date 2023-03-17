@@ -123,7 +123,7 @@ Model Model::read_from_file(const std::string& input_file, DynamicPrintConfig* c
         //FIXME options & LoadAttribute::CheckVersion ? 
         result = load_3mf(input_file.c_str(), *config, *config_substitutions, &model, false);
     else
-        throw Slic3r::RuntimeError("Unknown file format. Input file must have .stl, .obj, .amf(.xml), .wasp or .step/.stp extension.");
+        throw Slic3r::RuntimeError("Unknown file format. Input file must have .stl, .obj, .amf(.xml), .prusa or .step/.stp extension.");
 
     if (! result)
         throw Slic3r::RuntimeError("Loading of a model file failed.");

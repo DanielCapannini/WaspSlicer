@@ -70,7 +70,7 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
     }
 
     if (combo_storage != nullptr) {
-        // WaspLink specific: User needs to choose a storage
+        // PrusaLink specific: User needs to choose a storage
         auto* label_group = new wxStaticText(this, wxID_ANY, _L("Upload to storage:"));
         content_sizer->Add(label_group);
         content_sizer->Add(combo_storage, 0, wxBOTTOM, 2 * VERT_SPACING);
@@ -79,7 +79,7 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
         if (!recent_storage.empty())
             combo_storage->SetValue(recent_storage); 
     } else if (storage_names.GetCount() == 1){
-        // WaspLink specific: Show which storage has been detected.
+        // PrusaLink specific: Show which storage has been detected.
         auto* label_group = new wxStaticText(this, wxID_ANY, _L("Upload to storage: ") + storage_names.front());
         content_sizer->Add(label_group);
         m_preselected_storage = storage_paths.front();
@@ -155,7 +155,7 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
 #ifdef __linux__
     // On Linux with GTK2 when text control lose the focus then selection (colored background) disappears but text color stay white
     // and as a result the text is invisible with light mode
-    // see https://github.com/wasp3d/WaspSlicer/issues/4532
+    // see https://github.com/prusa3d/PrusaSlicer/issues/4532
     // Workaround: Unselect text selection explicitly on kill focus
     txt_filename->Bind(wxEVT_KILL_FOCUS, [this](wxEvent& e) {
         e.Skip();

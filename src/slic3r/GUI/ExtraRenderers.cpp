@@ -49,7 +49,7 @@ static wxSize get_size(const wxBitmap& icon)
 #if ENABLE_NONCUSTOM_DATA_VIEW_RENDERING
 BitmapTextRenderer::BitmapTextRenderer(wxDataViewCellMode mode /*= wxDATAVIEW_CELL_EDITABLE*/, 
                                                  int align /*= wxDVR_DEFAULT_ALIGNMENT*/): 
-wxDataViewRenderer(wxT("WaspDataViewBitmapText"), mode, align)
+wxDataViewRenderer(wxT("PrusaDataViewBitmapText"), mode, align)
 {
     SetMode(mode);
     SetAlignment(align);

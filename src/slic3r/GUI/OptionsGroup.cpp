@@ -1005,7 +1005,7 @@ wxString OptionsGroup::get_url(const std::string& path_end)
     wxString language = get_app_config()->get("translation_language");
     wxString lang_marker = language.IsEmpty() ? "en" : language.BeforeFirst('_');
 
-    return wxString("https://help.wasp3d.com/") + lang_marker + wxString("/article/" + path_end);
+    return wxString("https://help.prusa3d.com/") + lang_marker + wxString("/article/" + path_end);
 }
 
 bool OptionsGroup::launch_browser(const std::string& path_end)

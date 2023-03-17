@@ -71,7 +71,7 @@ void fill_iniconf(ConfMap &m, const SLAPrint &print)
     m["printerProfile"] = get_cfg_value(cfg, "printer_settings_id");
     m["printProfile"]   = get_cfg_value(cfg, "sla_print_settings_id");
     m["fileCreationTimestamp"] = Utils::utc_timestamp();
-    m["waspSlicerVersion"]    = SLIC3R_BUILD_ID;
+    m["prusaSlicerVersion"]    = SLIC3R_BUILD_ID;
     
     SLAPrintStatistics stats = print.print_statistics();
     // Set statistics values to the printer
@@ -202,7 +202,7 @@ void SL1Archive::export_print(Zipper               &zipper,
     try {
         zipper.add_entry("config.ini");
         zipper << to_ini(iniconf);
-        zipper.add_entry("waspslicer.ini");
+        zipper.add_entry("prusaslicer.ini");
         zipper << to_ini(slicerconf);
 
         size_t i = 0;

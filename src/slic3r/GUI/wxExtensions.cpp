@@ -819,7 +819,7 @@ void MenuWithSeparators::SetSecondSeparator()
 }
 
 // ----------------------------------------------------------------------------
-// WaspBitmap
+// PrusaBitmap
 // ----------------------------------------------------------------------------
 ScalableBitmap::ScalableBitmap( wxWindow *parent, 
                                 const std::string& icon_name/* = ""*/,
@@ -838,7 +838,7 @@ void ScalableBitmap::sys_color_changed()
 }
 
 // ----------------------------------------------------------------------------
-// WaspButton
+// PrusaButton
 // ----------------------------------------------------------------------------
 
 ScalableButton::ScalableButton( wxWindow *          parent,

@@ -69,8 +69,8 @@ static const t_config_enum_values s_keys_map_MachineLimitsUsage {
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(MachineLimitsUsage)
 
 static const t_config_enum_values s_keys_map_PrintHostType {
-    { "wasplink",      htWaspLink },
-    { "waspconnect",   htWaspConnect },
+    { "prusalink",      htPrusaLink },
+    { "prusaconnect",   htPrusaConnect },
     { "octoprint",      htOctoPrint },
     { "duet",           htDuet },
     { "flashair",       htFlashAir },
@@ -787,7 +787,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("end_gcode", coString);
     def->label = L("End G-code");
     def->tooltip = L("This end procedure is inserted at the end of the output file. "
-                   "Note that you can use placeholder variables for all WaspSlicer settings.");
+                   "Note that you can use placeholder variables for all PrusaSlicer settings.");
     def->multiline = true;
     def->full_width = true;
     def->height = 12;
@@ -798,7 +798,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("End G-code");
     def->tooltip = L("This end procedure is inserted at the end of the output file, before the printer end gcode (and "
                    "before any toolchange from this filament in case of multimaterial printers). "
-                   "Note that you can use placeholder variables for all WaspSlicer settings. "
+                   "Note that you can use placeholder variables for all PrusaSlicer settings. "
                    "If you have multiple extruders, the gcode is processed in extruder order.");
     def->multiline = true;
     def->full_width = true;
@@ -1400,7 +1400,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("G-code flavor");
     def->tooltip = L("Some G/M-code commands, including temperature control and others, are not universal. "
                    "Set this option to your printer's firmware to get a compatible output. "
-                   "The \"No extrusion\" flavor prevents WaspSlicer from exporting any extrusion value at all.");
+                   "The \"No extrusion\" flavor prevents PrusaSlicer from exporting any extrusion value at all.");
     def->set_enum<GCodeFlavor>({
         { "reprap",         "RepRap/Sprinter" },
         { "reprapfirmware", "RepRapFirmware" },
@@ -1484,7 +1484,7 @@ void PrintConfigDef::init_fff_params()
     def->category = L("Advanced");
     def->tooltip = L("Connect an infill line to an internal perimeter with a short segment of an additional perimeter. "
                      "If expressed as percentage (example: 15%) it is calculated over infill extrusion width. "
-                     "WaspSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
+                     "PrusaSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
                      "shorter than infill_anchor_max is found, the infill line is connected to a perimeter segment at just one side "
                      "and the length of the perimeter segment taken is limited to this parameter, but no longer than anchor_length_max. "
                      "Set this parameter to zero to disable anchoring perimeters connected to a single infill line.");
@@ -1507,7 +1507,7 @@ void PrintConfigDef::init_fff_params()
     def->category    = def_infill_anchor_min->category;
     def->tooltip = L("Connect an infill line to an internal perimeter with a short segment of an additional perimeter. "
                      "If expressed as percentage (example: 15%) it is calculated over infill extrusion width. "
-                     "WaspSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
+                     "PrusaSlicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment "
                      "shorter than this parameter is found, the infill line is connected to a perimeter segment at just one side "
                      "and the length of the perimeter segment taken is limited to infill_anchor, but no longer than this parameter. "
                      "Set this parameter to zero to disable anchoring.");
@@ -1677,7 +1677,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Supports remaining times");
     def->tooltip = L("Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute"
                      " intervals into the G-code to let the firmware show accurate remaining time."
-                     " As of now only the Wasp i3 MK3 firmware recognizes M73."
+                     " As of now only the Prusa i3 MK3 firmware recognizes M73."
                      " Also the i3 MK3 firmware supports M73 Qxx Sxx for the silent mode.");
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionBool(false));
@@ -1944,8 +1944,8 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Slic3r can upload G-code files to a printer host. This field must contain "
                    "the kind of the host.");
     def->set_enum<PrintHostType>({
-        { "wasplink",      "WaspLink" },
-        { "waspconnect",   "WaspConnect" },
+        { "prusalink",      "PrusaLink" },
+        { "prusaconnect",   "PrusaConnect" },
         { "octoprint",      "OctoPrint" },
         { "duet",           "Duet" },
         { "flashair",       "FlashAir" },
@@ -1955,7 +1955,7 @@ void PrintConfigDef::init_fff_params()
     });
     def->mode = comAdvanced;
     def->cli = ConfigOptionDef::nocli;
-    def->set_default_value(new ConfigOptionEnum<PrintHostType>(htWaspLink));
+    def->set_default_value(new ConfigOptionEnum<PrintHostType>(htPrusaLink));
 
     def = this->add("only_retract_when_crossing_perimeters", coBool);
     def->label = L("Only retract when crossing perimeters");
@@ -2482,10 +2482,10 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Start G-code");
     def->tooltip = L("This start procedure is inserted at the beginning, after bed has reached "
                    "the target temperature and extruder just started heating, and before extruder "
-                   "has finished heating. If WaspSlicer detects M104 or M190 in your custom codes, "
+                   "has finished heating. If PrusaSlicer detects M104 or M190 in your custom codes, "
                    "such commands will not be prepended automatically so you're free to customize "
                    "the order of heating commands and other custom actions. Note that you can use "
-                   "placeholder variables for all WaspSlicer settings, so you can put "
+                   "placeholder variables for all PrusaSlicer settings, so you can put "
                    "a \"M109 S[first_layer_temperature]\" command wherever you want.");
     def->multiline = true;
     def->full_width = true;
@@ -2497,11 +2497,11 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Start G-code");
     def->tooltip = L("This start procedure is inserted at the beginning, after any printer start gcode (and "
                    "after any toolchange to this filament in case of multi-material printers). "
-                   "This is used to override settings for a specific filament. If WaspSlicer detects "
+                   "This is used to override settings for a specific filament. If PrusaSlicer detects "
                    "M104, M109, M140 or M190 in your custom codes, such commands will "
                    "not be prepended automatically so you're free to customize the order "
                    "of heating commands and other custom actions. Note that you can use placeholder variables "
-                   "for all WaspSlicer settings, so you can put a \"M109 S[first_layer_temperature]\" command "
+                   "for all PrusaSlicer settings, so you can put a \"M109 S[first_layer_temperature]\" command "
                    "wherever you want. If you have multiple extruders, the gcode is processed "
                    "in extruder order.");
     def->multiline = true;
@@ -2963,9 +2963,9 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("toolchange_gcode", coString);
     def->label = L("Tool change G-code");
-    def->tooltip = L("This custom code is inserted before every toolchange. Placeholder variables for all WaspSlicer settings "
+    def->tooltip = L("This custom code is inserted before every toolchange. Placeholder variables for all PrusaSlicer settings "
                      "as well as {toolchange_z}, {previous_extruder} and {next_extruder} can be used. When a tool-changing command "
-                     "which changes to the correct extruder is included (such as T{next_extruder}), WaspSlicer will emit no other such command. "
+                     "which changes to the correct extruder is included (such as T{next_extruder}), PrusaSlicer will emit no other such command. "
                      "It is therefore possible to script custom behaviour both before and after the toolchange.");
     def->multiline = true;
     def->full_width = true;
@@ -4085,9 +4085,9 @@ static std::set<std::string> PrintConfigDef_ignore = {
     "seal_position", "vibration_limit", "bed_size",
     "print_center", "g0", "threads", "pressure_advance", "wipe_tower_per_color_wipe",
     "serial_port", "serial_speed",
-    // Introduced in some WaspSlicer 2.3.1 alpha, later renamed or removed.
+    // Introduced in some PrusaSlicer 2.3.1 alpha, later renamed or removed.
     "fuzzy_skin_perimeter_mode", "fuzzy_skin_shape",
-    // Introduced in WaspSlicer 2.3.0-alpha2, later replaced by automatic calculation based on extrusion width.
+    // Introduced in PrusaSlicer 2.3.0-alpha2, later replaced by automatic calculation based on extrusion width.
     "wall_add_middle_threshold", "wall_split_middle_threshold",
     // Replaced by new concentric ensuring in 2.6.0-alpha5
     "ensure_vertical_shell_thickness",
@@ -4111,7 +4111,7 @@ void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &va
         if (value == "makerbot")
             value = "makerware";
         else if (value == "marlinfirmware")
-            // the "new" marlin firmware flavor used to be called "marlinfirmware" for some time during WaspSlicer 2.4.0-alpha development.
+            // the "new" marlin firmware flavor used to be called "marlinfirmware" for some time during PrusaSlicer 2.4.0-alpha development.
             value = "marlin2";
     } else if (opt_key == "fill_density" && value.find("%") == std::string::npos) {
         try {
@@ -4140,12 +4140,12 @@ void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &va
         // Slic3r PE does not support the pillars. They never worked well.
         value = "rectilinear";
     } else if (opt_key == "skirt_height" && value == "-1") {
-    	// WaspSlicer no more accepts skirt_height == -1 to print a draft shield to the top of the highest object.
+    	// PrusaSlicer no more accepts skirt_height == -1 to print a draft shield to the top of the highest object.
         // A new "draft_shield" enum config value is used instead.
     	opt_key = "draft_shield";
         value = "enabled";
     } else if (opt_key == "draft_shield" && (value == "1" || value == "0")) {
-        // draft_shield used to be a bool, it was turned into an enum in WaspSlicer 2.4.0.
+        // draft_shield used to be a bool, it was turned into an enum in PrusaSlicer 2.4.0.
         value = value == "1" ? "enabled" : "disabled";
     } else if (opt_key == "octoprint_host") {
         opt_key = "print_host";
@@ -4166,7 +4166,7 @@ void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &va
         }
     }*/
 
-    // In WaspSlicer 2.3.0-alpha0 the "monotonous" infill was introduced, which was later renamed to "monotonic".
+    // In PrusaSlicer 2.3.0-alpha0 the "monotonous" infill was introduced, which was later renamed to "monotonic".
     if (value == "monotonous" && (opt_key == "top_fill_pattern" || opt_key == "bottom_fill_pattern" || opt_key == "fill_pattern"))
         value = "monotonic";
 
@@ -4423,7 +4423,7 @@ std::string validate(const FullPrintConfig &cfg)
         if (em <= 0)
             return "Invalid value for --extrusion-multiplier";
 
-    // The following test was commented out after 482841b, see also https://github.com/wasp3d/WaspSlicer/pull/6743.
+    // The following test was commented out after 482841b, see also https://github.com/prusa3d/PrusaSlicer/pull/6743.
     // The backend should now handle this case correctly. I.e., zero default_acceleration behaves as if all others
     // were zero too. This is now consistent with what the UI said would happen.
     // The UI already grays the fields out, there is no more reason to reject it here. This function validates the
@@ -4738,8 +4738,8 @@ CLIMiscConfigDef::CLIMiscConfigDef()
 
     def = this->add("config_compatibility", coEnum);
     def->label = L("Forward-compatibility rule when loading configurations from config files and project files (3MF, AMF).");
-    def->tooltip = L("This version of WaspSlicer may not understand configurations produced by the newest WaspSlicer versions. "
-                     "For example, newer WaspSlicer may extend the list of supported firmware flavors. One may decide to "
+    def->tooltip = L("This version of PrusaSlicer may not understand configurations produced by the newest PrusaSlicer versions. "
+                     "For example, newer PrusaSlicer may extend the list of supported firmware flavors. One may decide to "
                      "bail out or to substitute an unknown value with a default silently or verbosely.");
     def->set_enum<ForwardCompatibilitySubstitutionRule>({
         { "disable",        L("Bail out on unknown configuration values") },
@@ -4759,8 +4759,8 @@ CLIMiscConfigDef::CLIMiscConfigDef()
 
     def = this->add("single_instance", coBool);
     def->label = L("Single instance mode");
-    def->tooltip = L("If enabled, the command line arguments are sent to an existing instance of GUI WaspSlicer, "
-                     "or an existing WaspSlicer window is activated. "
+    def->tooltip = L("If enabled, the command line arguments are sent to an existing instance of GUI PrusaSlicer, "
+                     "or an existing PrusaSlicer window is activated. "
                      "Overrides the \"single_instance\" configuration value from application preferences.");
 
     def = this->add("datadir", coString);

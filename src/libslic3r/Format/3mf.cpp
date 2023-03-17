@@ -57,7 +57,7 @@ const unsigned int VERSION_3MF_COMPATIBLE = 2;
 const char* SLIC3RPE_3MF_VERSION = "slic3rpe:Version3mf"; // definition of the metadata name saved into .model file
 
 // Painting gizmos data version numbers
-// 0 : 3MF files saved by older WaspSlicer or the painting gizmo wasn't used. No version definition in them.
+// 0 : 3MF files saved by older PrusaSlicer or the painting gizmo wasn't used. No version definition in them.
 // 1 : Introduction of painting gizmos data versioning. No other changes in painting gizmos data.
 const unsigned int FDM_SUPPORTS_PAINTING_VERSION = 1;
 const unsigned int SEAM_PAINTING_VERSION         = 1;
@@ -76,11 +76,11 @@ const std::string THUMBNAIL_FILE = "Metadata/thumbnail.png";
 const std::string PRINT_CONFIG_FILE = "Metadata/Slic3r_PE.config";
 const std::string MODEL_CONFIG_FILE = "Metadata/Slic3r_PE_model.config";
 const std::string LAYER_HEIGHTS_PROFILE_FILE = "Metadata/Slic3r_PE_layer_heights_profile.txt";
-const std::string LAYER_CONFIG_RANGES_FILE = "Metadata/Wasp_Slicer_layer_config_ranges.xml";
+const std::string LAYER_CONFIG_RANGES_FILE = "Metadata/Prusa_Slicer_layer_config_ranges.xml";
 const std::string SLA_SUPPORT_POINTS_FILE = "Metadata/Slic3r_PE_sla_support_points.txt";
 const std::string SLA_DRAIN_HOLES_FILE = "Metadata/Slic3r_PE_sla_drain_holes.txt";
-const std::string CUSTOM_GCODE_PER_PRINT_Z_FILE = "Metadata/Wasp_Slicer_custom_gcode_per_print_z.xml";
-const std::string CUT_INFORMATION_FILE = "Metadata/Wasp_Slicer_cut_information.xml";
+const std::string CUSTOM_GCODE_PER_PRINT_Z_FILE = "Metadata/Prusa_Slicer_custom_gcode_per_print_z.xml";
+const std::string CUT_INFORMATION_FILE = "Metadata/Prusa_Slicer_cut_information.xml";
 
 static constexpr const char* MODEL_TAG = "model";
 static constexpr const char* RESOURCES_TAG = "resources";
@@ -463,8 +463,8 @@ namespace Slic3r {
         unsigned int m_version;
         bool m_check_version;
 
-        // Semantic version of WaspSlicer, that generated this 3MF.
-        boost::optional<Semver> m_waspslicer_generator_version;
+        // Semantic version of PrusaSlicer, that generated this 3MF.
+        boost::optional<Semver> m_prusaslicer_generator_version;
         unsigned int m_fdm_supports_painting_version = 0;
         unsigned int m_seam_painting_version         = 0;
         unsigned int m_mm_painting_version           = 0;
@@ -498,7 +498,7 @@ namespace Slic3r {
 
         bool load_model_from_file(const std::string& filename, Model& model, DynamicPrintConfig& config, ConfigSubstitutionContext& config_substitutions, bool check_version);
         unsigned int version() const { return m_version; }
-        boost::optional<Semver> waspslicer_generator_version() const { return m_waspslicer_generator_version; }
+        boost::optional<Semver> prusaslicer_generator_version() const { return m_prusaslicer_generator_version; }
 
     private:
         void _destroy_xml_parser();
@@ -758,7 +758,7 @@ namespace Slic3r {
         close_zip_reader(&archive);
 
         if (m_version == 0) {
-            // if the 3mf was not produced by WaspSlicer and there is more than one instance,
+            // if the 3mf was not produced by PrusaSlicer and there is more than one instance,
             // split the object in as many objects as instances
             size_t curr_models_count = m_model->objects.size();
             size_t i = 0;
@@ -1062,8 +1062,8 @@ namespace Slic3r {
             // Each config line is prefixed with a semicolon (G-code comment), that is ugly.
 
             // Replacing the legacy function with load_from_ini_string_commented leads to issues when
-            // parsing 3MFs from before WaspSlicer 2.0.0 (which can have duplicated entries in the INI.
-            // See https://github.com/wasp3d/WaspSlicer/issues/7155. We'll revert it for now.
+            // parsing 3MFs from before PrusaSlicer 2.0.0 (which can have duplicated entries in the INI.
+            // See https://github.com/prusa3d/PrusaSlicer/issues/7155. We'll revert it for now.
             //config_substitutions.substitutions = config.load_from_ini_string_commented(std::move(buffer), config_substitutions.rule);
             ConfigBase::load_from_gcode_string_legacy(config, buffer.data(), config_substitutions);
         }
@@ -1435,7 +1435,7 @@ namespace Slic3r {
                 std::string         extra;
                 pt::ptree attr_tree = tree.find("<xmlattr>")->second;
                 if (attr_tree.find("type") == attr_tree.not_found()) {
-                    // It means that data was saved in old version (2.2.0 and older) of WaspSlicer
+                    // It means that data was saved in old version (2.2.0 and older) of PrusaSlicer
                     // read old data ... 
                     std::string gcode       = tree.get<std::string> ("<xmlattr>.gcode");
                     // ... and interpret them to the new data
@@ -1603,7 +1603,7 @@ namespace Slic3r {
         }
 
         if (m_version == 0) {
-            // if the 3mf was not produced by WaspSlicer and there is only one object,
+            // if the 3mf was not produced by PrusaSlicer and there is only one object,
             // set the object name to match the filename
             if (m_model->objects.size() == 1)
                 m_model->objects.front()->name = m_name;
@@ -1883,20 +1883,20 @@ namespace Slic3r {
         } else if (m_curr_metadata_name == "Application") {
             // Generator application of the 3MF.
             // SLIC3R_APP_KEY - SLIC3R_VERSION
-            if (boost::starts_with(m_curr_characters, "WaspSlicer-"))
-                m_waspslicer_generator_version = Semver::parse(m_curr_characters.substr(12));
+            if (boost::starts_with(m_curr_characters, "PrusaSlicer-"))
+                m_prusaslicer_generator_version = Semver::parse(m_curr_characters.substr(12));
         } else if (m_curr_metadata_name == SLIC3RPE_FDM_SUPPORTS_PAINTING_VERSION) {
             m_fdm_supports_painting_version = (unsigned int) atoi(m_curr_characters.c_str());
             check_painting_version(m_fdm_supports_painting_version, FDM_SUPPORTS_PAINTING_VERSION,
-                _(L("The selected 3MF contains FDM supports painted object using a newer version of WaspSlicer and is not compatible.")));
+                _(L("The selected 3MF contains FDM supports painted object using a newer version of PrusaSlicer and is not compatible.")));
         } else if (m_curr_metadata_name == SLIC3RPE_SEAM_PAINTING_VERSION) {
             m_seam_painting_version = (unsigned int) atoi(m_curr_characters.c_str());
             check_painting_version(m_seam_painting_version, SEAM_PAINTING_VERSION,
-                _(L("The selected 3MF contains seam painted object using a newer version of WaspSlicer and is not compatible.")));
+                _(L("The selected 3MF contains seam painted object using a newer version of PrusaSlicer and is not compatible.")));
         } else if (m_curr_metadata_name == SLIC3RPE_MM_PAINTING_VERSION) {
             m_mm_painting_version = (unsigned int) atoi(m_curr_characters.c_str());
             check_painting_version(m_mm_painting_version, MM_PAINTING_VERSION,
-                _(L("The selected 3MF contains multi-material painted object using a newer version of WaspSlicer and is not compatible.")));
+                _(L("The selected 3MF contains multi-material painted object using a newer version of PrusaSlicer and is not compatible.")));
         }
 
         return true;
@@ -2023,7 +2023,7 @@ namespace Slic3r {
             return false;
         }
 
-        // Added because of github #3435, currently not used by WaspSlicer
+        // Added because of github #3435, currently not used by PrusaSlicer
         // int instances_count_id = get_attribute_value_int(attributes, num_attributes, INSTANCESCOUNT_ATTR);
 
         m_objects_metadata.insert({ object_id, ObjectMetadata() });
@@ -2180,17 +2180,17 @@ namespace Slic3r {
                         tri_id -= min_id;
             }
 
-            if (m_waspslicer_generator_version && 
-                *m_waspslicer_generator_version >= *Semver::parse("2.4.0-alpha1") &&
-                *m_waspslicer_generator_version < *Semver::parse("2.4.0-alpha3"))
-                // WaspSlicer 2.4.0-alpha2 contained a bug, where all vertices of a single object were saved for each volume the object contained.
+            if (m_prusaslicer_generator_version && 
+                *m_prusaslicer_generator_version >= *Semver::parse("2.4.0-alpha1") &&
+                *m_prusaslicer_generator_version < *Semver::parse("2.4.0-alpha3"))
+                // PrusaSlicer 2.4.0-alpha2 contained a bug, where all vertices of a single object were saved for each volume the object contained.
                 // Remove the vertices, that are not referenced by any face.
                 its_compactify_vertices(its, true);
 
             TriangleMesh triangle_mesh(std::move(its), volume_data.mesh_stats);
 
             if (m_version == 0) {
-                // if the 3mf was not produced by WaspSlicer and there is only one instance,
+                // if the 3mf was not produced by PrusaSlicer and there is only one instance,
                 // bake the transformation into the geometry to allow the reload from disk command
                 // to work properly
                 if (object.instances.size() == 1) {
@@ -2410,7 +2410,7 @@ namespace Slic3r {
         }
 
         // Adds content types file ("[Content_Types].xml";).
-        // The content of this file is the same for each WaspSlicer 3mf.
+        // The content of this file is the same for each PrusaSlicer 3mf.
         if (!_add_content_types_file_to_archive(archive)) {
             close_zip_writer(&archive);
             boost::filesystem::remove(filename);
@@ -2427,7 +2427,7 @@ namespace Slic3r {
         }
 
         // Adds relationships file ("_rels/.rels"). 
-        // The content of this file is the same for each WaspSlicer 3mf.
+        // The content of this file is the same for each PrusaSlicer 3mf.
         // The relationshis file contains a reference to the geometry file "3D/3dmodel.model", the name was chosen to be compatible with CURA.
         if (!_add_relationships_file_to_archive(archive)) {
             close_zip_writer(&archive);
@@ -2487,7 +2487,7 @@ namespace Slic3r {
         }
         
 
-        // Adds custom gcode per height file ("Metadata/Wasp_Slicer_custom_gcode_per_print_z.xml").
+        // Adds custom gcode per height file ("Metadata/Prusa_Slicer_custom_gcode_per_print_z.xml").
         // All custom gcode per height of whole Model are stored here
         if (!_add_custom_gcode_per_print_z_file_to_archive(archive, model, config)) {
             close_zip_writer(&archive);
@@ -3246,7 +3246,7 @@ namespace Slic3r {
         for (const IdToObjectDataMap::value_type& obj_metadata : objects_data) {
             const ModelObject* obj = obj_metadata.second.object;
             if (obj == nullptr) continue;
-            // Output of instances count added because of github #3435, currently not used by WaspSlicer
+            // Output of instances count added because of github #3435, currently not used by PrusaSlicer
             stream << " <" << OBJECT_TAG << " " << ID_ATTR << "=\"" << obj_metadata.first << "\" " << INSTANCESCOUNT_ATTR << "=\"" << obj->instances.size() << "\">\n";
 
             // stores object's name
@@ -3365,7 +3365,7 @@ bool _3MF_Exporter::_add_custom_gcode_per_print_z_file_to_archive( mz_zip_archiv
             code_tree.put("<xmlattr>.color"     , code.color    );
             code_tree.put("<xmlattr>.extra"     , code.extra    );
 
-            // add gcode field data for the old version of the WaspSlicer
+            // add gcode field data for the old version of the PrusaSlicer
             std::string gcode = code.type == CustomGCode::ColorChange ? config->opt_string("color_change_gcode")    :
                                 code.type == CustomGCode::PausePrint  ? config->opt_string("pause_print_gcode")     :
                                 code.type == CustomGCode::Template    ? config->opt_string("template_custom_gcode") :
@@ -3400,20 +3400,20 @@ bool _3MF_Exporter::_add_custom_gcode_per_print_z_file_to_archive( mz_zip_archiv
 }
 
 // Perform conversions based on the config values available.
-static void handle_legacy_project_loaded(unsigned int version_project_file, DynamicPrintConfig& config, const boost::optional<Semver>& waspslicer_generator_version)
+static void handle_legacy_project_loaded(unsigned int version_project_file, DynamicPrintConfig& config, const boost::optional<Semver>& prusaslicer_generator_version)
 {
     if (! config.has("brim_separation")) {
         if (auto *opt_elephant_foot   = config.option<ConfigOptionFloat>("elefant_foot_compensation", false); opt_elephant_foot) {
-            // Conversion from older WaspSlicer which applied brim separation equal to elephant foot compensation.
+            // Conversion from older PrusaSlicer which applied brim separation equal to elephant foot compensation.
             auto *opt_brim_separation = config.option<ConfigOptionFloat>("brim_separation", true);
             opt_brim_separation->value = opt_elephant_foot->value;
         }
     }
     
-    // In WaspSlicer 2.5.0-alpha2 and 2.5.0-alpha3, we introduce several parameters for Arachne that depend
+    // In PrusaSlicer 2.5.0-alpha2 and 2.5.0-alpha3, we introduce several parameters for Arachne that depend
     // on nozzle size . Later we decided to make default values for those parameters computed automatically
     // until the user changes them.
-    if (waspslicer_generator_version && *waspslicer_generator_version >= *Semver::parse("2.5.0-alpha2") && *waspslicer_generator_version <= *Semver::parse("2.5.0-alpha3")) {
+    if (prusaslicer_generator_version && *prusaslicer_generator_version >= *Semver::parse("2.5.0-alpha2") && *prusaslicer_generator_version <= *Semver::parse("2.5.0-alpha3")) {
         if (auto *opt_wall_transition_length = config.option<ConfigOptionFloatOrPercent>("wall_transition_length", false);
             opt_wall_transition_length && !opt_wall_transition_length->percent && opt_wall_transition_length->value == 0.4) {
             opt_wall_transition_length->percent = true;
@@ -3468,7 +3468,7 @@ bool load_3mf(const char* path, DynamicPrintConfig& config, ConfigSubstitutionCo
     _3MF_Importer         importer;
     importer.load_model_from_file(path, *model, config, config_substitutions, check_version);
     importer.log_errors();
-    handle_legacy_project_loaded(importer.version(), config, importer.waspslicer_generator_version());
+    handle_legacy_project_loaded(importer.version(), config, importer.prusaslicer_generator_version());
 
     return !model->objects.empty() || !config.empty();
 }

@@ -687,7 +687,7 @@ template<> struct std::hash<Pair> {
     }
 };
 
-TEST_CASE("Convex polygon intersection test wasp polygons", "[Geometry][Rotcalip]") {
+TEST_CASE("Convex polygon intersection test prusa polygons", "[Geometry][Rotcalip]") {
 
     // Overlap of the same polygon should always be an intersection
     for (size_t i = 0; i < PRINTER_PART_POLYGONS.size(); ++i) {
