@@ -572,9 +572,6 @@ void WipeTower::set_extruder(size_t idx, const PrintConfig& config)
     m_filpar[idx].is_soluble = config.filament_soluble.get_at(idx);
     m_filpar[idx].temperature = config.temperature.get_at(idx);
     m_filpar[idx].first_layer_temperature = config.first_layer_temperature.get_at(idx);
-    m_filpar[idx].layer_temperature = config.layer_temperature.get_at(idx);
-    m_filpar[idx].layer_range_min = config.layer_range_min.get_at(idx);
-    m_filpar[idx].layer_range_max = config.layer_range_max.get_at(idx);
 
     // If this is a single extruder MM printer, we will use all the SE-specific config values.
     // Otherwise, the defaults will be used to turn off the SE stuff.

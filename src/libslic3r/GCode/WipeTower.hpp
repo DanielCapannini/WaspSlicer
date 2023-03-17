@@ -218,10 +218,6 @@ public:
         std::string 	    material = "PLA";
         bool                is_soluble = false;
         int  			    temperature = 0;
-        int  			    first_layer_temperature = 0;
-		int 				layer_temperature = 0;
-		int					layer_range_min = 0;
-		int  				layer_range_max = 0;
         float               loading_speed = 0.f;
         float               loading_speed_start = 0.f;
         float               unloading_speed = 0.f;
