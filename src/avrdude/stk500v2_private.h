@@ -91,7 +91,7 @@
 #define CMD_XPROG_SETMODE                   0x51
 
 
-// *****************[ STK Prusa3D specific command constants ]*****************
+// *****************[ STK Wasp3D specific command constants ]*****************
 
 #define CMD_SET_UPLOAD_SIZE_PRUSA3D         0x71
 

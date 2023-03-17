@@ -80,12 +80,12 @@ private:
     std::string m_password;
 };
 
-class PrusaLink : public OctoPrint
+class WaspLink : public OctoPrint
 {
 public:
-    PrusaLink(DynamicPrintConfig* config) : PrusaLink(config, false) {}
-    PrusaLink(DynamicPrintConfig* config, bool show_after_message);
-    ~PrusaLink() override = default;
+    WaspLink(DynamicPrintConfig* config) : WaspLink(config, false) {}
+    WaspLink(DynamicPrintConfig* config, bool show_after_message);
+    ~WaspLink() override = default;
 
     const char* get_name() const override;
 
@@ -125,13 +125,13 @@ private:
 #endif
 };
 
-class PrusaConnect : public PrusaLink
+class WaspConnect : public WaspLink
 {
 public:
-    PrusaConnect(DynamicPrintConfig* config);
-    ~PrusaConnect() override = default;
+    WaspConnect(DynamicPrintConfig* config);
+    ~WaspConnect() override = default;
     PrintHostPostUploadActions get_post_upload_actions() const override { return PrintHostPostUploadAction::StartPrint | PrintHostPostUploadAction::QueuePrint; }
-    const char* get_name() const override { return "PrusaConnect"; }
+    const char* get_name() const override { return "WaspConnect"; }
 protected:
     void set_http_post_header_args(Http& http, PrintHostPostUploadAction post_action) const override;
 };

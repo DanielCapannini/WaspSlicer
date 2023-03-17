@@ -239,7 +239,7 @@ void Field::get_value_by_opt_type(wxString& str, const bool check_value/* = true
         const char dec_sep_alt = dec_sep == '.' ? ',' : '.';
         // Replace the first incorrect separator in decimal number, 
         // if this value doesn't "N/A" value in some language
-        // see https://github.com/prusa3d/PrusaSlicer/issues/6921
+        // see https://github.com/wasp3d/WaspSlicer/issues/6921
         if (!is_na_value && str.Replace(dec_sep_alt, dec_sep, false) != 0)
             set_value(str, false);
 
@@ -297,7 +297,7 @@ void Field::get_value_by_opt_type(wxString& str, const bool check_value/* = true
     case coFloatOrPercent: {
         if (m_opt.type == coFloatOrPercent && m_opt.opt_key == "first_layer_height" && !str.IsEmpty() && str.Last() == '%') {
             // Workaroud to avoid of using of the % for first layer height
-            // see https://github.com/prusa3d/PrusaSlicer/issues/7418
+            // see https://github.com/wasp3d/WaspSlicer/issues/7418
             wxString label = m_opt.full_label.empty() ? _(m_opt.label) : _(m_opt.full_label);
             show_error(m_parent, from_u8((boost::format(_utf8(L("%s doesn't support percentage"))) % label).str()));
             const wxString stVal = double_to_string(0.01, 2);

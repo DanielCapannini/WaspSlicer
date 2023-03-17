@@ -2783,7 +2783,7 @@ void GLCanvas3D::on_mouse_wheel(wxMouseEvent& evt)
 #ifdef __WXMSW__
 	// For some reason the Idle event is not being generated after the mouse scroll event in case of scrolling with the two fingers on the touch pad,
 	// if the event is not allowed to be passed further.
-	// https://github.com/prusa3d/PrusaSlicer/issues/2750
+	// https://github.com/wasp3d/WaspSlicer/issues/2750
     // evt.Skip() used to trigger the needed screen refresh, but it does no more. wxWakeUpIdle() seem to work now.
     wxWakeUpIdle();
 #endif /* __WXMSW__ */
@@ -4169,7 +4169,7 @@ bool GLCanvas3D::_render_search_list(float pos_x)
 
     if (selected >= 0) {
         // selected == 9999 means that Esc kye was pressed
-        /*// revert commit https://github.com/prusa3d/PrusaSlicer/commit/91897589928789b261ca0dc735ffd46f2b0b99f2
+        /*// revert commit https://github.com/wasp3d/WaspSlicer/commit/91897589928789b261ca0dc735ffd46f2b0b99f2
         if (selected == 9999)
             action_taken = true;
         else
@@ -4308,7 +4308,7 @@ static void debug_output_thumbnail(const ThumbnailData& thumbnail_data)
         }
     }
 
-    image.SaveFile("C:/prusa/test/test.png", wxBITMAP_TYPE_PNG);
+    image.SaveFile("C:/wasp/test/test.png", wxBITMAP_TYPE_PNG);
 }
 #endif // ENABLE_THUMBNAIL_GENERATOR_DEBUG_OUTPUT
 
@@ -5666,7 +5666,7 @@ void GLCanvas3D::_check_and_update_toolbar_icon_scale()
     // calculate scale needed for items in all top toolbars
     // the std::max() is there because on some Linux dialects/virtual machines this code is called when the canvas has not been properly initialized yet,
     // leading to negative values for the scale.
-    // See: https://github.com/prusa3d/PrusaSlicer/issues/8563
+    // See: https://github.com/wasp3d/WaspSlicer/issues/8563
     //      https://github.com/supermerill/SuperSlicer/issues/854
     const float new_h_scale = std::max((cnv_size.get_width() - noitems_width), 1.0f) / (items_cnt * GLToolbar::Default_Icons_Size);
 

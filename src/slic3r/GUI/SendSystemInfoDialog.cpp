@@ -51,7 +51,7 @@
 namespace Slic3r {
 namespace GUI {
 
-static const std::string SEND_SYSTEM_INFO_DOMAIN = "prusa3d.com";
+static const std::string SEND_SYSTEM_INFO_DOMAIN = "wasp3d.com";
 static const std::string SEND_SYSTEM_INFO_URL = "https://files." + SEND_SYSTEM_INFO_DOMAIN + "/wp-json/v1/ps";
 
 
@@ -187,7 +187,7 @@ static bool should_dialog_be_shown()
 
     // We might want to check that the internet connection is ready so we don't open the dialog
     // if it cannot really send any data. Using a dummy HTTP GET request led to
-    // https://forum.prusaprinters.org/forum/prusaslicer/prusaslicer-2-4-0-beta1-is-out/#post-518488.
+    // https://forum.waspprinters.org/forum/waspslicer/waspslicer-2-4-0-beta1-is-out/#post-518488.
     // It might also trigger security softwares, which would look bad and would lead to questions
     // about what PS is doing. We better use some less intrusive way of checking the connection.
 
@@ -202,7 +202,7 @@ static bool should_dialog_be_shown()
 
 
 
-// Following function saves current PrusaSlicer version into app config.
+// Following function saves current WaspSlicer version into app config.
 // It will be later used to decide whether to open the dialog or not.
 static void save_version()
 {
@@ -394,7 +394,7 @@ static std::string generate_system_info_json()
     namespace pt = boost::property_tree;
 
     pt::ptree data_node;
-    data_node.put("PrusaSlicerVersion", SLIC3R_VERSION);
+    data_node.put("WaspSlicerVersion", SLIC3R_VERSION);
     data_node.put("BuildID", SLIC3R_BUILD_ID);
     data_node.put("UniqueID", unique_id);
     data_node.put("Platform", platform_to_string(platform()));
@@ -559,7 +559,7 @@ SendSystemInfoDialog::SendSystemInfoDialog(wxWindow* parent)
 {
     const int em = GUI::wxGetApp().em_unit();
 
-    // Get current PrusaSliver version info.
+    // Get current WaspSliver version info.
     std::string app_name;
     {
         Semver semver(SLIC3R_VERSION);
@@ -597,7 +597,7 @@ SendSystemInfoDialog::SendSystemInfoDialog(wxWindow* parent)
            "to identify you later. To detect duplicate entries, a unique number derived "
            "from your system is sent, but the source information cannot be reconstructed. "
            "Apart from that, only general data about your OS, hardware and OpenGL "
-           "installation are sent. PrusaSlicer is open source, if you want to "
+           "installation are sent. WaspSlicer is open source, if you want to "
            "inspect the code actually performing the communication, see %1%."),
            std::string("<i>") + filename + "</i>");
 
@@ -605,7 +605,7 @@ SendSystemInfoDialog::SendSystemInfoDialog(wxWindow* parent)
     wxString html = GUI::format_wxstr(
             "<html><body bgcolor=%1%><font color=%2%>"
             "<table><tr><td>"
-            "<img src = \"" + resources_dir() + "/icons/PrusaSlicer_192px.png\" />"
+            "<img src = \"" + resources_dir() + "/icons/WaspSlicer_192px.png\" />"
             "</td><td align=\"left\">"
             + text0 + "<br / ><br / >"
             + text1 + "<br /><br />"
