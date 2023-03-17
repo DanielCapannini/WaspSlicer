@@ -2044,6 +2044,17 @@ LayerResult GCode::process_layer(
     m_max_layer_z  = std::max(m_max_layer_z, m_last_layer_z);
     m_last_height = height;
 
+    if(print.config().layer_range_min.value < m_last_layer_z && print.config().layer_range_max.value > m_last_layer_z)
+    {
+        gcode+="M109 S";
+        gcode+=std::to_string(print.config().layer_temperature.value);
+    }
+    else
+    {
+        gcode+="M109 S";
+        gcode+=std::to_string(print.config().temperature.value);
+    }
+
     // Set new layer - this will change Z and force a retraction if retract_layer_change is enabled.
     if (! print.config().before_layer_gcode.value.empty()) {
         DynamicConfig config;
