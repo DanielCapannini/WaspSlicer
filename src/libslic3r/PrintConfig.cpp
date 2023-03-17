@@ -2933,6 +2933,36 @@ void PrintConfigDef::init_fff_params()
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 200 });
 
+    def = this->add("layer_temperature", coInts);
+    def->label = L("Other layers");
+    def->tooltip = L("Nozzle temperature for layers after the first one. Set this to zero to disable "
+                     "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("Nozzle layer temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 200 });
+
+    def = this->add("layer_range_min", coInts);
+    def->label = L("range min");
+    def->tooltip = L("Nozzle temperature for layers after the first one. Set this to zero to disable "
+                     "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("layer range min");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 200 });
+
+    def = this->add("layer_range_max", coInts);
+    def->label = L("range max");
+    def->tooltip = L("Nozzle temperature for layers after the first one. Set this to zero to disable "
+                     "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("layer range max");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 200 });
+
     def = this->add("thick_bridges", coBool);
     def->label = L("Thick bridges");
     def->category = L("Layers and Perimeters");
