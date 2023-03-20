@@ -1962,10 +1962,6 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
 
-        line = { L{"num temp range"}, ""};
-        line.append_option(optgroup->get_option("n_temp_range"));
-        optgroup->append_line(line);
-
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature"));
         line.append_option(optgroup->get_option("layer_range_min"));
