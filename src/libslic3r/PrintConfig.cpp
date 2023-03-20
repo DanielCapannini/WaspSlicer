@@ -2963,6 +2963,16 @@ void PrintConfigDef::init_fff_params()
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
 
+    def = this->add("n_temp_range", coInts);
+    def->label = L("n range");
+    def->tooltip = L("Nozzle temperature for layers after the first one. Set this to zero to disable "
+                     "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("layer range max");
+    def->min = 0;
+    def->max = 20;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
     def = this->add("thick_bridges", coBool);
     def->label = L("Thick bridges");
     def->category = L("Layers and Perimeters");

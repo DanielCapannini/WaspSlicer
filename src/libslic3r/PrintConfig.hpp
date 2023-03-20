@@ -813,6 +813,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionIntsNullable,       layer_temperature))
     ((ConfigOptionInts,       layer_range_min))
     ((ConfigOptionInts,       layer_range_max))
+    ((ConfigOptionInts,       n_temp_range))
     ((ConfigOptionInt,                threads))
     ((ConfigOptionPoints,             thumbnails))
     ((ConfigOptionEnum<GCodeThumbnailsFormat>,  thumbnails_format))

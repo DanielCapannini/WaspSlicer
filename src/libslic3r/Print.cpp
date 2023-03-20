@@ -202,6 +202,7 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
             || opt_key == "layer_temperature"
             || opt_key == "layer_range_min"
             || opt_key == "layer_range_max"
+            || opt_key == "n_temp_range"
             || opt_key == "idle_temperature"
             || opt_key == "wipe_tower"
             || opt_key == "wipe_tower_width"
