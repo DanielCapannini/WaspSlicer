@@ -1966,15 +1966,11 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("n_temp_range"));
         optgroup->append_line(line);
 
-        int n_temp_range = any_cast<int>(optgroup->get_value("n_temp_range"));
-
-        for(int i=0; i<n_temp_range; i++){
-            line = { L("set temp"), "" };
-            line.append_option(optgroup->get_option("layer_temperature"));
-            line.append_option(optgroup->get_option("layer_range_min"));
-            line.append_option(optgroup->get_option("layer_range_max"));
-            optgroup->append_line(line);
-        }
+        line = { L("set temp"), "" };
+        line.append_option(optgroup->get_option("layer_temperature"));
+        line.append_option(optgroup->get_option("layer_range_min"));
+        line.append_option(optgroup->get_option("layer_range_max"));
+        optgroup->append_line(line);
 
     page = add_options_page(L("Cooling"), "cooling");
         std::string category_path = "cooling_127569#";
