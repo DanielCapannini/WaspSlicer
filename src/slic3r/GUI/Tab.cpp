@@ -1962,17 +1962,23 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
 
-        line = { L{"num temp range"}, ""};
+        line = { L("num temp range"), ""};
         line.append_option(optgroup->get_option("n_temp_range"));
         optgroup->append_line(line);
 
-        int n_temp_range = any_cast<int>(optgroup->get_value("n_temp_range"));
+        int n_temp_range = boost::any_cast<int>(optgroup->get_value("n_temp_range"));
 
         for(int i=0; i<n_temp_range; i++){
+            std::string a = "layer_temperature";
+            std::string b = "layer_range_min";
+            std::string c = "layer_range_max";
+            a += to_string(i);
+            b += to_string(i);
+            c += to_string(i);
             line = { L("set temp"), "" };
-            line.append_option(optgroup->get_option("layer_temperature"));
-            line.append_option(optgroup->get_option("layer_range_min"));
-            line.append_option(optgroup->get_option("layer_range_max"));
+            line.append_option(optgroup->get_option(a));
+            line.append_option(optgroup->get_option(b));
+            line.append_option(optgroup->get_option(c));
             optgroup->append_line(line);
         }
 
