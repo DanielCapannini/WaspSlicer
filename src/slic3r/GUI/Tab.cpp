@@ -1962,24 +1962,11 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
 
-        ConfigOptionDef def;
-            def.type =  coInt,
-            def.set_default_value(new ConfigOptionInt(1));
-            def.label = L("n temp ranges");
-            def.tooltip = L("Number of range temperature.");
-            def.min = 0;
-            def.max = 10;
-            def.mode = comExpert;
-        Option options(def, "n_temp_ranges");
-        optgroup->append_single_option_line(options);
-
-        for(int i=0; i<m_config->opt_int("n_temp_ranges"); i++) {
-            line = { L("set temp"), "" };
-            line.append_option(optgroup->get_option("layer_temperature"));
-            line.append_option(optgroup->get_option("layer_range_min"));
-            line.append_option(optgroup->get_option("layer_range_max"));
-            optgroup->append_line(line);
-        }
+        line = { L("set temp"), "" };
+        line.append_option(optgroup->get_option("layer_temperature"));
+        line.append_option(optgroup->get_option("layer_range_min"));
+        line.append_option(optgroup->get_option("layer_range_max"));
+        optgroup->append_line(line);
 
     page = add_options_page(L("Cooling"), "cooling");
         std::string category_path = "cooling_127569#";
