@@ -2085,38 +2085,20 @@ LayerResult GCode::process_layer(
             if(print.config().layer_temperature0.get_at(extruder.id()) != 0 && print.config().layer_range_min0.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature0.get_at(extruder.id()), false, extruder.id());
             
-            if(print.config().layer_temperature0.get_at(extruder.id()) != 0 && print.config().layer_range_max0.get_at(extruder.id()) == m_layer_index)
-                gcode += m_writer.set_temperature(temperature, false, extruder.id());
-
             if(print.config().layer_temperature1.get_at(extruder.id()) != 0 && print.config().layer_range_min1.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature1.get_at(extruder.id()), false, extruder.id());
             
-            if(print.config().layer_temperature1.get_at(extruder.id()) != 0 && print.config().layer_range_max1.get_at(extruder.id()) == m_layer_index)
-                gcode += m_writer.set_temperature(temperature, false, extruder.id());
-
             if(print.config().layer_temperature2.get_at(extruder.id()) != 0 && print.config().layer_range_min2.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature2.get_at(extruder.id()), false, extruder.id());
             
-            if(print.config().layer_temperature2.get_at(extruder.id()) != 0 && print.config().layer_range_max2.get_at(extruder.id()) == m_layer_index)
-                gcode += m_writer.set_temperature(temperature, false, extruder.id());
-
             if(print.config().layer_temperature3.get_at(extruder.id()) != 0 && print.config().layer_range_min3.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature3.get_at(extruder.id()), false, extruder.id());
-            
-            if(print.config().layer_temperature3.get_at(extruder.id()) != 0 && print.config().layer_range_max3.get_at(extruder.id()) == m_layer_index)
-                gcode += m_writer.set_temperature(temperature, false, extruder.id());
             
             if(print.config().layer_temperature4.get_at(extruder.id()) != 0 && print.config().layer_range_min4.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature4.get_at(extruder.id()), false, extruder.id());
             
-            if(print.config().layer_temperature4.get_at(extruder.id()) != 0 && print.config().layer_range_max4.get_at(extruder.id()) == m_layer_index)
-                gcode += m_writer.set_temperature(temperature, false, extruder.id());
-
             if(print.config().layer_temperature5.get_at(extruder.id()) != 0 && print.config().layer_range_min5.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature5.get_at(extruder.id()), false, extruder.id());
-            
-            if(print.config().layer_temperature5.get_at(extruder.id()) != 0 && print.config().layer_range_max5.get_at(extruder.id()) == m_layer_index)
-                gcode += m_writer.set_temperature(temperature, false, extruder.id());
             
         }
         if(!m_second_layer_things_done)

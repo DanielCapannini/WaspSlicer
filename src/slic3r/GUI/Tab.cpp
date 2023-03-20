@@ -1965,37 +1965,31 @@ void TabFilament::build()
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature0"));
         line.append_option(optgroup->get_option("layer_range_min0"));
-        line.append_option(optgroup->get_option("layer_range_max0"));
         optgroup->append_line(line);
 
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature1"));
         line.append_option(optgroup->get_option("layer_range_min1"));
-        line.append_option(optgroup->get_option("layer_range_max1"));
         optgroup->append_line(line);
 
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature2"));
         line.append_option(optgroup->get_option("layer_range_min2"));
-        line.append_option(optgroup->get_option("layer_range_max2"));
         optgroup->append_line(line);
 
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature3"));
         line.append_option(optgroup->get_option("layer_range_min3"));
-        line.append_option(optgroup->get_option("layer_range_max3"));
         optgroup->append_line(line);
 
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature4"));
         line.append_option(optgroup->get_option("layer_range_min4"));
-        line.append_option(optgroup->get_option("layer_range_max4"));
         optgroup->append_line(line);
 
         line = { L("set temp"), "" };
         line.append_option(optgroup->get_option("layer_temperature5"));
         line.append_option(optgroup->get_option("layer_range_min5"));
-        line.append_option(optgroup->get_option("layer_range_max5"));
         optgroup->append_line(line);
 
     page = add_options_page(L("Cooling"), "cooling");
