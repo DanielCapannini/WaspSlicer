@@ -1970,8 +1970,8 @@ void TabFilament::build()
             def.min = 0;
             def.max = 10;
             def.mode = comExpert;
-        Option option(def, "n_temp_ranges");
-        optgroup->append_single_option_line(option);
+        Option options(def, "n_temp_ranges");
+        optgroup->append_single_option_line(options);
 
         for(int i=0; i<m_config->opt_int("n_temp_ranges"); i++) {
             line = { L("set temp"), "" };
