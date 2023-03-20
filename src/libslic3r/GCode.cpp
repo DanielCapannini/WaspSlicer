@@ -2080,7 +2080,7 @@ LayerResult GCode::process_layer(
             int temperature = print.config().temperature.get_at(extruder.id());
 
             if (temperature > 0 && (temperature != print.config().first_layer_temperature.get_at(extruder.id())) && ! m_second_layer_things_done)
-                code += m_writer.set_temperature(temperature, false, extruder.id());
+                gcode += m_writer.set_temperature(temperature, false, extruder.id());
 
             if(print.config().layer_temperature0.get_at(extruder.id()) != 0 && print.config().layer_range_min0.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature0.get_at(extruder.id()), false, extruder.id());
