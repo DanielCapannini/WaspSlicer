@@ -1199,7 +1199,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
     std::string start_gcode = this->placeholder_parser_process("start_gcode", print.config().start_gcode.value, initial_extruder_id);
 
-    std::string preheating = std::to_string(print.config().preheating_temperature.get_at(first_printing_extruder_id));
+    std::string preheating = std::to_string(print.config().preheating_temperature.get_at(initial_extruder_id));
     start_gcode += "M109 T1 S";
     start_gcode += preheating;
     start_gcode += "\n";
