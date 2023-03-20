@@ -1198,6 +1198,11 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     DoExport::init_ooze_prevention(print, m_ooze_prevention);
 
     std::string start_gcode = this->placeholder_parser_process("start_gcode", print.config().start_gcode.value, initial_extruder_id);
+
+    std::string preheating = std::to_string(print.config().preheating_temperature.get_at(first_printing_extruder_id));
+    start_gcode += "M109 T1 S";
+    start_gcode += preheating;
+    start_gcode += "\n";
     // Set bed temperature if the start G-code does not contain any bed temp control G-codes.
     this->_print_first_layer_bed_temperature(file, print, start_gcode, initial_extruder_id, true);
     // Set extruder(s) temperature before and after start G-code.
