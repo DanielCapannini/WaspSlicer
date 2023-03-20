@@ -2935,17 +2935,17 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("layer_temperature0", coInts);
     def->label = L("new temperature");
-    def->tooltip = L("min layer of the range. Set it to zero to disable"
+    def->tooltip = L("New nozzle temperature for layers. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("Nozzle layer temperature");
+    def->full_label = L("New nozzle temperature");
     def->min = 0;
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_range_min0", coInts);
-    def->label = L("range min");
-    def->tooltip = L("max layer of the range. Set this to zero to disable "
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
     def->sidetext = L("");
     def->full_label = L("layer range min");
@@ -2955,17 +2955,17 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("layer_temperature1", coInts);
     def->label = L("new temperature");
-    def->tooltip = L("min layer of the range. Set it to zero to disable"
+    def->tooltip = L("New nozzle temperature for layers. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("Nozzle layer temperature");
+    def->full_label = L("New nozzle temperature");
     def->min = 0;
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_range_min1", coInts);
-    def->label = L("range min");
-    def->tooltip = L("max layer of the range. Set this to zero to disable "
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
     def->sidetext = L("");
     def->full_label = L("layer range min");
@@ -2975,17 +2975,17 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("layer_temperature2", coInts);
     def->label = L("new temperature");
-    def->tooltip = L("min layer of the range. Set it to zero to disable"
+    def->tooltip = L("New nozzle temperature for layers. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("Nozzle layer temperature");
+    def->full_label = L("New nozzle temperature");
     def->min = 0;
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_range_min2", coInts);
-    def->label = L("range min");
-    def->tooltip = L("max layer of the range. Set this to zero to disable "
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
     def->sidetext = L("");
     def->full_label = L("layer range min");
@@ -2995,18 +2995,18 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("layer_temperature3", coInts);
     def->label = L("new temperature");
-    def->tooltip = L("min layer of the range. Set it to zero to disable"
+    def->tooltip = L("New nozzle temperature for layers. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("Nozzle layer temperature");
+    def->full_label = L("New nozzle temperature");
     def->min = 0;
     def->max = max_temp;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_range_min3", coInts);
-    def->label = L("range min");
-    def->tooltip = L("max layer of the range. Set this to zero to disable "
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
     def->sidetext = L("");
     def->full_label = L("layer range min");
@@ -3017,18 +3017,18 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("layer_temperature4", coInts);
     def->label = L("new temperature");
-    def->tooltip = L("min layer of the range. Set it to zero to disable"
+    def->tooltip = L("New nozzle temperature for layers. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("Nozzle layer temperature");
+    def->full_label = L("New nozzle temperature");
     def->min = 0;
     def->max = max_temp;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_range_min4", coInts);
-    def->label = L("range min");
-    def->tooltip = L("max layer of the range. Set this to zero to disable "
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
     def->sidetext = L("");
     def->full_label = L("layer range min");
@@ -3039,18 +3039,18 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("layer_temperature5", coInts);
     def->label = L("new temperature");
-    def->tooltip = L("min layer of the range. Set it to zero to disable"
+    def->tooltip = L("New nozzle temperature for layers. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("Nozzle layer temperature");
+    def->full_label = L("New nozzle temperature");
     def->min = 0;
     def->max = max_temp;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_range_min5", coInts);
-    def->label = L("range min");
-    def->tooltip = L("max layer of the range. Set this to zero to disable "
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
     def->sidetext = L("");
     def->full_label = L("layer range min");

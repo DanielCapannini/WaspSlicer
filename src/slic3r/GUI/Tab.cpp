@@ -1962,32 +1962,32 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
 
-        line = { L("set temp"), "" };
+        line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature0"));
         line.append_option(optgroup->get_option("layer_range_min0"));
         optgroup->append_line(line);
 
-        line = { L("set temp"), "" };
+        line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature1"));
         line.append_option(optgroup->get_option("layer_range_min1"));
         optgroup->append_line(line);
 
-        line = { L("set temp"), "" };
+        line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature2"));
         line.append_option(optgroup->get_option("layer_range_min2"));
         optgroup->append_line(line);
 
-        line = { L("set temp"), "" };
+        line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature3"));
         line.append_option(optgroup->get_option("layer_range_min3"));
         optgroup->append_line(line);
 
-        line = { L("set temp"), "" };
+        line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature4"));
         line.append_option(optgroup->get_option("layer_range_min4"));
         optgroup->append_line(line);
 
-        line = { L("set temp"), "" };
+        line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature5"));
         line.append_option(optgroup->get_option("layer_range_min5"));
         optgroup->append_line(line);
