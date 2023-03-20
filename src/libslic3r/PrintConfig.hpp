@@ -823,6 +823,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionIntsNullable,       layer_temperature5))
     ((ConfigOptionInts,       layer_range_min5))
     ((ConfigOptionInts,       preheating_temperature))
+    ((ConfigOptionInts,       aria_calda))
     ((ConfigOptionInt,                threads))
     ((ConfigOptionPoints,             thumbnails))
     ((ConfigOptionEnum<GCodeThumbnailsFormat>,  thumbnails_format))
