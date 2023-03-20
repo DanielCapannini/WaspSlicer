@@ -199,6 +199,7 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
             || opt_key == "infill_first"
             || opt_key == "single_extruder_multi_material"
             || opt_key == "temperature"
+            || opt_key == "preheating_temperature"
             || opt_key == "layer_temperature0"
             || opt_key == "layer_range_min0"
             || opt_key == "layer_temperature1"

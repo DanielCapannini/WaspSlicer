@@ -1952,7 +1952,11 @@ void TabFilament::build()
 
         create_line_with_near_label_widget(optgroup, "idle_temperature");
 
-        Line line = { L("Nozzle"), "" };
+        Line line = { L("preheating"), ""};
+        line.append_option(optgroup->get_option("preheating_temperature"));
+        optgroup->append_line(line);
+
+        line = { L("Nozzle"), "" };
         line.append_option(optgroup->get_option("first_layer_temperature"));
         line.append_option(optgroup->get_option("temperature"));
         optgroup->append_line(line);

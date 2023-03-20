@@ -3059,6 +3059,16 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
+    def = this->add("preheating_temperature", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("Temperature of preheating. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("preheating temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
     def = this->add("thick_bridges", coBool);
     def->label = L("Thick bridges");
     def->category = L("Layers and Perimeters");
