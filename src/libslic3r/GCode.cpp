@@ -2078,10 +2078,10 @@ LayerResult GCode::process_layer(
                     continue;
             }
             int temperature = print.config().temperature.get_at(extruder.id());
-            if(print.config().layer_temperature0.get_at(extruder.id()) != 0 && print.config().layer_range_min0.get_at(extruder.id()) != 0 && print.config().layer_range_max0.get_at(extruder.id()) != 0 ){
-                int temp_range = print.config().layer_temperature0.get_at(extruder.id());
-                int range_min = print.config().layer_range_min0.get_at(extruder.id());
-                int range_max = print.config().layer_range_max0.get_at(extruder.id());
+            if(print.config().layer_temperature.get_at(extruder.id()) != 0 && print.config().layer_range_min.get_at(extruder.id()) != 0 && print.config().layer_range_max.get_at(extruder.id()) != 0 ){
+                int temp_range = print.config().layer_temperature.get_at(extruder.id());
+                int range_min = print.config().layer_range_min.get_at(extruder.id());
+                int range_max = print.config().layer_range_max.get_at(extruder.id());
                 if (temperature > 0 && (temperature != print.config().first_layer_temperature.get_at(extruder.id())))
                     range_min <= m_layer_index && m_layer_index <= range_max ? gcode += m_writer.set_temperature(temp_range, false, extruder.id()) : gcode += m_writer.set_temperature(temperature, false, extruder.id());
             
