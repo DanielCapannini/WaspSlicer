@@ -2133,15 +2133,15 @@ LayerResult GCode::process_layer(
             }
             int preheating1 = print.config().preheating_temperature1.get_at(extruder.id());
             if(preheating1 != 0 && print.config().layer_preheating1.get_at(extruder.id()) == m_layer_index){
-                start_gcode += "M109 T1 S";
-                start_gcode += std::to_string(preheating1);
-                start_gcode += "\n";
+                gcode += "M109 T1 S";
+                gcode += std::to_string(preheating1);
+                gcode += "\n";
             }
             int preheating2 = print.config().preheating_temperature2.get_at(extruder.id());
             if(preheating2 != 0 && print.config().layer_preheating2.get_at(extruder.id()) == m_layer_index){
-                start_gcode += "M109 T1 S";
-                start_gcode += std::to_string(preheating2);
-                start_gcode += "\n";
+                gcode += "M109 T1 S";
+                gcode += std::to_string(preheating2);
+                gcode += "\n";
             }
         }
         if(!m_second_layer_things_done)
