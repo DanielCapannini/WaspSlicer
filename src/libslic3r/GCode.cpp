@@ -1203,9 +1203,9 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     start_gcode += "M109 T1 S";
     start_gcode += preheating;
     start_gcode += "\n";
-    std::string aria_calda = std::to_string(print.config().aria_calda.get_at(initial_extruder_id));
+    std::string aria_caldal = std::to_string(print.config().aria_calda.get_at(initial_extruder_id));
     start_gcode += "M104 T5 S";
-    start_gcode += aria_calda;
+    start_gcode += aria_caldal;
     start_gcode += "\n";
     // Set bed temperature if the start G-code does not contain any bed temp control G-codes.
     this->_print_first_layer_bed_temperature(file, print, start_gcode, initial_extruder_id, true);

@@ -1968,7 +1968,7 @@ void TabFilament::build()
 
         line = { L("aria calda"), ""};
         line.append_option(optgroup->get_option("aria_calda"));
-        optgroup->activate_line(line);
+        optgroup->append_line(line);
 
         line = { L("new temerature"), "" };
         line.append_option(optgroup->get_option("layer_temperature0"));
