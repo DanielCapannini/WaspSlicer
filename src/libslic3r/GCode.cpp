@@ -2114,31 +2114,31 @@ LayerResult GCode::process_layer(
                 gcode += m_writer.set_temperature(print.config().layer_temperature5.get_at(extruder.id()), false, extruder.id());
             
             int aria_calda1 = print.config().aria_calda1.get_at(extruder.id());
-            if(aria_calda1 != 0 && print.config().layer_air1.get_at(extruder.id())){
+            if(aria_calda1 != 0 && print.config().layer_air1.get_at(extruder.id()) == m_layer_index){
                 gcode += "M104 T5 S";
                 gcode += std::to_string(aria_calda1);
                 gcode += "\n";
             }
             int aria_calda2 = print.config().aria_calda2.get_at(extruder.id());
-            if(aria_calda2 != 0 && print.config().layer_air2.get_at(extruder.id())){
+            if(aria_calda2 != 0 && print.config().layer_air2.get_at(extruder.id()) == m_layer_index){
                 gcode += "M104 T5 S";
                 gcode += std::to_string(aria_calda2);
                 gcode += "\n";
             }
             int aria_calda3 = print.config().aria_calda3.get_at(extruder.id());
-            if(aria_calda3 != 0 && print.config().layer_air3.get_at(extruder.id())){
+            if(aria_calda3 != 0 && print.config().layer_air3.get_at(extruder.id()) == m_layer_index){
                 gcode += "M104 T5 S";
                 gcode += std::to_string(aria_calda3);
                 gcode += "\n";
             }
             int preheating1 = print.config().preheating_temperature1.get_at(extruder.id());
-            if(preheating1 != 0 && print.config().layer_preheating1.get_at(extruder.id())){
+            if(preheating1 != 0 && print.config().layer_preheating1.get_at(extruder.id()) == m_layer_index){
                 start_gcode += "M109 T1 S";
                 start_gcode += std::to_string(preheating1);
                 start_gcode += "\n";
             }
             int preheating2 = print.config().preheating_temperature2.get_at(extruder.id());
-            if(preheating2 != 0 && print.config().layer_preheating2.get_at(extruder.id())){
+            if(preheating2 != 0 && print.config().layer_preheating2.get_at(extruder.id()) == m_layer_index){
                 start_gcode += "M109 T1 S";
                 start_gcode += std::to_string(preheating2);
                 start_gcode += "\n";
