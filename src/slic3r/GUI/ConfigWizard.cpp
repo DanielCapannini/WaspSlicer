@@ -73,11 +73,11 @@ using Config::SnapshotDB;
 
 // Configuration data structures extensions needed for the wizard
 
-bool Bundle::load(fs::path source_path, BundleLocation location, bool ais_wasp_bundle)
+bool Bundle::load(fs::path source_path, BundleLocation location, bool ais_prusa_bundle)
 {
     this->preset_bundle = std::make_unique<PresetBundle>();
     this->location = location;
-    this->is_wasp_bundle = ais_wasp_bundle;
+    this->is_prusa_bundle = ais_prusa_bundle;
 
     std::string path_string = source_path.string();
     // Throw when parsing invalid configuration. Only valid configuration is supposed to be provided over the air.
@@ -105,7 +105,7 @@ Bundle::Bundle(Bundle &&other)
     : preset_bundle(std::move(other.preset_bundle))
     , vendor_profile(other.vendor_profile)
     , location(other.location)
-    , is_wasp_bundle(other.is_wasp_bundle)
+    , is_wasp_bundle(other.is_prusa_bundle)
 {
     other.vendor_profile = nullptr;
 }
@@ -160,7 +160,7 @@ BundleMap BundleMap::load()
     return res;
 }
 
-Bundle& BundleMap::wasp_bundle()
+Bundle& BundleMap::prusa_bundle()
 {
     auto it = find(PresetBundle::WASP_BUNDLE);
     if (it == end()) {
@@ -170,9 +170,9 @@ Bundle& BundleMap::wasp_bundle()
     return it->second;
 }
 
-const Bundle& BundleMap::wasp_bundle() const
+const Bundle& BundleMap::prusa_bundle() const
 {
-    return const_cast<BundleMap*>(this)->wasp_bundle();
+    return const_cast<BundleMap*>(this)->prusa_bundle();
 }
 
 
@@ -1113,7 +1113,7 @@ void PageMaterials::sort_list_data(StringList* list, bool add_All_item, bool mat
 // then the rest
 // in alphabetical order
     
-    std::vector<std::reference_wrapper<const std::string>> wasp_profiles;
+    std::vector<std::reference_wrapper<const std::string>> prusa_profiles;
     std::vector<std::reference_wrapper<const std::string>> other_profiles;
     bool add_TEMPLATES_item = false;
     for (int i = 0 ; i < list->size(); ++i) {
@@ -1124,8 +1124,8 @@ void PageMaterials::sort_list_data(StringList* list, bool add_All_item, bool mat
             add_TEMPLATES_item = true;
             continue;
         }
-        if (!material_type_ordering && data.find("Wasp") != std::string::npos)
-            wasp_profiles.push_back(data);
+        if (!material_type_ordering && data.find("Prusa") != std::string::npos)
+            prusa_profiles.push_back(data);
         else 
             other_profiles.push_back(data);
     }
@@ -1150,7 +1150,7 @@ void PageMaterials::sort_list_data(StringList* list, bool add_All_item, bool mat
             }
         }
     } else {
-        std::sort(wasp_profiles.begin(), wasp_profiles.end(), [](std::reference_wrapper<const std::string> a, std::reference_wrapper<const std::string> b) {
+        std::sort(prusa_profiles.begin(), prusa_profiles.end(), [](std::reference_wrapper<const std::string> a, std::reference_wrapper<const std::string> b) {
             return a.get() < b.get();
             });
         std::sort(other_profiles.begin(), other_profiles.end(), [](std::reference_wrapper<const std::string> a, std::reference_wrapper<const std::string> b) {
@@ -1163,7 +1163,7 @@ void PageMaterials::sort_list_data(StringList* list, bool add_All_item, bool mat
         list->append(_L("(All)"), &EMPTY);
     if (materials->technology == T_FFF && add_TEMPLATES_item)
         list->append(_L("(Templates)"), &TEMPLATES);
-    for (const auto& item : wasp_profiles)
+    for (const auto& item : prusa_profiles)
         list->append(item, &const_cast<std::string&>(item.get()));
     for (const auto& item : other_profiles)
         list->append(item, &const_cast<std::string&>(item.get()));
@@ -1176,30 +1176,30 @@ void PageMaterials::sort_list_data(PresetList* list, const std::vector<ProfilePr
     // then wasp profiles
     // then the rest
     // in alphabetical order
-    std::vector<ProfilePrintData> wasp_profiles;
+    std::vector<ProfilePrintData> prusa_profiles;
     std::vector<ProfilePrintData> other_profiles;
     //for (int i = 0; i < data.size(); ++i) {
     for (const auto& item : data) {
         const std::string& name = item.name;
-        if (name.find("Wasp") != std::string::npos)
-            wasp_profiles.emplace_back(item);
+        if (name.find("Prusa") != std::string::npos)
+            prusa_profiles.emplace_back(item);
         else
             other_profiles.emplace_back(item);
     }
-    std::sort(wasp_profiles.begin(), wasp_profiles.end(), [](ProfilePrintData a, ProfilePrintData b) {
+    std::sort(prusa_profiles.begin(), prusa_profiles.end(), [](ProfilePrintData a, ProfilePrintData b) {
         return a.name.get() < b.name.get();
         });
     std::sort(other_profiles.begin(), other_profiles.end(), [](ProfilePrintData a, ProfilePrintData b) {
         return a.name.get() < b.name.get();
         });
     list->Clear();
-    for (size_t i = 0; i < wasp_profiles.size(); ++i) {
-        list->append(std::string(wasp_profiles[i].name) + (wasp_profiles[i].omnipresent || template_shown ? "" : " *"), &const_cast<std::string&>(wasp_profiles[i].name.get()));
-        list->Check(i, wasp_profiles[i].checked);
+    for (size_t i = 0; i < prusa_profiles.size(); ++i) {
+        list->append(std::string(prusa_profiles[i].name) + (prusa_profiles[i].omnipresent || template_shown ? "" : " *"), &const_cast<std::string&>(prusa_profiles[i].name.get()));
+        list->Check(i, prusa_profiles[i].checked);
     }
     for (size_t i = 0; i < other_profiles.size(); ++i) {
         list->append(std::string(other_profiles[i].name) + (other_profiles[i].omnipresent || template_shown ? "" : " *"), &const_cast<std::string&>(other_profiles[i].name.get()));
-        list->Check(i + wasp_profiles.size(), other_profiles[i].checked);
+        list->Check(i + prusa_profiles.size(), other_profiles[i].checked);
     }
 }
 
@@ -2240,14 +2240,14 @@ const std::string& Materials::get_material_vendor(const Preset *preset)
 // priv
 
 static const std::unordered_map<std::string, std::pair<std::string, std::string>> legacy_preset_map {{
-    { "Original Wasp i3 MK2.ini",                           std::make_pair("MK2S", "0.4") },
-    { "Original Wasp i3 MK2 MM Single Mode.ini",            std::make_pair("MK2SMM", "0.4") },
-    { "Original Wasp i3 MK2 MM Single Mode 0.6 nozzle.ini", std::make_pair("MK2SMM", "0.6") },
-    { "Original Wasp i3 MK2 MultiMaterial.ini",             std::make_pair("MK2SMM", "0.4") },
-    { "Original Wasp i3 MK2 MultiMaterial 0.6 nozzle.ini",  std::make_pair("MK2SMM", "0.6") },
-    { "Original Wasp i3 MK2 0.25 nozzle.ini",               std::make_pair("MK2S", "0.25") },
-    { "Original Wasp i3 MK2 0.6 nozzle.ini",                std::make_pair("MK2S", "0.6") },
-    { "Original Wasp i3 MK3.ini",                           std::make_pair("MK3",  "0.4") },
+    { "Original Prusa i3 MK2.ini",                           std::make_pair("MK2S", "0.4") },
+    { "Original Prusa i3 MK2 MM Single Mode.ini",            std::make_pair("MK2SMM", "0.4") },
+    { "Original Prusa i3 MK2 MM Single Mode 0.6 nozzle.ini", std::make_pair("MK2SMM", "0.6") },
+    { "Original Prusa i3 MK2 MultiMaterial.ini",             std::make_pair("MK2SMM", "0.4") },
+    { "Original Prusa i3 MK2 MultiMaterial 0.6 nozzle.ini",  std::make_pair("MK2SMM", "0.6") },
+    { "Original Prusa i3 MK2 0.25 nozzle.ini",               std::make_pair("MK2S", "0.25") },
+    { "Original Prusa i3 MK2 0.6 nozzle.ini",                std::make_pair("MK2S", "0.6") },
+    { "Original Prusa i3 MK3.ini",                           std::make_pair("MK3",  "0.4") },
 }};
 
 void ConfigWizard::priv::load_pages()
@@ -2352,7 +2352,7 @@ void ConfigWizard::priv::load_vendors()
 
                 const auto &model = needle->second.first;
                 const auto &variant = needle->second.second;
-                appconfig_new.set_variant("WaspResearch", model, variant, true);
+                appconfig_new.set_variant("PrusaResearch", model, variant, true);
             }
     }
 
@@ -2979,10 +2979,10 @@ bool ConfigWizard::priv::apply_config(AppConfig *app_config, PresetBundle *prese
         return pt;
     };
     // Wasp printers are considered first, then 3rd party.
-    if (preferred_pt = get_preferred_printer_technology("WaspResearch", bundles.wasp_bundle());
+    if (preferred_pt = get_preferred_printer_technology("PrusaResearch", bundles.prusa_bundle());
         preferred_pt == ptAny || (preferred_pt == ptSLA && suppress_sla_printer)) {
         for (const auto& bundle : bundles) {
-            if (bundle.second.is_wasp_bundle) { continue; }
+            if (bundle.second.is_prusa_bundle) { continue; }
             if (PrinterTechnology pt = get_preferred_printer_technology(bundle.first, bundle.second); pt == ptAny)
                 continue;
             else if (preferred_pt == ptAny)
@@ -3007,7 +3007,7 @@ bool ConfigWizard::priv::apply_config(AppConfig *app_config, PresetBundle *prese
     for (const auto &pair : bundles) {
         if (pair.second.location == BundleLocation::IN_VENDOR) { continue; }
 
-        if (pair.second.is_wasp_bundle) {
+        if (pair.second.is_prusa_bundle) {
             // Always install Wasp bundle, because it has a lot of filaments/materials
             // likely to be referenced by other profiles.
             install_bundles.emplace_back(pair.first);
@@ -3120,10 +3120,10 @@ bool ConfigWizard::priv::apply_config(AppConfig *app_config, PresetBundle *prese
         return std::string();
     };
     // Wasp printers are considered first, then 3rd party.
-    if (preferred_model = get_preferred_printer_model("WaspResearch", bundles.wasp_bundle(), preferred_variant);
+    if (preferred_model = get_preferred_printer_model("PrusaResearch", bundles.prusa_bundle(), preferred_variant);
         preferred_model.empty()) {
         for (const auto& bundle : bundles) {
-            if (bundle.second.is_wasp_bundle) { continue; }
+            if (bundle.second.is_prusa_bundle) { continue; }
             if (preferred_model = get_preferred_printer_model(bundle.first, bundle.second, preferred_variant);
                 !preferred_model.empty())
                     break;
@@ -3321,6 +3321,10 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     wxGetApp().UpdateDarkUI(p->btn_next);
     wxGetApp().UpdateDarkUI(p->btn_finish);
     wxGetApp().UpdateDarkUI(p->btn_cancel);
+
+     const auto prusa_it = p->bundles.find("PrusaResearch");
+    wxCHECK_RET(prusa_it != p->bundles.cend(), "Vendor PrusaResearch not found");
+    const VendorProfile *vendor_prusa = prusa_it->second.vendor_profile;
 
     const auto wasp_it = p->bundles.find("Wasp");
     const VendorProfile *vendor_wasp = wasp_it->second.vendor_profile;
