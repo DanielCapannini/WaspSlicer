@@ -1541,6 +1541,18 @@ msgstr "basato su Slic3r"
 msgid "Bed"
 msgstr "Piano"
 
+#: src/slic3r/GUI/Tab.cpp:1997
+msgid "preheating"
+msgstr "preriscaldamento"
+
+#: src/slic3r/GUI/Tab.cpp:1997
+msgid "nozzle new temperature"
+msgstr "ugello nuova temperatura"
+
+#: src/slic3r/GUI/Tab.cpp:1997
+msgid "new temperature"
+msgstr "nuova temperatura"
+
 #: src/libslic3r/PrintConfig.cpp:254
 msgid "Bed custom model"
 msgstr "Modello piano personalizzato"

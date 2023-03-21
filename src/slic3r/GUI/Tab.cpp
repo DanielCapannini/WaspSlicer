@@ -1976,7 +1976,7 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("temperature"));
         optgroup->append_line(line);
 
-        line = { L("nozzle new temrature"), "" };
+        line = { L("nozzle new temperature"), "" };
         line.append_option(optgroup->get_option("layer_temperature0"));
         line.append_option(optgroup->get_option("layer_range_min0"));
         optgroup->append_line(line);
