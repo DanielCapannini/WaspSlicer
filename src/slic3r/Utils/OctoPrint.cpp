@@ -315,7 +315,7 @@ bool OctoPrint::upload(PrintHostUpload upload_data, ProgressFn prorgess_fn, Erro
     }
     if (resolved_addr.empty()) {
         // no resolved addresses - try system resolving
-        BOOST_LOG_TRIVIAL(error) << "WaspSlicer failed to resolve hostname " << m_host << " into the IP address. Starting upload with system resolving.";
+        BOOST_LOG_TRIVIAL(error) << "PrusaSlicer failed to resolve hostname " << m_host << " into the IP address. Starting upload with system resolving.";
         return upload_inner_with_host(std::move(upload_data), prorgess_fn, error_fn, info_fn);
     } else if (resolved_addr.size() == 1) {
         // one address resolved - upload there
@@ -525,19 +525,19 @@ const char* SL1Host::get_name() const { return "SL1Host"; }
 
 wxString SL1Host::get_test_ok_msg () const
 {
-    return _(L("Connection to Wasp SL1 / SL1S works correctly."));
+    return _(L("Connection to Prusa SL1 / SL1S works correctly."));
 }
 
 wxString SL1Host::get_test_failed_msg (wxString &msg) const
 {
     return GUI::from_u8((boost::format("%s: %s")
-                    % _utf8(L("Could not connect to Wasp SLA"))
+                    % _utf8(L("Could not connect to Prusa SLA"))
                     % std::string(msg.ToUTF8())).str());
 }
 
 bool SL1Host::validate_version_text(const boost::optional<std::string> &version_text) const
 {
-    return version_text ? boost::starts_with(*version_text, "Wasp SLA") : false;
+    return version_text ? boost::starts_with(*version_text, "Prusa SLA") : false;
 }
 
 void SL1Host::set_auth(Http &http) const
@@ -556,8 +556,8 @@ void SL1Host::set_auth(Http &http) const
     }
 }
 
-// WaspLink
-WaspLink::WaspLink(DynamicPrintConfig* config, bool show_after_message) :
+// PrusaLink
+PrusaLink::PrusaLink(DynamicPrintConfig* config, bool show_after_message) :
     OctoPrint(config),
     m_authorization_type(dynamic_cast<const ConfigOptionEnum<AuthorizationType>*>(config->option("printhost_authorization_type"))->value),
     m_username(config->opt_string("printhost_user")),
@@ -566,26 +566,26 @@ WaspLink::WaspLink(DynamicPrintConfig* config, bool show_after_message) :
 {
 }
 
-const char* WaspLink::get_name() const { return "WaspLink"; }
+const char* PrusaLink::get_name() const { return "PrusaLink"; }
 
-wxString WaspLink::get_test_ok_msg() const
+wxString PrusaLink::get_test_ok_msg() const
 {
-    return _(L("Connection to WaspLink works correctly."));
+    return _(L("Connection to PrusaLink works correctly."));
 }
 
-wxString WaspLink::get_test_failed_msg(wxString& msg) const
+wxString PrusaLink::get_test_failed_msg(wxString& msg) const
 {
     return GUI::from_u8((boost::format("%s: %s")
-        % _utf8(L("Could not connect to WaspLink"))
+        % _utf8(L("Could not connect to PrusaLink"))
         % std::string(msg.ToUTF8())).str());
 }
 
-bool WaspLink::validate_version_text(const boost::optional<std::string>& version_text) const
+bool PrusaLink::validate_version_text(const boost::optional<std::string>& version_text) const
 {
-    return version_text ? (boost::starts_with(*version_text, "WaspLink") || boost::starts_with(*version_text, "OctoPrint")) : false;
+    return version_text ? (boost::starts_with(*version_text, "PrusaLink") || boost::starts_with(*version_text, "OctoPrint")) : false;
 }
 
-void WaspLink::set_auth(Http& http) const
+void PrusaLink::set_auth(Http& http) const
 {
     switch (m_authorization_type) {
     case atKeyPassword:
@@ -602,11 +602,11 @@ void WaspLink::set_auth(Http& http) const
 }
 
 #if 0
-bool WaspLink::version_check(const boost::optional<std::string>& version_text) const
+bool PrusaLink::version_check(const boost::optional<std::string>& version_text) const
 {
     // version_text is in format OctoPrint 1.2.3
     // true (= use PUT) should return: 
-    // WaspLink 0.7+
+    // PrusaLink 0.7+
     
     try {
         if (!version_text)
@@ -619,7 +619,7 @@ bool WaspLink::version_check(const boost::optional<std::string>& version_text) c
             throw Slic3r::RuntimeError("invalid version_text");
         
         Semver semver(name_and_version[1]); // throws Slic3r::RuntimeError when unable to parse
-        if (name_and_version.front() == "WaspLink" && semver >= Semver(0, 7, 0))
+        if (name_and_version.front() == "PrusaLink" && semver >= Semver(0, 7, 0))
             return true;
     } catch (const Slic3r::RuntimeError& ex) {
         BOOST_LOG_TRIVIAL(error) << std::string("Print host version check failed: ") + ex.what();
@@ -629,7 +629,7 @@ bool WaspLink::version_check(const boost::optional<std::string>& version_text) c
 }
 #endif
 
-bool WaspLink::test(wxString& msg) const
+bool PrusaLink::test(wxString& msg) const
 {
     // Since the request is performed synchronously here,
     // it is ok to refer to `msg` from within the closure
@@ -684,7 +684,7 @@ bool WaspLink::test(wxString& msg) const
      return res;
 }
 
-bool WaspLink::get_storage(wxArrayString& storage_path, wxArrayString& storage_name) const
+bool PrusaLink::get_storage(wxArrayString& storage_path, wxArrayString& storage_name) const
 {
     const char* name = get_name();
 
@@ -739,7 +739,7 @@ bool WaspLink::get_storage(wxArrayString& storage_path, wxArrayString& storage_n
                 const auto path = section.second.get_optional<std::string>("path");
                 const auto space = section.second.get_optional<std::string>("free_space");
                 const auto read_only = section.second.get_optional<bool>("read_only");
-                const auto ro = section.second.get_optional<bool>("ro"); // In WaspLink 0.7.0RC2 "read_only" value is stored under "ro".
+                const auto ro = section.second.get_optional<bool>("ro"); // In PrusaLink 0.7.0RC2 "read_only" value is stored under "ro".
                 const auto available = section.second.get_optional<bool>("available");
                 if (path && (!available || *available)) {
                     StorageInfo si;
@@ -786,7 +786,7 @@ bool WaspLink::get_storage(wxArrayString& storage_path, wxArrayString& storage_n
     return res;
 }
 
-bool WaspLink::test_with_method_check(wxString& msg, bool& use_put) const
+bool PrusaLink::test_with_method_check(wxString& msg, bool& use_put) const
 {
     // Since the request is performed synchronously here,
     // it is ok to refer to `msg` from within the closure
@@ -858,7 +858,7 @@ bool WaspLink::test_with_method_check(wxString& msg, bool& use_put) const
 
 
 #ifdef WIN32
-bool WaspLink::test_with_resolved_ip_and_method_check(wxString& msg, bool& use_put) const
+bool PrusaLink::test_with_resolved_ip_and_method_check(wxString& msg, bool& use_put) const
 {
     // Since the request is performed synchronously here,
     // it is ok to refer to `msg` from within the closure
@@ -922,7 +922,7 @@ bool WaspLink::test_with_resolved_ip_and_method_check(wxString& msg, bool& use_p
     return res;
 }
 
-bool WaspLink::upload_inner_with_resolved_ip(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn, const boost::asio::ip::address& resolved_addr) const
+bool PrusaLink::upload_inner_with_resolved_ip(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn, const boost::asio::ip::address& resolved_addr) const
 {
     info_fn(L"resolve", boost::nowide::widen(resolved_addr.to_string()));
 
@@ -961,7 +961,7 @@ bool WaspLink::upload_inner_with_resolved_ip(PrintHostUpload upload_data, Progre
 
 #endif //WIN32
 
-bool WaspLink::upload_inner_with_host(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const
+bool PrusaLink::upload_inner_with_host(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const
 {
     const char* name = get_name();
 
@@ -1017,7 +1017,7 @@ bool WaspLink::upload_inner_with_host(PrintHostUpload upload_data, ProgressFn pr
     return post_inner(std::move(upload_data), std::move(url), name, prorgess_fn, error_fn, info_fn);
 }
 
-bool WaspLink::put_inner(PrintHostUpload upload_data, std::string url, const std::string& name, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const
+bool PrusaLink::put_inner(PrintHostUpload upload_data, std::string url, const std::string& name, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const
 {
     info_fn(L"set_complete_off", wxString());
 
@@ -1027,7 +1027,7 @@ bool WaspLink::put_inner(PrintHostUpload upload_data, std::string url, const std
 
     Http http = Http::put(std::move(url));
     set_auth(http);
-    // This is ugly, but works. There was an error at WaspLink side that accepts any string at Print-After-Upload as true, thus False was also triggering print after upload.
+    // This is ugly, but works. There was an error at PrusaLink side that accepts any string at Print-After-Upload as true, thus False was also triggering print after upload.
     if (upload_data.post_action == PrintHostPostUploadAction::StartPrint)
         http.header("Print-After-Upload", "?1");
 
@@ -1060,7 +1060,7 @@ bool WaspLink::put_inner(PrintHostUpload upload_data, std::string url, const std
 
     return res;
 }
-bool WaspLink::post_inner(PrintHostUpload upload_data, std::string url, const std::string& name, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const
+bool PrusaLink::post_inner(PrintHostUpload upload_data, std::string url, const std::string& name, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const
 {
     info_fn(L"set_complete_off", wxString());
     bool res = true;
@@ -1073,7 +1073,7 @@ bool WaspLink::post_inner(PrintHostUpload upload_data, std::string url, const st
         .form_add_file("file", upload_data.source_path.string(), upload_filename.string())
         .on_complete([&](std::string body, unsigned status) {
             if (m_show_after_message) {
-                // WaspConnect message
+                // PrusaConnect message
                 wxString widebody = wxString::FromUTF8(body);
                 BOOST_LOG_TRIVIAL(debug) << boost::format("%1%: File uploaded: HTTP %2%: %3%") % name % status % widebody;
                 std::string message = m_show_after_message ? (boost::format("%1%") % widebody).str() : std::string();
@@ -1082,7 +1082,7 @@ bool WaspLink::post_inner(PrintHostUpload upload_data, std::string url, const st
                 else 
                     info_fn(L"complete", message);
             } else {
-                // WaspLink
+                // PrusaLink
                 BOOST_LOG_TRIVIAL(debug) << boost::format("%1%: File uploaded: HTTP %2%") % name % status;
                 info_fn(L"complete", wxString());
             }
@@ -1110,17 +1110,17 @@ bool WaspLink::post_inner(PrintHostUpload upload_data, std::string url, const st
     return res;
 }
 
-void WaspLink::set_http_post_header_args(Http& http, PrintHostPostUploadAction post_action) const
+void PrusaLink::set_http_post_header_args(Http& http, PrintHostPostUploadAction post_action) const
 {
     http.form_add("print", post_action == PrintHostPostUploadAction::StartPrint ? "true" : "false");
 }
 
-WaspConnect::WaspConnect(DynamicPrintConfig* config)
-    : WaspLink(config, true)
+PrusaConnect::PrusaConnect(DynamicPrintConfig* config)
+    : PrusaLink(config, true)
 {
 }
 
-void WaspConnect::set_http_post_header_args(Http& http, PrintHostPostUploadAction post_action) const
+void PrusaConnect::set_http_post_header_args(Http& http, PrintHostPostUploadAction post_action) const
 {
     // Language for accept message
     wxString wlang = GUI::wxGetApp().current_language_code();

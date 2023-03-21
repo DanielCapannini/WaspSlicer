@@ -1,5 +1,5 @@
-#ifndef _waspslicer_technologies_h_
-#define _waspslicer_technologies_h_
+#ifndef _prusaslicer_technologies_h_
+#define _prusaslicer_technologies_h_
 
 //=============
 // debug techs
@@ -59,4 +59,4 @@
 #define ENABLE_ALTERNATIVE_FILE_WILDCARDS_GENERATOR (1 && ENABLE_2_6_0_ALPHA1)
 
 
-#endif // _waspslicer_technologies_h_
+#endif // _prusaslicer_technologies_h_

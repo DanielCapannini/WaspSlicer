@@ -62,11 +62,11 @@ public:
 	// stops listening, on linux stops the background thread
 	void    shutdown(MainFrame* main_frame);
 
-	//finds paths to models in message(= command line arguments, first should be waspSlicer executable)
+	//finds paths to models in message(= command line arguments, first should be prusaSlicer executable)
 	//and sends them to plater via LoadFromOtherInstanceEvent
 	//security of messages: from message all existing paths are proccesed to load model 
 	//						win32 - anybody who has hwnd can send message.
-	//						mac - anybody who posts notification with name:@"OtherWaspSlicerTerminating"
+	//						mac - anybody who posts notification with name:@"OtherPrusaSlicerTerminating"
 	//						linux - instrospectable on dbus
 	void           handle_message(const std::string& message);
 #ifdef __APPLE__

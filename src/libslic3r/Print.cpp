@@ -199,6 +199,20 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
             || opt_key == "infill_first"
             || opt_key == "single_extruder_multi_material"
             || opt_key == "temperature"
+            || opt_key == "preheating_temperature"
+            || opt_key == "aria_calda"
+            || opt_key == "layer_temperature0"
+            || opt_key == "layer_range_min0"
+            || opt_key == "layer_temperature1"
+            || opt_key == "layer_range_min1"
+            || opt_key == "layer_temperature2"
+            || opt_key == "layer_range_min2"
+            || opt_key == "layer_temperature3"
+            || opt_key == "layer_range_min3"
+            || opt_key == "layer_temperature4"
+            || opt_key == "layer_range_min4"
+            || opt_key == "layer_temperature5"
+            || opt_key == "layer_range_min5"
             || opt_key == "idle_temperature"
             || opt_key == "wipe_tower"
             || opt_key == "wipe_tower_width"
@@ -1303,7 +1317,7 @@ void Print::_make_wipe_tower()
     // Check whether there are any layers in m_tool_ordering, which are marked with has_wipe_tower,
     // they print neither object, nor support. These layers are above the raft and below the object, and they
     // shall be added to the support layers to be printed.
-    // see https://github.com/wasp3d/WaspSlicer/issues/607
+    // see https://github.com/prusa3d/PrusaSlicer/issues/607
     {
         size_t idx_begin = size_t(-1);
         size_t idx_end   = m_wipe_tower_data.tool_ordering.layer_tools().size();

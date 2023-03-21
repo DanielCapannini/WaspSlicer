@@ -504,7 +504,7 @@ GCode::ObjectsLayerToPrint GCode::collect_layers_to_print(const PrintObject& obj
                 + layer_to_print.layer()->height
                 + std::max(0., extra_gap);
             // Negative support_contact_z is not taken into account, it can result in false positives in cases
-            // where previous layer has object extrusions too (https://github.com/wasp3d/WaspSlicer/issues/2752)
+            // where previous layer has object extrusions too (https://github.com/prusa3d/PrusaSlicer/issues/2752)
 
             if (has_extrusions && layer_to_print.print_z() > maximal_print_z + 2. * EPSILON)
                 warning_ranges.emplace_back(std::make_pair((last_extrusion_layer ? last_extrusion_layer->print_z() : 0.), layers_to_print.back().print_z()));
@@ -818,7 +818,7 @@ namespace DoExport {
                     {
                         // Minimal volumetric flow should not be calculated over ironing extrusions.
                         // Use following lambda instead of the built-it method.
-                        // https://github.com/wasp3d/WaspSlicer/issues/5082
+                        // https://github.com/prusa3d/PrusaSlicer/issues/5082
                         auto min_mm3_per_mm_no_ironing = [](const ExtrusionEntityCollection& eec) -> double {
                             double min = std::numeric_limits<double>::max();
                             for (const ExtrusionEntity* ee : eec.entities)
@@ -1198,6 +1198,15 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     DoExport::init_ooze_prevention(print, m_ooze_prevention);
 
     std::string start_gcode = this->placeholder_parser_process("start_gcode", print.config().start_gcode.value, initial_extruder_id);
+
+    std::string preheating = std::to_string(print.config().preheating_temperature.get_at(initial_extruder_id));
+    start_gcode += "M109 T1 S";
+    start_gcode += preheating;
+    start_gcode += "\n";
+    std::string aria_caldal = std::to_string(print.config().aria_calda.get_at(initial_extruder_id));
+    start_gcode += "M104 T5 S";
+    start_gcode += aria_caldal;
+    start_gcode += "\n";
     // Set bed temperature if the start G-code does not contain any bed temp control G-codes.
     this->_print_first_layer_bed_temperature(file, print, start_gcode, initial_extruder_id, true);
     // Set extruder(s) temperature before and after start G-code.
@@ -1282,7 +1291,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
         // Sort layers by Z.
         // All extrusion moves with the same top layer height are extruded uninterrupted.
         std::vector<std::pair<coordf_t, ObjectsLayerToPrint>> layers_to_print = collect_layers_to_print(print);
-        // Wasp Multi-Material wipe tower.
+        // Prusa Multi-Material wipe tower.
         if (has_wipe_tower && ! layers_to_print.empty()) {
             m_wipe_tower.reset(new WipeTowerIntegration(print.config(), *print.wipe_tower_data().priming.get(), print.wipe_tower_data().tool_changes, *print.wipe_tower_data().final_purge.get()));
             file.write(m_writer.travel_to_z(first_layer_height + m_config.z_offset.value, "Move to the first layer height"));
@@ -1311,7 +1320,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
                     }
                 } else {
                     // This is not Marlin, M1 command is probably not supported.
-                    // (See https://github.com/wasp3d/WaspSlicer/issues/5441.)
+                    // (See https://github.com/prusa3d/PrusaSlicer/issues/5441.)
                     if (overlap) {
                         print.active_step_add_warning(PrintStateBase::WarningLevel::CRITICAL,
                             _(L("Your print is very close to the priming regions. "
@@ -1364,7 +1373,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     file.write(m_writer.postamble());
 
     // From now to the end of G-code, the G-code find / replace post-processor will be disabled.
-    // Thus the WaspSlicer generated config will NOT be processed by the G-code post-processor, see GH issue #7952.
+    // Thus the PrusaSlicer generated config will NOT be processed by the G-code post-processor, see GH issue #7952.
     file.find_replace_supress();
 
     // adds tags for time estimators
@@ -1389,15 +1398,15 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     	file.write_format("; total toolchanges = %i\n", print.m_print_statistics.total_toolchanges);
     file.write_format(";%s\n", GCodeProcessor::reserved_tag(GCodeProcessor::ETags::Estimated_Printing_Time_Placeholder).c_str());
 
-    // Append full config, delimited by two 'phony' configuration keys waspslicer_config = begin and waspslicer_config = end.
-    // The delimiters are structured as configuration key / value pairs to be parsable by older versions of WaspSlicer G-code viewer.
+    // Append full config, delimited by two 'phony' configuration keys prusaslicer_config = begin and prusaslicer_config = end.
+    // The delimiters are structured as configuration key / value pairs to be parsable by older versions of PrusaSlicer G-code viewer.
     {
-        file.write("\n; waspslicer_config = begin\n");
+        file.write("\n; prusaslicer_config = begin\n");
         std::string full_config;
         append_full_config(print, full_config);
         if (!full_config.empty())
             file.write(full_config);
-        file.write("; waspslicer_config = end\n");
+        file.write("; prusaslicer_config = end\n");
     }
     print.throw_if_canceled();
 }
@@ -1671,7 +1680,7 @@ void GCode::print_machine_envelope(GCodeOutputStream &file, Print &print)
             factor == 60 ? "mm / min" : "mm / sec");
 
         // Now M204 - acceleration. This one is quite hairy thanks to how Marlin guys care about
-        // backwards compatibility: https://github.com/wasp3d/WaspSlicer/issues/1089
+        // backwards compatibility: https://github.com/prusa3d/PrusaSlicer/issues/1089
         // Legacy Marlin should export travel acceleration the same as printing acceleration.
         // MarlinFirmware has the two separated.
         int travel_acc = flavor == gcfMarlinLegacy
@@ -1939,14 +1948,14 @@ namespace Skirt {
             assert(valid);
             // This print_z has not been extruded yet (sequential print)
             // FIXME: The skirt_done should not be empty at this point. The check is a workaround
-            // of https://github.com/wasp3d/WaspSlicer/issues/5652, but it deserves a real fix.
+            // of https://github.com/prusa3d/PrusaSlicer/issues/5652, but it deserves a real fix.
             if (valid) {
 #if 0
                 // Prime just the first printing extruder. This is original Slic3r's implementation.
                 skirt_loops_per_extruder_out[layer_tools.extruders.front()] = std::pair<size_t, size_t>(0, print.config().skirts.value);
 #else
                 // Prime all extruders planned for this layer, see
-                // https://github.com/wasp3d/WaspSlicer/issues/469#issuecomment-322450619
+                // https://github.com/prusa3d/PrusaSlicer/issues/469#issuecomment-322450619
                 skirt_loops_per_extruder_all_printing(print, layer_tools, skirt_loops_per_extruder_out);
 #endif
                 assert(!skirt_done.empty());
@@ -2067,7 +2076,7 @@ LayerResult GCode::process_layer(
             + "\n";
     }
 
-    if (! first_layer && ! m_second_layer_things_done) {
+    if (! first_layer) {
         // Transition from 1st to 2nd layer. Adjust nozzle temperatures as prescribed by the nozzle dependent
         // first_layer_temperature vs. temperature settings.
         for (const Extruder &extruder : m_writer.extruders()) {
@@ -2078,10 +2087,31 @@ LayerResult GCode::process_layer(
                     continue;
             }
             int temperature = print.config().temperature.get_at(extruder.id());
-            if (temperature > 0 && (temperature != print.config().first_layer_temperature.get_at(extruder.id())))
+
+            if (temperature > 0 && (temperature != print.config().first_layer_temperature.get_at(extruder.id())) && ! m_second_layer_things_done)
                 gcode += m_writer.set_temperature(temperature, false, extruder.id());
+
+            if(print.config().layer_temperature0.get_at(extruder.id()) != 0 && print.config().layer_range_min0.get_at(extruder.id()) == m_layer_index)
+                gcode += m_writer.set_temperature(print.config().layer_temperature0.get_at(extruder.id()), false, extruder.id());
+            
+            if(print.config().layer_temperature1.get_at(extruder.id()) != 0 && print.config().layer_range_min1.get_at(extruder.id()) == m_layer_index)
+                gcode += m_writer.set_temperature(print.config().layer_temperature1.get_at(extruder.id()), false, extruder.id());
+            
+            if(print.config().layer_temperature2.get_at(extruder.id()) != 0 && print.config().layer_range_min2.get_at(extruder.id()) == m_layer_index)
+                gcode += m_writer.set_temperature(print.config().layer_temperature2.get_at(extruder.id()), false, extruder.id());
+            
+            if(print.config().layer_temperature3.get_at(extruder.id()) != 0 && print.config().layer_range_min3.get_at(extruder.id()) == m_layer_index)
+                gcode += m_writer.set_temperature(print.config().layer_temperature3.get_at(extruder.id()), false, extruder.id());
+            
+            if(print.config().layer_temperature4.get_at(extruder.id()) != 0 && print.config().layer_range_min4.get_at(extruder.id()) == m_layer_index)
+                gcode += m_writer.set_temperature(print.config().layer_temperature4.get_at(extruder.id()), false, extruder.id());
+            
+            if(print.config().layer_temperature5.get_at(extruder.id()) != 0 && print.config().layer_range_min5.get_at(extruder.id()) == m_layer_index)
+                gcode += m_writer.set_temperature(print.config().layer_temperature5.get_at(extruder.id()), false, extruder.id());
+            
         }
-        gcode += m_writer.set_bed_temperature(print.config().bed_temperature.get_at(first_extruder_id));
+        if(!m_second_layer_things_done)
+            gcode += m_writer.set_bed_temperature(print.config().bed_temperature.get_at(first_extruder_id));
         // Mark the temperature transition from 1st to 2nd layer to be finished.
         m_second_layer_things_done = true;
     }
@@ -2908,7 +2938,7 @@ std::string GCode::_extrude(const ExtrusionPath &path, const std::string_view de
     }
 
     // adds processor tags and updates processor tracking data
-    // WaspMultiMaterial::Writer may generate GCodeProcessor::Height_Tag lines without updating m_last_height
+    // PrusaMultiMaterial::Writer may generate GCodeProcessor::Height_Tag lines without updating m_last_height
     // so, if the last role was GCodeExtrusionRole::WipeTower we force export of GCodeProcessor::Height_Tag lines
     bool last_was_wipe_tower = (m_last_processor_extrusion_role == GCodeExtrusionRole::WipeTower);
     assert(is_decimal_separator_point());

@@ -80,7 +80,7 @@ static double calc_max_layer_height(const PrintConfig &config, double max_object
             mlh = 0.75 * config.nozzle_diameter.values[i];
         max_layer_height = std::min(max_layer_height, mlh);
     }
-    // The Wasp3D Fast (0.35mm layer height) print profile sets a higher layer height than what is normally allowed
+    // The Prusa3D Fast (0.35mm layer height) print profile sets a higher layer height than what is normally allowed
     // by the nozzle. This is a hack and it works by increasing extrusion width. See GH #3919.
     return std::max(max_layer_height, max_object_layer_height);
 }
@@ -431,7 +431,7 @@ void ToolOrdering::fill_wipe_tower_partitions(const PrintConfig &config, coordf_
         }
     }
 
-    // If the model contains empty layers (such as https://github.com/wasp3d/Slic3r/issues/1266), there might be layers
+    // If the model contains empty layers (such as https://github.com/prusa3d/Slic3r/issues/1266), there might be layers
     // that were not marked as has_wipe_tower, even when they should have been. This produces a crash with soluble supports
     // and maybe other problems. We will therefore go through layer_tools and detect and fix this.
     // So, if there is a non-object layer starting with different extruder than the last one ended with (or containing more than one extruder),

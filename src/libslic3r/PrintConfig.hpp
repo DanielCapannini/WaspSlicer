@@ -44,7 +44,7 @@ enum class MachineLimitsUsage {
 };
 
 enum PrintHostType {
-    htWaspLink, htWaspConnect, htOctoPrint, htDuet, htFlashAir, htAstroBox, htRepetier, htMKS
+    htPrusaLink, htPrusaConnect, htOctoPrint, htDuet, htFlashAir, htAstroBox, htRepetier, htMKS
 };
 
 enum AuthorizationType {
@@ -810,6 +810,20 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionBool,               spiral_vase))
     ((ConfigOptionInt,                standby_temperature_delta))
     ((ConfigOptionInts,               temperature))
+    ((ConfigOptionIntsNullable,       layer_temperature0))
+    ((ConfigOptionInts,       layer_range_min0))
+    ((ConfigOptionIntsNullable,       layer_temperature1))
+    ((ConfigOptionInts,       layer_range_min1))
+    ((ConfigOptionIntsNullable,       layer_temperature2))
+    ((ConfigOptionInts,       layer_range_min2))
+    ((ConfigOptionIntsNullable,       layer_temperature3))
+    ((ConfigOptionInts,       layer_range_min3))
+    ((ConfigOptionIntsNullable,       layer_temperature4))
+    ((ConfigOptionInts,       layer_range_min4))
+    ((ConfigOptionIntsNullable,       layer_temperature5))
+    ((ConfigOptionInts,       layer_range_min5))
+    ((ConfigOptionInts,       preheating_temperature))
+    ((ConfigOptionInts,       aria_calda))
     ((ConfigOptionInt,                threads))
     ((ConfigOptionPoints,             thumbnails))
     ((ConfigOptionEnum<GCodeThumbnailsFormat>,  thumbnails_format))

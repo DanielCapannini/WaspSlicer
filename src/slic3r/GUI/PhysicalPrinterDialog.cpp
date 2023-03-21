@@ -484,13 +484,13 @@ void PhysicalPrinterDialog::update(bool printer_change)
         const auto opt = m_config->option<ConfigOptionEnum<PrintHostType>>("host_type");
         m_optgroup->show_field("host_type");
 
-        // hide WaspConnect address
+        // hide PrusaConnect address
         if (Field* printhost_field = m_optgroup->get_field("print_host"); printhost_field) {
-            if (wxTextCtrl* temp = dynamic_cast<wxTextCtrl*>(printhost_field->getWindow()); temp && temp->GetValue() == L"https://connect.wasp3d.com") {
+            if (wxTextCtrl* temp = dynamic_cast<wxTextCtrl*>(printhost_field->getWindow()); temp && temp->GetValue() == L"https://connect.prusa3d.com") {
                 temp->SetValue(wxString());
             }
         }
-        if (opt->value == htWaspLink) { // WaspConnect does NOT allow http digest
+        if (opt->value == htPrusaLink) { // PrusaConnect does NOT allow http digest
             m_optgroup->show_field("printhost_authorization_type");
             AuthorizationType auth_type = m_config->option<ConfigOptionEnum<AuthorizationType>>("printhost_authorization_type")->value;
             m_optgroup->show_field("printhost_apikey", auth_type == AuthorizationType::atKeyPassword);
@@ -502,10 +502,10 @@ void PhysicalPrinterDialog::update(bool printer_change)
             for (const std::string& opt_key : std::vector<std::string>{ "printhost_user", "printhost_password" })
                 m_optgroup->hide_field(opt_key);
             supports_multiple_printers = opt && opt->value == htRepetier;
-            if (opt->value == htWaspConnect) { // automatically show default waspconnect address
+            if (opt->value == htPrusaConnect) { // automatically show default prusaconnect address
                 if (Field* printhost_field = m_optgroup->get_field("print_host"); printhost_field) {
                     if (wxTextCtrl* temp = dynamic_cast<wxTextCtrl*>(printhost_field->getWindow()); temp && temp->GetValue().IsEmpty()) {
-                        temp->SetValue(L"https://connect.wasp3d.com");
+                        temp->SetValue(L"https://connect.prusa3d.com");
                     }
                 }
             }
@@ -546,7 +546,7 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
         wxString label;
     } link, connect;
     // allowed models are: all MINI, all MK3 and newer, MK2.5 and MK2.5S  
-    auto model_supports_wasplink = [](const std::string& model) {
+    auto model_supports_prusalink = [](const std::string& model) {
         return model.size() >= 2 &&
                 (( boost::starts_with(model, "MK") && model[2] > '2' && model[2] <= '9')
                 || boost::starts_with(model, "MINI")
@@ -555,7 +555,7 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
                 );
     };
     // allowed models are: all MK3/S and MK2.5/S
-    auto model_supports_waspconnect = [](const std::string& model) {
+    auto model_supports_prusaconnect = [](const std::string& model) {
         return model.size() >= 2 &&
                 ((boost::starts_with(model, "MK") && model[2] > '2' && model[2] <= '9')
                 || boost::starts_with(model, "MK2.5")
@@ -563,28 +563,28 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
                 );
     };
 
-    // set all_presets_are_wasplink_supported
+    // set all_presets_are_prusalink_supported
     for (PresetForPrinter* prstft : m_presets) {
         std::string preset_name = prstft->get_preset_name();
         if (Preset* preset = wxGetApp().preset_bundle->printers.find_preset(preset_name)) {
             std::string model_id = preset->config.opt_string("printer_model");            
             if (preset->vendor) {
-                if (preset->vendor->name == "Wasp Research") {
+                if (preset->vendor->name == "Prusa Research") {
                     const std::vector<VendorProfile::PrinterModel>& models = preset->vendor->models;
                     auto it = std::find_if(models.begin(), models.end(),
                         [model_id](const VendorProfile::PrinterModel& model) { return model.id == model_id; });
-                    if (it != models.end() && model_supports_wasplink(it->family))
+                    if (it != models.end() && model_supports_prusalink(it->family))
                         continue;
                 }
             }
-            else if (model_supports_wasplink(model_id))
+            else if (model_supports_prusalink(model_id))
                 continue;
         }
         link.supported = false;
         break;
     }
 
-    // set all_presets_are_waspconnect_supported
+    // set all_presets_are_prusaconnect_supported
     for (PresetForPrinter* prstft : m_presets) {
         std::string preset_name = prstft->get_preset_name();
         Preset* preset = wxGetApp().preset_bundle->printers.find_preset(preset_name);
@@ -593,16 +593,16 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
             break;
         }
         std::string model_id = preset->config.opt_string("printer_model");
-        if (preset->vendor && preset->vendor->name != "Wasp Research") {
+        if (preset->vendor && preset->vendor->name != "Prusa Research") {
             connect.supported = false;
             break;
         }
-        if (preset->vendor && preset->vendor->name != "Wasp Research") {
+        if (preset->vendor && preset->vendor->name != "Prusa Research") {
             connect.supported = false;
             break;
         }
         // model id should be enough for this case
-        if (!model_supports_waspconnect(model_id)) {
+        if (!model_supports_prusaconnect(model_id)) {
             connect.supported = false;
             break;
         }
@@ -618,11 +618,11 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
     for (size_t i = 0; i < ht->m_opt.enum_def->labels().size(); ++ i) {
         wxString label = _(ht->m_opt.enum_def->label(i));
         if (const std::string &value = ht->m_opt.enum_def->value(i);
-            value == "wasplink") {
+            value == "prusalink") {
             link.label = label;
             if (!link.supported)
                 continue;
-        } else if (value == "waspconnect") {
+        } else if (value == "prusaconnect") {
             connect.label = label;
             if (!connect.supported)
                 continue;
@@ -637,9 +637,9 @@ void PhysicalPrinterDialog::update_host_type(bool printer_change)
     int index_in_choice = (printer_change ? std::clamp(last_in_conf - ((int)ht->m_opt.enum_def->values().size() - (int)types.size()), 0, (int)ht->m_opt.enum_def->values().size() - 1) : last_in_conf);
     choice->set_value(index_in_choice);
     if (link.supported && link.label == _(ht->m_opt.enum_def->label(index_in_choice)))
-        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(htWaspLink));
+        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(htPrusaLink));
     else if (connect.supported && connect.label == _(ht->m_opt.enum_def->label(index_in_choice)))
-        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(htWaspConnect));
+        m_config->set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(htPrusaConnect));
     else {
         int host_type = std::clamp(index_in_choice + ((int)ht->m_opt.enum_def->values().size() - (int)types.size()), 0, (int)ht->m_opt.enum_def->values().size() - 1);
         PrintHostType type = static_cast<PrintHostType>(host_type);
