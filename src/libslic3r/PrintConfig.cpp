@@ -3069,14 +3069,122 @@ void PrintConfigDef::init_fff_params()
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
 
-    def = this->add("aria_calda", coInts);
+    def = this->add("preheating_temperature1", coInts);
     def->label = L("temperature");
     def->tooltip = L("Temperature of preheating. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("preheating temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_preheating1", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("preheating_temperature2", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("Temperature of preheating. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("preheating temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_preheating2", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("aria_calda", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("hot air temperature. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
     def->full_label = L("getto aria calda");
     def->min = 0;
     def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("aria_calda1", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("hot air temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("getto aria calda");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_air1", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("aria_calda2", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("hot air temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("getto aria calda");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_air2", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("aria_calda3", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("hot air temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("getto aria calda");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_air3", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("thick_bridges", coBool);

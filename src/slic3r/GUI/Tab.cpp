@@ -1956,9 +1956,14 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("preheating_temperature"));
         optgroup->append_line(line);
 
-        line = { L("Nozzle"), "" };
-        line.append_option(optgroup->get_option("first_layer_temperature"));
-        line.append_option(optgroup->get_option("temperature"));
+        line = { L("preheating new temperature"), ""};
+        line.append_option(optgroup->get_option("preheating_temperature1"));
+        line.append_option(optgroup->get_option("layer_preheating1"));
+        optgroup->append_line(line);
+
+        line = { L("preheating new temperature"), ""};
+        line.append_option(optgroup->get_option("preheating_temperature2"));
+        line.append_option(optgroup->get_option("layer_preheating2"));
         optgroup->append_line(line);
 
         line = { L("Bed"), "" };
@@ -1966,38 +1971,58 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("bed_temperature"));
         optgroup->append_line(line);
 
-        line = { L("aria calda"), ""};
-        line.append_option(optgroup->get_option("aria_calda"));
+        line = { L("Nozzle"), "" };
+        line.append_option(optgroup->get_option("first_layer_temperature"));
+        line.append_option(optgroup->get_option("temperature"));
         optgroup->append_line(line);
 
-        line = { L("new temerature"), "" };
+        line = { L("nozzle new temrature"), "" };
         line.append_option(optgroup->get_option("layer_temperature0"));
         line.append_option(optgroup->get_option("layer_range_min0"));
         optgroup->append_line(line);
 
-        line = { L("new temerature"), "" };
+        line = { L("nozzle new temperature"), "" };
         line.append_option(optgroup->get_option("layer_temperature1"));
         line.append_option(optgroup->get_option("layer_range_min1"));
         optgroup->append_line(line);
 
-        line = { L("new temerature"), "" };
+        line = { L("nozzle new temperature"), "" };
         line.append_option(optgroup->get_option("layer_temperature2"));
         line.append_option(optgroup->get_option("layer_range_min2"));
         optgroup->append_line(line);
 
-        line = { L("new temerature"), "" };
+        line = { L("nozzle new temperature"), "" };
         line.append_option(optgroup->get_option("layer_temperature3"));
         line.append_option(optgroup->get_option("layer_range_min3"));
         optgroup->append_line(line);
 
-        line = { L("new temerature"), "" };
+        line = { L("nozzle new temperature"), "" };
         line.append_option(optgroup->get_option("layer_temperature4"));
         line.append_option(optgroup->get_option("layer_range_min4"));
         optgroup->append_line(line);
 
-        line = { L("new temerature"), "" };
+        line = { L("nozzle new temperature"), "" };
         line.append_option(optgroup->get_option("layer_temperature5"));
         line.append_option(optgroup->get_option("layer_range_min5"));
+        optgroup->append_line(line);
+
+        line = { L("aria calda"), ""};
+        line.append_option(optgroup->get_option("aria_calda"));
+        optgroup->append_line(line);
+
+        line = { L("aria calda new temperature")}
+        line.append_option(optgroup->get_option("aria_calda1"));
+        line.append_option(optgroup->get_option("layer_air1"));
+        optgroup->append_line(line);
+
+        line = { L("aria calda new temperature")}
+        line.append_option(optgroup->get_option("aria_calda2"));
+        line.append_option(optgroup->get_option("layer_air2"));
+        optgroup->append_line(line);
+
+        line = { L("aria calda new temperature")}
+        line.append_option(optgroup->get_option("aria_calda3"));
+        line.append_option(optgroup->get_option("layer_air3"));
         optgroup->append_line(line);
 
     page = add_options_page(L("Cooling"), "cooling");

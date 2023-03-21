@@ -1199,14 +1199,18 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
     std::string start_gcode = this->placeholder_parser_process("start_gcode", print.config().start_gcode.value, initial_extruder_id);
 
-    std::string preheating = std::to_string(print.config().preheating_temperature.get_at(initial_extruder_id));
-    start_gcode += "M109 T1 S";
-    start_gcode += preheating;
-    start_gcode += "\n";
-    std::string aria_caldal = std::to_string(print.config().aria_calda.get_at(initial_extruder_id));
-    start_gcode += "M104 T5 S";
-    start_gcode += aria_caldal;
-    start_gcode += "\n";
+    int preheating = print.config().preheating_temperature.get_at(initial_extruder_id);
+    if(preheating != 0){
+        start_gcode += "M109 T1 S";
+        start_gcode += std::to_string(preheating);
+        start_gcode += "\n";
+    }
+    int aria_caldal = print.config().aria_calda.get_at(initial_extruder_id);
+    if(aria_caldal != 0){
+        start_gcode += "M104 T5 S";
+        start_gcode += std::to_string(aria_caldal);
+        start_gcode += "\n";
+    }
     // Set bed temperature if the start G-code does not contain any bed temp control G-codes.
     this->_print_first_layer_bed_temperature(file, print, start_gcode, initial_extruder_id, true);
     // Set extruder(s) temperature before and after start G-code.
@@ -2109,6 +2113,36 @@ LayerResult GCode::process_layer(
             if(print.config().layer_temperature5.get_at(extruder.id()) != 0 && print.config().layer_range_min5.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature5.get_at(extruder.id()), false, extruder.id());
             
+            int aria_calda1 = print.config().aria_calda1.get_at(extruder.id());
+            if(aria_calda1 != 0 && print.config().layer_air1.get_at(extruder.id())){
+                gcode += "M104 T5 S";
+                gcode += std::to_string(aria_calda1);
+                gcode += "\n";
+            }
+            int aria_calda2 = print.config().aria_calda2.get_at(extruder.id());
+            if(aria_calda2 != 0 && print.config().layer_air2.get_at(extruder.id())){
+                gcode += "M104 T5 S";
+                gcode += std::to_string(aria_calda2);
+                gcode += "\n";
+            }
+            int aria_calda3 = print.config().aria_calda3.get_at(extruder.id());
+            if(aria_calda3 != 0 && print.config().layer_air3.get_at(extruder.id())){
+                gcode += "M104 T5 S";
+                gcode += std::to_string(aria_calda3);
+                gcode += "\n";
+            }
+            int preheating1 = print.config().preheating_temperature1.get_at(extruder.id());
+            if(preheating1 != 0 && print.config().layer_preheating1.get_at(extruder.id())){
+                start_gcode += "M109 T1 S";
+                start_gcode += std::to_string(preheating1);
+                start_gcode += "\n";
+            }
+            int preheating2 = print.config().preheating_temperature2.get_at(extruder.id());
+            if(preheating2 != 0 && print.config().layer_preheating2.get_at(extruder.id())){
+                start_gcode += "M109 T1 S";
+                start_gcode += std::to_string(preheating2);
+                start_gcode += "\n";
+            }
         }
         if(!m_second_layer_things_done)
             gcode += m_writer.set_bed_temperature(print.config().bed_temperature.get_at(first_extruder_id));
