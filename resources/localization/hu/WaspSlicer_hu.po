@@ -4795,8 +4795,8 @@ msgid "Choose one file (3MF/AMF):"
 msgstr "Válasszon ki egy fájlt (3MF/AMF):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1973
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
-msgstr "Válasszon ki egy vagy több fájlt (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
+msgstr "Válasszon ki egy vagy több fájlt (STL/3MF/STEP/OBJ/AMF/WASP):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1984
 msgid "Choose ZIP file:"
@@ -7635,8 +7635,8 @@ msgid "Mate&rial Settings Tab"
 msgstr "Anyagbeállítások Lap"
 
 #: src/slic3r/GUI/MainFrame.cpp:1703
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Válasszon egy fájlt a szeleteléshez (STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Válasszon egy fájlt a szeleteléshez (STL/OBJ/AMF/3MF/WASP):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1715
 msgid "No previously sliced file."

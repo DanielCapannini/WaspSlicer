@@ -4533,8 +4533,8 @@ msgid "Choose one file (3MF/AMF):"
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:1973
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
-msgstr "選擇一個或多個文件  (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
+msgstr "選擇一個或多個文件  (STL/3MF/STEP/OBJ/AMF/WASP):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1984
 msgid "Choose ZIP file:"
@@ -7277,8 +7277,8 @@ msgid "Mate&rial Settings Tab"
 msgstr ""
 
 #: src/slic3r/GUI/MainFrame.cpp:1703
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "選擇要切片的文件(STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "選擇要切片的文件(STL/OBJ/AMF/3MF/WASP):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1715
 msgid "No previously sliced file."

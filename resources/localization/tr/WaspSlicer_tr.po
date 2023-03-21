@@ -4574,9 +4574,9 @@ msgid "Choose one file (3MF/AMF):"
 msgstr "Bir dosya seçin (3MF/AMF):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1973
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
 msgstr ""
-"Bir veya daha fazla dosya seçin (STL / OBJ / AMF / 3MF / PRUSA / STEP):"
+"Bir veya daha fazla dosya seçin (STL / OBJ / AMF / 3MF / WASP / STEP):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1984
 msgid "Choose ZIP file:"
@@ -7345,8 +7345,8 @@ msgid "Mate&rial Settings Tab"
 msgstr "Mate&ryal Ayarları Sekmesi"
 
 #: src/slic3r/GUI/MainFrame.cpp:1703
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Dilimlemek için bir dosya seçin (STL / OBJ / AMF / 3MF / PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Dilimlemek için bir dosya seçin (STL / OBJ / AMF / 3MF / WASP):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1715
 msgid "No previously sliced file."

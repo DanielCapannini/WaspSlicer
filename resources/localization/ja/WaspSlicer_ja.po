@@ -2053,8 +2053,8 @@ msgid "Choose a file to import bed texture from (PNG/SVG):"
 msgstr "ベッドのイメージファイルを選択(PNG/SVG):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1613
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "スライスするファイルを選択(STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "スライスするファイルを選択(STL/OBJ/AMF/3MF/WASP):"
 
 #: src/slic3r/GUI/BedShapeDialog.cpp:574
 msgid "Choose an STL file to import bed model from:"
@@ -2081,8 +2081,8 @@ msgid "Choose one or more files (STL, OBJ):"
 msgstr "1つ以上のファイル(STL, OBJ)を選択します："
 
 #: src/slic3r/GUI/GUI_App.cpp:1870
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
-msgstr "1つ以上のファイルの選択(STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
+msgstr "1つ以上のファイルの選択(STL/3MF/STEP/OBJ/AMF/WASP):"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1361
 msgid "Choose the type of firmware used by your printer."

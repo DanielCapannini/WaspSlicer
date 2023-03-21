@@ -4531,7 +4531,7 @@ msgid "Choose one file (3MF/AMF):"
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:1973
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
 msgstr ""
 
 #: src/slic3r/GUI/GUI_App.cpp:1984
@@ -7284,7 +7284,7 @@ msgid "Mate&rial Settings Tab"
 msgstr ""
 
 #: src/slic3r/GUI/MainFrame.cpp:1703
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
 msgstr ""
 
 #: src/slic3r/GUI/MainFrame.cpp:1715
