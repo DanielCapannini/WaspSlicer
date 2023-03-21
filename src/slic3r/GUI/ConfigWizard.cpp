@@ -73,11 +73,11 @@ using Config::SnapshotDB;
 
 // Configuration data structures extensions needed for the wizard
 
-bool Bundle::load(fs::path source_path, BundleLocation location, bool ais_wasp_bundle)
+bool Bundle::load(fs::path source_path, BundleLocation location, bool ais_prusa_bundle)
 {
     this->preset_bundle = std::make_unique<PresetBundle>();
     this->location = location;
-    this->is_wasp_bundle = ais_wasp_bundle;
+    this->is_prusa_bundle = ais_prusa_bundle;
 
     std::string path_string = source_path.string();
     // Throw when parsing invalid configuration. Only valid configuration is supposed to be provided over the air.
@@ -105,7 +105,7 @@ Bundle::Bundle(Bundle &&other)
     : preset_bundle(std::move(other.preset_bundle))
     , vendor_profile(other.vendor_profile)
     , location(other.location)
-    , is_wasp_bundle(other.is_wasp_bundle)
+    , is_prusa_bundle(other.is_prusa_bundle)
 {
     other.vendor_profile = nullptr;
 }
@@ -118,21 +118,21 @@ BundleMap BundleMap::load()
     const auto archive_dir = (boost::filesystem::path(Slic3r::data_dir()) / "cache" / "vendor").make_preferred();
     const auto rsrc_vendor_dir = (boost::filesystem::path(resources_dir()) / "profiles").make_preferred();
 
-    // Load Wasp bundle from the datadir/vendor directory or from datadir/cache/vendor (archive) or from resources/profiles.
-    auto wasp_bundle_path = (vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-    BundleLocation wasp_bundle_loc = BundleLocation::IN_VENDOR;
-    if (! boost::filesystem::exists(wasp_bundle_path)) {
-        wasp_bundle_path = (archive_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-        wasp_bundle_loc = BundleLocation::IN_ARCHIVE;
+    // Load Prusa bundle from the datadir/vendor directory or from datadir/cache/vendor (archive) or from resources/profiles.
+    auto prusa_bundle_path = (vendor_dir / PresetBundle::PRUSA_BUNDLE).replace_extension(".ini");
+    BundleLocation prusa_bundle_loc = BundleLocation::IN_VENDOR;
+    if (! boost::filesystem::exists(prusa_bundle_path)) {
+        prusa_bundle_path = (archive_dir / PresetBundle::PRUSA_BUNDLE).replace_extension(".ini");
+        prusa_bundle_loc = BundleLocation::IN_ARCHIVE;
     }
-    if (!boost::filesystem::exists(wasp_bundle_path)) {
-        wasp_bundle_path = (rsrc_vendor_dir / PresetBundle::WASP_BUNDLE).replace_extension(".ini");
-        wasp_bundle_loc = BundleLocation::IN_RESOURCES;
+    if (!boost::filesystem::exists(prusa_bundle_path)) {
+        prusa_bundle_path = (rsrc_vendor_dir / PresetBundle::PRUSA_BUNDLE).replace_extension(".ini");
+        prusa_bundle_loc = BundleLocation::IN_RESOURCES;
     }
     {
-        Bundle wasp_bundle;
-        if (wasp_bundle.load(std::move(wasp_bundle_path), wasp_bundle_loc, true))
-            res.emplace(PresetBundle::WASP_BUNDLE, std::move(wasp_bundle)); 
+        Bundle prusa_bundle;
+        if (prusa_bundle.load(std::move(prusa_bundle_path), prusa_bundle_loc, true))
+            res.emplace(PresetBundle::PRUSA_BUNDLE, std::move(prusa_bundle)); 
     }
 
     // Load the other bundles in the datadir/vendor directory
@@ -160,19 +160,19 @@ BundleMap BundleMap::load()
     return res;
 }
 
-Bundle& BundleMap::wasp_bundle()
+Bundle& BundleMap::prusa_bundle()
 {
-    auto it = find(PresetBundle::WASP_BUNDLE);
+    auto it = find(PresetBundle::PRUSA_BUNDLE);
     if (it == end()) {
-        throw Slic3r::RuntimeError("ConfigWizard: Internal error in BundleMap: WASP_BUNDLE not loaded");
+        throw Slic3r::RuntimeError("ConfigWizard: Internal error in BundleMap: PRUSA_BUNDLE not loaded");
     }
 
     return it->second;
 }
 
-const Bundle& BundleMap::wasp_bundle() const
+const Bundle& BundleMap::prusa_bundle() const
 {
-    return const_cast<BundleMap*>(this)->wasp_bundle();
+    return const_cast<BundleMap*>(this)->prusa_bundle();
 }
 
 
@@ -477,7 +477,7 @@ ConfigWizardPage::ConfigWizardPage(ConfigWizard *parent, wxString title, wxStrin
     SetSizer(sizer);
 
     // There is strange layout on Linux with GTK3, 
-    // see https://github.com/wasp3d/WaspSlicer/issues/5103 and https://github.com/wasp3d/WaspSlicer/issues/4861
+    // see https://github.com/prusa3d/PrusaSlicer/issues/5103 and https://github.com/prusa3d/PrusaSlicer/issues/4861
     // So, non-active pages will be hidden later, on wxEVT_SHOW, after completed Layout() for all pages 
     if (!wxLinux_gtk3)
         this->Hide();
@@ -633,7 +633,7 @@ void PagePrinters::set_run_reason(ConfigWizard::RunReason run_reason)
     if (is_primary_printer_page
         && (run_reason == ConfigWizard::RR_DATA_EMPTY || run_reason == ConfigWizard::RR_DATA_LEGACY)
         && printer_pickers.size() > 0 
-        && printer_pickers[0]->vendor_id == PresetBundle::WASP_BUNDLE) {
+        && printer_pickers[0]->vendor_id == PresetBundle::PRUSA_BUNDLE) {
         printer_pickers[0]->select_one(0, true);
     }
 }
@@ -719,7 +719,6 @@ PageMaterials::PageMaterials(ConfigWizard *parent, Materials *materials, wxStrin
     sel_none->Bind(wxEVT_BUTTON, [this](wxCommandEvent &) { select_all(false); });
     /*
     Bind(wxEVT_PAINT, [this](wxPaintEvent& evt) {on_paint();});
-
     list_profile->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { on_mouse_move_on_profiles(evt); });
     list_profile->Bind(wxEVT_ENTER_WINDOW, [this](wxMouseEvent& evt) { on_mouse_enter_profiles(evt); });
     list_profile->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { on_mouse_leave_profiles(evt); });
@@ -918,7 +917,7 @@ void PageMaterials::update_lists(int sel_type, int sel_vendor, int last_selected
     bool templates_available = list_printer->size() > 1 && list_printer->get_data(1) == TEMPLATES;
 
     // Does our wxWidgets version support operator== for wxArrayInt ?
-    // https://github.com/wasp3d/WaspSlicer/issues/5152#issuecomment-787208614
+    // https://github.com/prusa3d/PrusaSlicer/issues/5152#issuecomment-787208614
 #if wxCHECK_VERSION(3, 1, 1)
     if (sel_printers != sel_printers_prev) {
 #else
@@ -1109,7 +1108,7 @@ void PageMaterials::sort_list_data(StringList* list, bool add_All_item, bool mat
 // get data from list
 // sort data
 // first should be <all>
-// then wasp profiles
+// then prusa profiles
 // then the rest
 // in alphabetical order
     
@@ -1173,7 +1172,7 @@ void PageMaterials::sort_list_data(StringList* list, bool add_All_item, bool mat
 void PageMaterials::sort_list_data(PresetList* list, const std::vector<ProfilePrintData>& data)
 {
     // sort data
-    // then wasp profiles
+    // then prusa profiles
     // then the rest
     // in alphabetical order
     std::vector<ProfilePrintData> prusa_profiles;
@@ -1463,7 +1462,7 @@ bool DownloaderUtils::Worker::perform_register(const std::string& path_override/
     BOOST_LOG_TRIVIAL(info) << "Downloader registration: Directory for downloads: " << chosen_dest.string();
     wxGetApp().app_config->set("url_downloader_dest", chosen_dest.string());
 #ifdef _WIN32
-    // Registry key creation for "waspslicer://" URL
+    // Registry key creation for "prusaslicer://" URL
 
     boost::filesystem::path binary_path(boost::filesystem::canonical(boost::dll::program_location()));
     // the path to binary needs to be correctly saved in string with respect to localized characters
@@ -1475,8 +1474,8 @@ bool DownloaderUtils::Worker::perform_register(const std::string& path_override/
     //std::string key_string = "\"" + binary_string + "\" \"%1\"";
     std::string key_string = "\"" + binary_string + "\" \"--single-instance\" \"%1\"";
 
-    wxRegKey key_first(wxRegKey::HKCU, "Software\\Classes\\waspslicer");
-    wxRegKey key_full(wxRegKey::HKCU, "Software\\Classes\\waspslicer\\shell\\open\\command");
+    wxRegKey key_first(wxRegKey::HKCU, "Software\\Classes\\prusaslicer");
+    wxRegKey key_full(wxRegKey::HKCU, "Software\\Classes\\prusaslicer\\shell\\open\\command");
     if (!key_first.Exists()) {
         key_first.Create(false);
     }
@@ -1485,11 +1484,11 @@ bool DownloaderUtils::Worker::perform_register(const std::string& path_override/
     if (!key_full.Exists()) {
         key_full.Create(false);
     }
-    //key_full = "\"C:\\Program Files\\Wasp3D\\WaspSlicer\\wasp-slicer-console.exe\" \"%1\"";
+    //key_full = "\"C:\\Program Files\\Prusa3D\\PrusaSlicer\\prusa-slicer-console.exe\" \"%1\"";
     key_full = key_string;
 #elif __APPLE__
     // Apple registers for custom url in info.plist thus it has to be already registered since build.
-    // The url will always trigger opening of waspslicer and we have to check that user has allowed it. (GUI_App::MacOpenURL is the triggered method)
+    // The url will always trigger opening of prusaslicer and we have to check that user has allowed it. (GUI_App::MacOpenURL is the triggered method)
 #else 
     // the performation should be called later during desktop integration
     perform_registration_linux = true;
@@ -1501,7 +1500,7 @@ void DownloaderUtils::Worker::deregister()
 {
 #ifdef _WIN32
     std::string key_string = "";
-    wxRegKey key_full(wxRegKey::HKCU, "Software\\Classes\\waspslicer\\shell\\open\\command");
+    wxRegKey key_full(wxRegKey::HKCU, "Software\\Classes\\prusaslicer\\shell\\open\\command");
     if (!key_full.Exists()) {
         return;
     }
@@ -1560,9 +1559,9 @@ PageReloadFromDisk::PageReloadFromDisk(ConfigWizard* parent)
 PageFilesAssociation::PageFilesAssociation(ConfigWizard* parent)
     : ConfigWizardPage(parent, _L("Files association"), _L("Files association"))
 {
-    cb_3mf = new wxCheckBox(this, wxID_ANY, _L("Associate .3mf files to WaspSlicer"));
-    cb_stl = new wxCheckBox(this, wxID_ANY, _L("Associate .stl files to WaspSlicer"));
-//    cb_gcode = new wxCheckBox(this, wxID_ANY, _L("Associate .gcode files to WaspSlicer G-code Viewer"));
+    cb_3mf = new wxCheckBox(this, wxID_ANY, _L("Associate .3mf files to PrusaSlicer"));
+    cb_stl = new wxCheckBox(this, wxID_ANY, _L("Associate .stl files to PrusaSlicer"));
+//    cb_gcode = new wxCheckBox(this, wxID_ANY, _L("Associate .gcode files to PrusaSlicer G-code Viewer"));
 
     append(cb_3mf);
     append(cb_stl);
@@ -1573,7 +1572,7 @@ PageFilesAssociation::PageFilesAssociation(ConfigWizard* parent)
 PageMode::PageMode(ConfigWizard *parent)
     : ConfigWizardPage(parent, _L("View mode"), _L("View mode"))
 {
-    append_text(_L("WaspSlicer's user interfaces comes in three variants:\nSimple, Advanced, and Expert.\n"
+    append_text(_L("PrusaSlicer's user interfaces comes in three variants:\nSimple, Advanced, and Expert.\n"
         "The Simple mode shows only the most frequently used settings relevant for regular 3D printing. "
         "The other two offer progressively more sophisticated fine-tuning, "
         "they are suitable for advanced and expert users, respectively."));
@@ -1625,7 +1624,7 @@ PageVendors::PageVendors(ConfigWizard *parent)
 
     for (const auto &pair : wizard_p()->bundles) {
         const VendorProfile *vendor = pair.second.vendor_profile;
-        if (vendor->id == PresetBundle::WASP_BUNDLE) { continue; }
+        if (vendor->id == PresetBundle::PRUSA_BUNDLE) { continue; }
         if (vendor && vendor->templates_profile)
             continue;
 
@@ -1960,7 +1959,7 @@ void PageTemperatures::apply_custom_config(DynamicPrintConfig &config)
 
 ConfigWizardIndex::ConfigWizardIndex(wxWindow *parent)
     : wxPanel(parent)
-    , bg(ScalableBitmap(parent, "WaspSlicer_192px_transparent.png", 192))
+    , bg(ScalableBitmap(parent, "PrusaSlicer_192px_transparent.png", 192))
     , bullet_black(ScalableBitmap(parent, "bullet_black.png"))
     , bullet_blue(ScalableBitmap(parent, "bullet_blue.png"))
     , bullet_white(ScalableBitmap(parent, "bullet_white.png"))
@@ -2444,7 +2443,7 @@ void ConfigWizard::priv::create_3rdparty_pages()
 {
     for (const auto &pair : bundles) {
         const VendorProfile *vendor = pair.second.vendor_profile;
-        if (vendor->id == PresetBundle::WASP_BUNDLE) { continue; }
+        if (vendor->id == PresetBundle::PRUSA_BUNDLE) { continue; }
 
         bool is_fff_technology = false;
         bool is_sla_technology = false;
@@ -2685,10 +2684,8 @@ void ConfigWizard::priv::select_default_materials_for_printer_models(Technology 
                     for (const std::string &material : printer_model->default_materials)
                         appconfig_new.set(appconfig_section, material, "1");
     };
-
     PagePrinters* page_printers = technology & T_FFF ? page_fff : page_msla;
     select_default_materials_for_printer_page(page_printers, technology);
-
     for (const auto& printer : pages_3rdparty)
     {
         page_printers = technology & T_FFF ? printer.second.first : printer.second.second;
@@ -2978,11 +2975,11 @@ bool ConfigWizard::priv::apply_config(AppConfig *app_config, PresetBundle *prese
         }
         return pt;
     };
-    // Wasp printers are considered first, then 3rd party.
-    if (preferred_pt = get_preferred_printer_technology("PrusaResearch", bundles.wasp_bundle());
+    // Prusa printers are considered first, then 3rd party.
+    if (preferred_pt = get_preferred_printer_technology("PrusaResearch", bundles.prusa_bundle());
         preferred_pt == ptAny || (preferred_pt == ptSLA && suppress_sla_printer)) {
         for (const auto& bundle : bundles) {
-            if (bundle.second.is_wasp_bundle) { continue; }
+            if (bundle.second.is_prusa_bundle) { continue; }
             if (PrinterTechnology pt = get_preferred_printer_technology(bundle.first, bundle.second); pt == ptAny)
                 continue;
             else if (preferred_pt == ptAny)
@@ -3007,8 +3004,8 @@ bool ConfigWizard::priv::apply_config(AppConfig *app_config, PresetBundle *prese
     for (const auto &pair : bundles) {
         if (pair.second.location == BundleLocation::IN_VENDOR) { continue; }
 
-        if (pair.second.is_wasp_bundle) {
-            // Always install Wasp bundle, because it has a lot of filaments/materials
+        if (pair.second.is_prusa_bundle) {
+            // Always install Prusa bundle, because it has a lot of filaments/materials
             // likely to be referenced by other profiles.
             install_bundles.emplace_back(pair.first);
             continue;
@@ -3119,11 +3116,11 @@ bool ConfigWizard::priv::apply_config(AppConfig *app_config, PresetBundle *prese
             variant.clear();
         return std::string();
     };
-    // Wasp printers are considered first, then 3rd party.
-    if (preferred_model = get_preferred_printer_model("PrusaResearch", bundles.wasp_bundle(), preferred_variant);
+    // Prusa printers are considered first, then 3rd party.
+    if (preferred_model = get_preferred_printer_model("PrusaResearch", bundles.prusa_bundle(), preferred_variant);
         preferred_model.empty()) {
         for (const auto& bundle : bundles) {
-            if (bundle.second.is_wasp_bundle) { continue; }
+            if (bundle.second.is_prusa_bundle) { continue; }
             if (preferred_model = get_preferred_printer_model(bundle.first, bundle.second, preferred_variant);
                 !preferred_model.empty())
                     break;
@@ -3322,7 +3319,7 @@ ConfigWizard::ConfigWizard(wxWindow *parent)
     wxGetApp().UpdateDarkUI(p->btn_finish);
     wxGetApp().UpdateDarkUI(p->btn_cancel);
 
-     const auto prusa_it = p->bundles.find("PrusaResearch");
+    const auto prusa_it = p->bundles.find("PrusaResearch");
     wxCHECK_RET(prusa_it != p->bundles.cend(), "Vendor PrusaResearch not found");
     const VendorProfile *vendor_prusa = prusa_it->second.vendor_profile;
 
