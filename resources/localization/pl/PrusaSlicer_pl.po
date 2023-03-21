@@ -2243,8 +2243,8 @@ msgid "Choose a file to import bed texture from (PNG/SVG):"
 msgstr "Wybierz plik, z którego ma być zaimportowana tekstura stołu (PNG/SVG):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1613
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Wybierz plik do pocięcia (STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Wybierz plik do pocięcia (STL/OBJ/AMF/3MF/WASP):"
 
 #: src/slic3r/GUI/BedShapeDialog.cpp:574
 msgid "Choose an STL file to import bed model from:"
@@ -2267,16 +2267,16 @@ msgid "Choose one file (GCODE/.GCO/.G/.ngc/NGC):"
 msgstr "Wybierz jeden plik (GCODE/.GCO/.G/.ngc/NGC):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1871
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
-msgstr "Wybierz jeden lub więcej plików (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
+msgstr "Wybierz jeden lub więcej plików (STL/3MF/STEP/OBJ/AMF/WASP):"
 
 #: src/slic3r/GUI/GalleryDialog.cpp:400
 msgid "Choose one or more files (STL, OBJ):"
 msgstr "Wybierz jeden lub więcej plików (STL, OBJ):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1870
-msgid "Choose one or more files (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Wybierz jeden lub więcej plików (STL/OBJ/AMF/3MF/PRUSA/STEP):"
+msgid "Choose one or more files (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Wybierz jeden lub więcej plików (STL/OBJ/AMF/3MF/WASP/STEP):"
 
 #: src/slic3r/GUI/Gizmos/GLGizmoEmboss.cpp:3512
 msgid "Choose one or more files (TTF, TTC):"

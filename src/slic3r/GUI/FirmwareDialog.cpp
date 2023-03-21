@@ -58,7 +58,7 @@ using Utils::Serial;
 
 // USB IDs used to perform device lookup
 enum {
-	USB_VID_PRUSA    = 0x2c99,
+	USB_VID_WASP    = 0x2c99,
 	USB_PID_MK2      = 1,
 	USB_PID_MK3      = 2,
 	USB_PID_MMU_BOOT = 3,
@@ -377,7 +377,7 @@ bool FirmwareDialog::priv::check_model_id()
 
 	// std::string line;
 	// error_code ec;
-	// serial.printer_write_line("PRUSA Rev");
+	// serial.printer_write_line("WASP Rev");
 	// while (serial.read_line(TIMEOUT, line, ec)) {
 	// 	if (ec) {
 	// 		queue_error(wxString::Format(_(L("Could not connect to the printer at %s")), port->port));
@@ -409,7 +409,7 @@ void FirmwareDialog::priv::avr109_wait_for_bootloader(Avr109Pid usb_pid, unsigne
 
 		auto ports = Utils::scan_serial_ports_extended();
 		ports.erase(std::remove_if(ports.begin(), ports.end(), [=](const SerialPortInfo &port ) {
-			return port.id_vendor != USB_VID_PRUSA || port.id_product != usb_pid.boot;
+			return port.id_vendor != USB_VID_WASP || port.id_product != usb_pid.boot;
 		}), ports.end());
 
 		if (ports.size() == 1) {
@@ -442,7 +442,7 @@ void FirmwareDialog::priv::avr109_lookup_port(Avr109Pid usb_pid)
 
 	auto ports = Utils::scan_serial_ports_extended();
 	ports.erase(std::remove_if(ports.begin(), ports.end(), [=](const SerialPortInfo &port ) {
-		return port.id_vendor != USB_VID_PRUSA ||
+		return port.id_vendor != USB_VID_WASP ||
 			(port.id_product != usb_pid.boot && port.id_product != usb_pid.app);
 	}), ports.end());
 

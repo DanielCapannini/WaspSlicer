@@ -2208,8 +2208,8 @@ msgstr ""
 "Seleziona un file da cui importare la forma del piano di stampa (PNG/SVG):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1613
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Scegli un file da processare (STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Scegli un file da processare (STL/OBJ/AMF/3MF/WASP):"
 
 #: src/slic3r/GUI/BedShapeDialog.cpp:574
 msgid "Choose an STL file to import bed model from:"
@@ -2232,16 +2232,16 @@ msgid "Choose one file (GCODE/.GCO/.G/.ngc/NGC):"
 msgstr "Scegliere un file (GCODE/.GCO/.G/.ngc/NGC):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1871
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
-msgstr "Seleziona uno o più file (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
+msgstr "Seleziona uno o più file (STL/3MF/STEP/OBJ/AMF/WASP):"
 
 #: src/slic3r/GUI/GalleryDialog.cpp:400
 msgid "Choose one or more files (STL, OBJ):"
 msgstr "Scegli uno o più file (STL, OBJ):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1870
-msgid "Choose one or more files (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Seleziona uno o più file (STL/OBJ/AMF/3MF/PRUSA/STEP):"
+msgid "Choose one or more files (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Seleziona uno o più file (STL/OBJ/AMF/3MF/WASP/STEP):"
 
 #: src/slic3r/GUI/Gizmos/GLGizmoEmboss.cpp:3512
 msgid "Choose one or more files (TTF, TTC):"

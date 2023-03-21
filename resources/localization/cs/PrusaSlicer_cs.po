@@ -1841,8 +1841,8 @@ msgstr ""
 "(PNG/SVG):"
 
 #: src/slic3r/GUI/MainFrame.cpp:1613
-msgid "Choose a file to slice (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Zvolit soubor ke slicování (STL/OBJ/AMF/3MF/PRUSA):"
+msgid "Choose a file to slice (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Zvolit soubor ke slicování (STL/OBJ/AMF/3MF/WASP):"
 
 #: src/slic3r/GUI/BedShapeDialog.cpp:574
 msgid "Choose an STL file to import bed model from:"
@@ -1863,16 +1863,16 @@ msgid "Choose one file (GCODE/.GCO/.G/.ngc/NGC):"
 msgstr "Vyberte jeden soubor (GCODE/.GCO/.G/.ngc/NGC):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1871
-msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/PRUSA):"
-msgstr "Vyberte jeden nebo více souborů (STL/3MF/STEP/OBJ/AMF/PRUSA):"
+msgid "Choose one or more files (STL/3MF/STEP/OBJ/AMF/WASP):"
+msgstr "Vyberte jeden nebo více souborů (STL/3MF/STEP/OBJ/AMF/WASP):"
 
 #: src/slic3r/GUI/GalleryDialog.cpp:400
 msgid "Choose one or more files (STL, OBJ):"
 msgstr "Vyberte jeden nebo více souborů (STL, OBJ):"
 
 #: src/slic3r/GUI/GUI_App.cpp:1870
-msgid "Choose one or more files (STL/OBJ/AMF/3MF/PRUSA):"
-msgstr "Vyberte jeden nebo více souborů (STL/OBJ/AMF/3MF/PRUSA/STEP):"
+msgid "Choose one or more files (STL/OBJ/AMF/3MF/WASP):"
+msgstr "Vyberte jeden nebo více souborů (STL/OBJ/AMF/3MF/WASP/STEP):"
 
 #: src/slic3r/GUI/GalleryDialog.cpp:451
 msgid "Choose one PNG file:"
