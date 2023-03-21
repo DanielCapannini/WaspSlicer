@@ -1,15 +1,15 @@
 
-![PrusaSlicer logo](/resources/icons/PrusaSlicer.png?raw=true)
+![WaspSlicer logo](/resources/icons/WaspSlicer.png?raw=true)
 
 # WaspSlicer
 
 WaspSlicer takes 3D models (STL, OBJ, AMF) and converts them into G-code
 instructions for FFF printers or PNG layers for mSLA 3D printers. It's
 compatible with any modern printer based on the RepRap toolchain, including all
-those based on the Marlin, Prusa, Sprinter and Repetier firmware. It also works
+those based on the Marlin, Wasp, Sprinter and Repetier firmware. It also works
 with Mach3, LinuxCNC and Machinekit controllers.
 
-WaspSlicer is based on PrusaSlicer and PrusaSlicer is based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
+WaspSlicer is based on WaspSlicer and WaspSlicer is based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
 
 See the [documentation directory](doc/) for more information.
 
@@ -17,7 +17,7 @@ See the [documentation directory](doc/) for more information.
 
 All user facing code is written in C++, and some legacy code as well as unit
 tests are written in Perl. Perl is not required for either development or use
-of PrusaSlicer.
+of WaspSlicer.
 
 The slicing core is the `libslic3r` library, which can be built and used in a standalone way.
 The command line interface is a thin wrapper over `libslic3r`.
@@ -45,7 +45,7 @@ Other major features are:
 * several infill patterns including honeycomb, spirals, Hilbert curves
 * support material, raft, brim, skirt
 * **standby temperature** and automatic wiping for multi-extruder printing
-* [customizable **G-code macros**](https://github.com/prusa3d/PrusaSlicer/wiki/Slic3r-Prusa-Edition-Macro-Language) and output filename with variable placeholders
+* [customizable **G-code macros**](https://github.com/wasp3d/WaspSlicer/wiki/Slic3r-Wasp-Edition-Macro-Language) and output filename with variable placeholders
 * support for **post-processing scripts**
 * **cooling logic** controlling fan speed and dynamic print speed
 
@@ -60,4 +60,4 @@ these documentation pages:
 ### What's WaspSlicer license?
 
 WaspSlicer is licensed under the _GNU Affero General Public License, version 3_.
-The WaspSlicer is based on PrusaSlicer and PrusaSlicer is originally based on Slic3r by Alessandro Ranellucci.
+The WaspSlicer is based on WaspSlicer and WaspSlicer is originally based on Slic3r by Alessandro Ranellucci.

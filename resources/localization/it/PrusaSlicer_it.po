@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Prusalator\n"
+"X-Generator: Wasplator\n"
 
 #: src/libslic3r/PrintConfig.cpp:487 src/libslic3r/PrintConfig.cpp:1114
 #: src/libslic3r/PrintConfig.cpp:1601 src/libslic3r/PrintConfig.cpp:1793
@@ -897,8 +897,8 @@ msgid "Allow floating window near text"
 msgstr "Consentire la finestra sospesa vicino al testo"
 
 #: src/slic3r/GUI/Preferences.cpp:208 src/slic3r/GUI/Preferences.cpp:212
-msgid "Allow just a single PrusaSlicer instance"
-msgstr "Permetti una singola istanza di PrusaSlicer"
+msgid "Allow just a single WaspSlicer instance"
+msgstr "Permetti una singola istanza di WaspSlicer"
 
 #: src/slic3r/GUI/ExtruderSequenceDialog.cpp:172
 msgid "Allow next color repetition"
@@ -964,11 +964,11 @@ msgstr "Alt + Rotella del mouse"
 #: src/slic3r/GUI/Preferences.cpp:235
 msgid ""
 "Always ask for unsaved changes in presets, when: \n"
-"- Closing PrusaSlicer while some presets are modified,\n"
+"- Closing WaspSlicer while some presets are modified,\n"
 "- Loading a new project while some presets are modified"
 msgstr ""
 "Chiedi sempre riguardo le modifiche ai preset non salvate, quando:\n"
-"- Alla chiusura di PrusaSlicer se ci sono preset modificati,\n"
+"- Alla chiusura di WaspSlicer se ci sono preset modificati,\n"
 "- Al caricamento di un nuovo progetto se ci sono preset modificati"
 
 #: src/slic3r/GUI/Preferences.cpp:251
@@ -988,11 +988,11 @@ msgstr ""
 #: src/slic3r/GUI/Preferences.cpp:224
 msgid ""
 "Always ask for unsaved changes in project, when: \n"
-"- Closing PrusaSlicer,\n"
+"- Closing WaspSlicer,\n"
 "- Loading or creating a new project"
 msgstr ""
 "Chiedi sempre riguardo le modifiche non salvate nel progetto, quando:\n"
-"- Alla chiusura di PrusaSlicer,\n"
+"- Alla chiusura di WaspSlicer,\n"
 "- Al caricamento o creazione di un nuovo progetto"
 
 #: src/libslic3r/Print.cpp:1242
@@ -1313,11 +1313,11 @@ msgstr ""
 
 #: src/slic3r/GUI/OpenGLManager.cpp:264
 msgid ""
-"As a workaround, you may run PrusaSlicer with a software rendered 3D "
-"graphics by running prusa-slicer.exe with the --sw-renderer parameter."
+"As a workaround, you may run WaspSlicer with a software rendered 3D "
+"graphics by running wasp-slicer.exe with the --sw-renderer parameter."
 msgstr ""
-"Come soluzione alternativa, puoi eseguire PrusaSlicer con una grafica 3D "
-"renderizzata dal software eseguendo prusa-slicer.exe con il parametro --sw-"
+"Come soluzione alternativa, puoi eseguire WaspSlicer con una grafica 3D "
+"renderizzata dal software eseguendo wasp-slicer.exe con il parametro --sw-"
 "renderer."
 
 #: src/slic3r/GUI/Preferences.cpp:249
@@ -1366,16 +1366,16 @@ msgid "Assembling model from parts"
 msgstr "Assemblaggio del modello dalle parti"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1261 src/slic3r/GUI/Preferences.cpp:157
-msgid "Associate .3mf files to PrusaSlicer"
-msgstr "Associa i file .3mf a PrusaSlicer"
+msgid "Associate .3mf files to WaspSlicer"
+msgstr "Associa i file .3mf a WaspSlicer"
 
 #: src/slic3r/GUI/Preferences.cpp:258
-msgid "Associate .gcode files to PrusaSlicer G-code Viewer"
-msgstr "Associa i file .gcode al Visualizzatore G-code di PrusaSlicer"
+msgid "Associate .gcode files to WaspSlicer G-code Viewer"
+msgstr "Associa i file .gcode al Visualizzatore G-code di WaspSlicer"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1262 src/slic3r/GUI/Preferences.cpp:164
-msgid "Associate .stl files to PrusaSlicer"
-msgstr "Associa i file .stl a PrusaSlicer"
+msgid "Associate .stl files to WaspSlicer"
+msgstr "Associa i file .stl a WaspSlicer"
 
 #: src/slic3r/GUI/GLCanvas3D.cpp:6435
 msgid "A toolpath outside the print area was detected."
@@ -1615,8 +1615,8 @@ msgid "Between objects G-code (for sequential printing)"
 msgstr "G-code tra gli oggetti (per stampa sequenziale)"
 
 #: src/slic3r/GUI/SysInfoDialog.cpp:150
-msgid "Blacklisted libraries loaded into PrusaSlicer process:"
-msgstr "Librerie in lista nera caricate nel processo PrusaSlicer:"
+msgid "Blacklisted libraries loaded into WaspSlicer process:"
+msgstr "Librerie in lista nera caricate nel processo WaspSlicer:"
 
 #: src/slic3r/GUI/Gizmos/GLGizmoSeam.cpp:38
 #: src/slic3r/GUI/Gizmos/GLGizmoSeam.cpp:255
@@ -1816,11 +1816,11 @@ msgstr "Volume di stampa"
 
 #: src/slic3r/GUI/GUI_App.cpp:1683
 msgid ""
-"But since this version of PrusaSlicer we don't show this information in "
+"But since this version of WaspSlicer we don't show this information in "
 "Printer Settings anymore.\n"
 "Settings will be available in physical printers settings."
 msgstr ""
-"Ma da questa versione di PrusaSlicer non mostriamo più queste informazioni "
+"Ma da questa versione di WaspSlicer non mostriamo più queste informazioni "
 "nelle impostazioni della stampante.\n"
 "Le impostazioni saranno disponibili nelle impostazioni delle stampanti "
 "fisiche."
@@ -2400,12 +2400,12 @@ msgid "Closing distance"
 msgstr "Distanza di chiusura"
 
 #: src/slic3r/GUI/MainFrame.cpp:225
-msgid "Closing PrusaSlicer. Current project is modified."
-msgstr "Chiusura di PrusaSlicer. Il progetto corrente è modificato."
+msgid "Closing WaspSlicer. Current project is modified."
+msgstr "Chiusura di WaspSlicer. Il progetto corrente è modificato."
 
 #: src/slic3r/GUI/MainFrame.cpp:232
-msgid "Closing PrusaSlicer while some presets are modified."
-msgstr "Chiusura di PrusaSlicer mentre alcuni preset vengono modificati."
+msgid "Closing WaspSlicer while some presets are modified."
+msgstr "Chiusura di WaspSlicer mentre alcuni preset vengono modificati."
 
 #: src/libslic3r/PrintConfig.cpp:2717
 msgid "Closing radius"
@@ -2678,7 +2678,7 @@ msgstr "Conferma connettori"
 msgid ""
 "Connect an infill line to an internal perimeter with a short segment of an "
 "additional perimeter. If expressed as percentage (example: 15%) it is "
-"calculated over infill extrusion width. PrusaSlicer tries to connect two "
+"calculated over infill extrusion width. WaspSlicer tries to connect two "
 "close infill lines to a short perimeter segment. If no such perimeter "
 "segment shorter than infill_anchor_max is found, the infill line is "
 "connected to a perimeter segment at just one side and the length of the "
@@ -2689,7 +2689,7 @@ msgstr ""
 "Collega una linea di riempimento ad un perimetro interno con un breve "
 "segmento di un perimetro aggiuntivo. Se espresso in percentuale (esempio: "
 "15%) viene calcolato sulla larghezza di estrusione di riempimento. "
-"PrusaSlicer cerca di collegare due linee di riempimento vicine ad un breve "
+"WaspSlicer cerca di collegare due linee di riempimento vicine ad un breve "
 "segmento di perimetro. Se non viene rilevato alcun segmento perimetrale più "
 "corto di infill_anchor_max, la linea di riempimento viene collegata ad un "
 "segmento perimetrale su un solo lato e la lunghezza del segmento perimetrale "
@@ -2701,7 +2701,7 @@ msgstr ""
 msgid ""
 "Connect an infill line to an internal perimeter with a short segment of an "
 "additional perimeter. If expressed as percentage (example: 15%) it is "
-"calculated over infill extrusion width. PrusaSlicer tries to connect two "
+"calculated over infill extrusion width. WaspSlicer tries to connect two "
 "close infill lines to a short perimeter segment. If no such perimeter "
 "segment shorter than this parameter is found, the infill line is connected "
 "to a perimeter segment at just one side and the length of the perimeter "
@@ -2711,7 +2711,7 @@ msgstr ""
 "Collegare una linea di riempimento ad un perimetro interno con un breve "
 "segmento di un perimetro aggiuntivo. Se espresso in percentuale (esempio: "
 "15%) viene calcolato sulla larghezza di estrusione del riempimento. "
-"PrusaSlicer prova a collegare due linee di riempimento vicine ad un segmento "
+"WaspSlicer prova a collegare due linee di riempimento vicine ad un segmento "
 "di perimetro corto. Se non viene trovato un segmento perimetrale più corto "
 "di questo parametro, la linea di riempimento viene collegata ad un segmento "
 "perimetrale su un solo lato e la lunghezza del segmento perimetrale "
@@ -2745,12 +2745,12 @@ msgstr ""
 "Collegamento alle stampanti collegate tramite l'host di stampa fallito."
 
 #: src/slic3r/Utils/OctoPrint.cpp:336
-msgid "Connection to PrusaLink works correctly."
-msgstr "Il collegamento a PrusaLink funziona correttamente."
+msgid "Connection to WaspLink works correctly."
+msgstr "Il collegamento a WaspLink funziona correttamente."
 
 #: src/slic3r/Utils/OctoPrint.cpp:292
-msgid "Connection to Prusa SL1 / SL1S works correctly."
-msgstr "Collegamento a Prusa SL1 / SL1S correttamente funzionante."
+msgid "Connection to Wasp SL1 / SL1S works correctly."
+msgstr "Collegamento a Wasp SL1 / SL1S correttamente funzionante."
 
 #: src/slic3r/Utils/Repetier.cpp:84
 msgid "Connection to Repetier works correctly."
@@ -3008,12 +3008,12 @@ msgid "Could not connect to OctoPrint"
 msgstr "Impossibile connettersi ad OctoPrint"
 
 #: src/slic3r/Utils/OctoPrint.cpp:342
-msgid "Could not connect to PrusaLink"
-msgstr "Impossibile connettersi a PrusaLink"
+msgid "Could not connect to WaspLink"
+msgstr "Impossibile connettersi a WaspLink"
 
 #: src/slic3r/Utils/OctoPrint.cpp:298
-msgid "Could not connect to Prusa SLA"
-msgstr "Connessione a Prusa SLA fallita"
+msgid "Could not connect to Wasp SLA"
+msgstr "Connessione a Wasp SLA fallita"
 
 #: src/slic3r/Utils/Repetier.cpp:90
 msgid "Could not connect to Repetier"
@@ -3021,10 +3021,10 @@ msgstr "Impossibile connettersi a Repetier"
 
 #: src/slic3r/Utils/Http.cpp:73
 msgid ""
-"Could not detect system SSL certificate store. PrusaSlicer will be unable to "
+"Could not detect system SSL certificate store. WaspSlicer will be unable to "
 "establish secure network connections."
 msgstr ""
-"Impossibile rilevare archivio di certificati SSL di sistema. PrusaSlicer non "
+"Impossibile rilevare archivio di certificati SSL di sistema. WaspSlicer non "
 "sarà in grado di stabilire connessioni di rete sicure."
 
 #: src/slic3r/GUI/PhysicalPrinterDialog.cpp:315
@@ -3107,10 +3107,10 @@ msgstr "Cubico"
 
 #: src/slic3r/Utils/Http.cpp:91
 msgid ""
-"CURL init has failed. PrusaSlicer will be unable to establish network "
+"CURL init has failed. WaspSlicer will be unable to establish network "
 "connections. See logs for additional details."
 msgstr ""
-"CURL init non riuscito. PrusaSlicer non sarà in grado di stabilire "
+"CURL init non riuscito. WaspSlicer non sarà in grado di stabilire "
 "connessioni di rete. Vedere i log per ulteriori dettagli."
 
 #: src/slic3r/GUI/wxExtensions.cpp:645
@@ -3736,8 +3736,8 @@ msgstr ""
 "separati."
 
 #: src/slic3r/GUI/GUI_App.cpp:267
-msgid "Developed by Prusa Research."
-msgstr "Sviluppato da Prusa Research."
+msgid "Developed by Wasp Research."
+msgstr "Sviluppato da Wasp Research."
 
 #: src/slic3r/GUI/Mouse3DController.cpp:464
 msgid "Device:"
@@ -4316,12 +4316,12 @@ msgstr "Azioni di rilievo"
 msgid ""
 "Emit M73 P[percent printed] R[remaining time in minutes] at 1 minute "
 "intervals into the G-code to let the firmware show accurate remaining time. "
-"As of now only the Prusa i3 MK3 firmware recognizes M73. Also the i3 MK3 "
+"As of now only the Wasp i3 MK3 firmware recognizes M73. Also the i3 MK3 "
 "firmware supports M73 Qxx Sxx for the silent mode."
 msgstr ""
 "Inserisce M73 P[percent printed] R[remaining time in minutes] ad intervalli "
 "di un minuto nel G-code per permettere al firmware di mostrare un tempo "
-"residuo accurato. Al momento solo il firmware della Prusa i3 MK3 riconosce "
+"residuo accurato. Al momento solo il firmware della Wasp i3 MK3 riconosce "
 "M73. Il firmware della i3 MK3 supporta il codice M73 Qxx Sxx anche per la "
 "modalità silenziosa."
 
@@ -4686,20 +4686,20 @@ msgstr "ERRORE: risorse non sufficienti per eseguire un nuovo lavoro."
 
 #: src/slic3r/GUI/GUI_App.cpp:915 src/slic3r/GUI/GUI_App.cpp:1013
 msgid ""
-"Error parsing PrusaGCodeViewer config file, it is probably corrupted. Try to "
+"Error parsing WaspGCodeViewer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error."
 msgstr ""
-"Errore nell'analisi del file di configurazione di PrusaGCodeViewer, "
+"Errore nell'analisi del file di configurazione di WaspGCodeViewer, "
 "probabilmente è corrotto. Provare a cancellare manualmente il file per "
 "risolvere l'errore."
 
 #: src/slic3r/GUI/GUI_App.cpp:909 src/slic3r/GUI/GUI_App.cpp:1007
 msgid ""
-"Error parsing PrusaSlicer config file, it is probably corrupted. Try to "
+"Error parsing WaspSlicer config file, it is probably corrupted. Try to "
 "manually delete the file to recover from the error. Your user profiles will "
 "not be affected."
 msgstr ""
-"Errore nell'analisi del file config di PrusaSlicer, probabilmente è "
+"Errore nell'analisi del file config di WaspSlicer, probabilmente è "
 "corrotto. Per risolvere questo problema prova ad eliminare manualmente il "
 "file. Il tuoi profili utente non verranno toccati."
 
@@ -5894,11 +5894,11 @@ msgstr "Schermo intero"
 #: resources/data/hints.ini: [hint:Fullscreen mode]
 msgid ""
 "Fullscreen mode\n"
-"Did you know that you can switch PrusaSlicer to fullscreen mode? Use the "
+"Did you know that you can switch WaspSlicer to fullscreen mode? Use the "
 "<b>F11</b> hotkey."
 msgstr ""
 "Modalità a schermo intero\n"
-"Sapevi che puoi usare PrusaSlicer in modalità schermo intero? Usa il tasto "
+"Sapevi che puoi usare WaspSlicer in modalità schermo intero? Usa il tasto "
 "rapido <b>F11</b>."
 
 #: src/slic3r/GUI/GUI_Factories.cpp:130 src/libslic3r/PrintConfig.cpp:1283
@@ -6632,27 +6632,27 @@ msgstr ""
 "applicano all'intero gcode."
 
 #: src/slic3r/GUI/Preferences.cpp:601
-msgid "If enabled, PrusaSlicer will allow to download from Printables.com"
-msgstr "Se abilitato, PrusaSlicer consentirà di scaricare da Printables.com"
+msgid "If enabled, WaspSlicer will allow to download from Printables.com"
+msgstr "Se abilitato, WaspSlicer consentirà di scaricare da Printables.com"
 
 #: src/slic3r/GUI/Preferences.cpp:601
-msgid "If enabled, PrusaSlicer will be allowed to download from Printables.com"
-msgstr "Se abilitato, PrusaSlicer consentirà di scaricare da Printables.com"
+msgid "If enabled, WaspSlicer will be allowed to download from Printables.com"
+msgstr "Se abilitato, WaspSlicer consentirà di scaricare da Printables.com"
 
 #: src/slic3r/GUI/Preferences.cpp:289
-msgid "If enabled, PrusaSlicer will be open at the position it was closed"
+msgid "If enabled, WaspSlicer will be open at the position it was closed"
 msgstr ""
-"Se abilitato, PrusaSlicer sarà aperto nella posizione in cui è stato chiuso"
+"Se abilitato, WaspSlicer sarà aperto nella posizione in cui è stato chiuso"
 
 #: src/slic3r/GUI/Preferences.cpp:594
-msgid "If enabled, PrusaSlicer will not open a hyperlinks in your browser."
+msgid "If enabled, WaspSlicer will not open a hyperlinks in your browser."
 msgstr ""
-"Se abilitato, PrusaSlicer non aprirà i collegamenti ipertestuali nel browser."
+"Se abilitato, WaspSlicer non aprirà i collegamenti ipertestuali nel browser."
 
 #: src/slic3r/GUI/Preferences.cpp:384
-msgid "If enabled, PrusaSlicer will not open hyperlinks in your browser."
+msgid "If enabled, WaspSlicer will not open hyperlinks in your browser."
 msgstr ""
-"Se abilitato, PrusaSlicer non aprirà i collegamenti ipertestuali nel tuo "
+"Se abilitato, WaspSlicer non aprirà i collegamenti ipertestuali nel tuo "
 "browser."
 
 #: src/slic3r/GUI/ExtruderSequenceDialog.cpp:166
@@ -6704,23 +6704,23 @@ msgstr ""
 "questa viene proposta all'avvio."
 
 #: src/slic3r/GUI/Preferences.cpp:159
-msgid "If enabled, sets PrusaSlicer as default application to open .3mf files."
+msgid "If enabled, sets WaspSlicer as default application to open .3mf files."
 msgstr ""
-"Se abilitato, imposta PrusaSlicer come applicazione predefinita per aprire i "
+"Se abilitato, imposta WaspSlicer come applicazione predefinita per aprire i "
 "file .3mf."
 
 #: src/slic3r/GUI/Preferences.cpp:166
-msgid "If enabled, sets PrusaSlicer as default application to open .stl files."
+msgid "If enabled, sets WaspSlicer as default application to open .stl files."
 msgstr ""
-"Se abilitato, imposta PrusaSlicer come applicazione predefinita per aprire i "
+"Se abilitato, imposta WaspSlicer come applicazione predefinita per aprire i "
 "file .stl."
 
 #: src/slic3r/GUI/Preferences.cpp:260
 msgid ""
-"If enabled, sets PrusaSlicer G-code Viewer as default application to open ."
+"If enabled, sets WaspSlicer G-code Viewer as default application to open ."
 "gcode files."
 msgstr ""
-"Se abilitato, imposta il visualizzatore G-code di PrusaSlicer come "
+"Se abilitato, imposta il visualizzatore G-code di WaspSlicer come "
 "applicazione predefinita per aprire i file .gcode."
 
 #: src/slic3r/GUI/Preferences.cpp:410
@@ -6787,12 +6787,12 @@ msgstr ""
 #: src/libslic3r/PrintConfig.cpp:4594
 msgid ""
 "If enabled, the command line arguments are sent to an existing instance of "
-"GUI PrusaSlicer, or an existing PrusaSlicer window is activated. Overrides "
+"GUI WaspSlicer, or an existing WaspSlicer window is activated. Overrides "
 "the \"single_instance\" configuration value from application preferences."
 msgstr ""
 "Se abilitato, gli argomenti della riga di comando vengono inviati ad "
-"un'istanza GUI esistente di PrusaSlicer, oppure viene attivata una finestra "
-"PrusaSlicer esistente. Sovrascrive il valore di configurazione "
+"un'istanza GUI esistente di WaspSlicer, oppure viene attivata una finestra "
+"WaspSlicer esistente. Sovrascrive il valore di configurazione "
 "\"single_instance\" dalle preferenze dell'applicazione."
 
 #: src/slic3r/GUI/Preferences.cpp:305
@@ -6977,19 +6977,19 @@ msgid ""
 "such issues are floating object parts, unsupported extrusions and low bed "
 "adhesion."
 msgstr ""
-"Se attivo, PrusaSlicer emette avvisi quando rileva problemi nell'oggetto "
+"Se attivo, WaspSlicer emette avvisi quando rileva problemi nell'oggetto "
 "processato che possono essere risolti con i supporti (e/o il brim). Ad "
 "esempio, parti sospese dell'oggetto, estrusioni non supportate e scarsa "
 "aderenza al piano di stampa."
 
 #: src/slic3r/GUI/Preferences.cpp:214
 msgid ""
-"If this is enabled, when starting PrusaSlicer and another instance of the "
-"same PrusaSlicer is already running, that instance will be reactivated "
+"If this is enabled, when starting WaspSlicer and another instance of the "
+"same WaspSlicer is already running, that instance will be reactivated "
 "instead."
 msgstr ""
-"Se questo è abilitato, quando si avvia PrusaSlicer e un'altra istanza della "
-"stessa PrusaSlicer è già in esecuzione, quell'istanza verrà invece "
+"Se questo è abilitato, quando si avvia WaspSlicer e un'altra istanza della "
+"stessa WaspSlicer è già in esecuzione, quell'istanza verrà invece "
 "riattivata."
 
 #: src/slic3r/GUI/SendSystemInfoDialog.cpp:585
@@ -8527,8 +8527,8 @@ msgid "Max print speed"
 msgstr "Massima velocità di stampa"
 
 #: src/slic3r/GUI/ConfigSnapshotDialog.cpp:78
-msgid "max PrusaSlicer version"
-msgstr "versione PrusaSlicer massima"
+msgid "max WaspSlicer version"
+msgstr "versione WaspSlicer massima"
 
 #: src/libslic3r/PrintConfig.cpp:1842
 msgid "Max volumetric slope negative"
@@ -8814,8 +8814,8 @@ msgid "Min print speed"
 msgstr "Velocità minima di stampa"
 
 #: src/slic3r/GUI/ConfigSnapshotDialog.cpp:76
-msgid "min PrusaSlicer version"
-msgstr "versione PrusaSlicer minima"
+msgid "min WaspSlicer version"
+msgstr "versione WaspSlicer minima"
 
 #: src/slic3r/GUI/GUI_Factories.cpp:885
 msgid "Mirror"
@@ -9079,11 +9079,11 @@ msgstr "Altro"
 
 #: src/slic3r/GUI/GUI.cpp:326
 msgid ""
-"Most likely the configuration was produced by a newer version of PrusaSlicer "
-"or by some PrusaSlicer fork."
+"Most likely the configuration was produced by a newer version of WaspSlicer "
+"or by some WaspSlicer fork."
 msgstr ""
 "Molto probabilmente la configurazione è stata creata da una versione più "
-"recente di PrusaSlicer o da qualche fork di PrusaSlicer."
+"recente di WaspSlicer o da qualche fork di WaspSlicer."
 
 #: src/slic3r/GUI/Gizmos/GLGizmoSlaSupports.cpp:1224
 msgid "Mouse wheel"
@@ -9295,13 +9295,13 @@ msgid ""
 "Negative volume\n"
 "Did you know that you can subtract one mesh from another using the Negative "
 "volume modifier? That way you can, for example, create easily resizable "
-"holes directly in PrusaSlicer. Read more in the documentation. (Requires "
+"holes directly in WaspSlicer. Read more in the documentation. (Requires "
 "Advanced or Expert mode.)"
 msgstr ""
 "Volume negativo\n"
 "Sapevi che puoi sottrarre una mesh da un'altra utilizzando il modificatore "
 "di volume negativo? In questo modo è possibile, ad esempio, creare fori "
-"facilmente ridimensionabili direttamente in PrusaSlicer. Leggi di più nella "
+"facilmente ridimensionabili direttamente in WaspSlicer. Leggi di più nella "
 "documentazione. (Richiede la modalità Avanzata o Esperto)."
 
 #: src/slic3r/GUI/BonjourDialog.cpp:55
@@ -9512,7 +9512,7 @@ msgid ""
 "right of the Printer profiles combo box, by selecting the \"Add physical "
 "printer\" item in the Printer combo box. The Physical Printer profile editor "
 "opens also when clicking on the \"cog\" icon in the Printer settings tab. "
-"The Physical Printer profiles are being stored into PrusaSlicer/"
+"The Physical Printer profiles are being stored into WaspSlicer/"
 "physical_printer directory."
 msgstr ""
 "Nota: Tutti i parametri di questo gruppo vengono spostati nelle impostazioni "
@@ -9524,7 +9524,7 @@ msgstr ""
 "combinata della stampante. L'editor dei profili della stampante fisica si "
 "apre anche cliccando sull'icona \"ingranaggio\" nella scheda Impostazioni "
 "della stampante. I profili della stampante fisica vengono memorizzati nella "
-"directory PrusaSlicer/physical_printer."
+"directory WaspSlicer/physical_printer."
 
 #: src/slic3r/Utils/AstroBox.cpp:92
 msgid "Note: AstroBox version at least 1.1.0 is required."
@@ -10031,8 +10031,8 @@ msgstr "Apri un file G-code"
 
 #: src/slic3r/GUI/MainFrame.cpp:75 src/slic3r/GUI/MainFrame.cpp:89
 #: src/slic3r/GUI/MainFrame.cpp:1420
-msgid "Open a new PrusaSlicer instance"
-msgstr "Apri una nuova istanza PrusaSlicer"
+msgid "Open a new WaspSlicer instance"
+msgstr "Apri una nuova istanza WaspSlicer"
 
 #: src/slic3r/GUI/MainFrame.cpp:1152
 msgid "Open a project file"
@@ -10132,12 +10132,12 @@ msgid "Open project STL/OBJ/AMF/3MF with config, clear plater"
 msgstr "Apri progetto STL/OBJ/AMF/3MF con configurazione, pulisci piano"
 
 #: src/slic3r/GUI/MainFrame.cpp:1541
-msgid "Open &PrusaSlicer"
-msgstr "Apri &PrusaSlicer"
+msgid "Open &WaspSlicer"
+msgstr "Apri &WaspSlicer"
 
 #: src/slic3r/GUI/MainFrame.cpp:89 src/slic3r/GUI/MainFrame.cpp:1541
-msgid "Open PrusaSlicer"
-msgstr "Apri PrusaSlicer"
+msgid "Open WaspSlicer"
+msgstr "Apri WaspSlicer"
 
 #: src/slic3r/GUI/MainFrame.cpp:1104
 msgid ""
@@ -10152,8 +10152,8 @@ msgid "Open the dialog to modify shape gallery"
 msgstr "Aprire la finestra di dialogo per modificare la galleria delle forme"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Open the Prusa3D drivers download page in your browser"
-msgstr "Apri la pagina di download dei driver Prusa3D sul browser"
+msgid "Open the Wasp3D drivers download page in your browser"
+msgstr "Apri la pagina di download dei driver Wasp3D sul browser"
 
 #: src/slic3r/GUI/MainFrame.cpp:1075
 msgid "Open the software releases page in your browser"
@@ -10674,10 +10674,10 @@ msgstr ""
 #: src/slic3r/GUI/DesktopIntegrationDialog.cpp:419
 msgid ""
 "Performing desktop integration failed - could not create Gcodeviewer desktop "
-"file. PrusaSlicer desktop file was probably created successfully."
+"file. WaspSlicer desktop file was probably created successfully."
 msgstr ""
 "Esecuzione dell'integrazione del desktop non riuscita - impossibile creare "
-"il file desktop Gcodeviewer. Probabilmente il file desktop PrusaSlicer è "
+"il file desktop Gcodeviewer. Probabilmente il file desktop WaspSlicer è "
 "stato creato correttamente."
 
 #: src/slic3r/GUI/DesktopIntegrationDialog.cpp:453
@@ -10894,10 +10894,10 @@ msgstr ""
 
 #: src/slic3r/GUI/BackgroundSlicingProcess.cpp:85
 msgid ""
-"Please save your project and restart PrusaSlicer. We would be glad if you "
+"Please save your project and restart WaspSlicer. We would be glad if you "
 "reported the issue."
 msgstr ""
-"Salva il tuo progetto e riavvia PrusaSlicer. Ti saremmo grati se ci "
+"Salva il tuo progetto e riavvia WaspSlicer. Ti saremmo grati se ci "
 "segnalassi il problema."
 
 #: src/slic3r/GUI/Plater.cpp:3654
@@ -11165,12 +11165,12 @@ msgstr "Stampabile"
 msgid ""
 "Printables.com integration\n"
 "Did you know that when you are browsing Printables.com, you can send 3D "
-"model files to PrusaSlicer with a single click? Learn more in the "
+"model files to WaspSlicer with a single click? Learn more in the "
 "documentation."
 msgstr ""
 "Integrazione con Printables.com\n"
 "Sapevi che quando navighi su Printables.com puoi inviare i file del modello "
-"3D a PrusaSlicer con un solo clic? Per saperne di più, consulta la "
+"3D a WaspSlicer con un solo clic? Per saperne di più, consulta la "
 "documentazione."
 
 #: resources/data/hints.ini: [hint:Printable toggle]
@@ -11413,21 +11413,21 @@ msgid "Project is loading"
 msgstr "Il progetto si sta caricando"
 
 #: src/slic3r/GUI/MainFrame.cpp:1073
-msgid "Prusa 3D &Drivers"
-msgstr "Prusa 3D &Drivers"
+msgid "Wasp 3D &Drivers"
+msgstr "Wasp 3D &Drivers"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2884
-msgid "Prusa FFF Technology Printers"
-msgstr "Stampanti Prusa con tecnologia FFF"
+msgid "Wasp FFF Technology Printers"
+msgstr "Stampanti Wasp con tecnologia FFF"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:2892
-msgid "Prusa MSLA Technology Printers"
-msgstr "Stampanti Prusa con tecnologia MSLA"
+msgid "Wasp MSLA Technology Printers"
+msgstr "Stampanti Wasp con tecnologia MSLA"
 
 #: src/slic3r/GUI/GUI_App.cpp:1339
 #, boost-format
 msgid ""
-"PrusaSlicer crashed last time when attempting to set window position.\n"
+"WaspSlicer crashed last time when attempting to set window position.\n"
 "We are sorry for the inconvenience, it unfortunately happens with certain "
 "multiple-monitor setups.\n"
 "More precise reason for the crash: \"%1%\".\n"
@@ -11436,7 +11436,7 @@ msgid ""
 "To avoid this problem, consider disabling \"%4%\" in \"Preferences\". "
 "Otherwise, the application will most likely crash again next time."
 msgstr ""
-"PrusaSlicer è andato in crash l'ultima volta quando ha tentato di impostare "
+"WaspSlicer è andato in crash l'ultima volta quando ha tentato di impostare "
 "la posizione della finestra.\n"
 "Siamo spiacenti per l'inconveniente, purtroppo succede con certe "
 "configurazioni a monitor multipli.\n"
@@ -11450,124 +11450,124 @@ msgstr ""
 
 #: src/slic3r/Utils/Http.cpp:78
 #, boost-format
-msgid "PrusaSlicer detected system SSL certificate store in: %1%"
-msgstr "PrusaSlicer ha rilevato l'archivio dei certificati SSL di sistema: %1%"
+msgid "WaspSlicer detected system SSL certificate store in: %1%"
+msgstr "WaspSlicer ha rilevato l'archivio dei certificati SSL di sistema: %1%"
 
 #: src/slic3r/GUI/GUI_App.cpp:3111 src/slic3r/GUI/Plater.cpp:1738
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:906
-msgid "PrusaSlicer: Don't ask me again"
-msgstr "PrusaSlicer: Non chiedermelo più"
+msgid "WaspSlicer: Don't ask me again"
+msgstr "WaspSlicer: Non chiedermelo più"
 
 #: src/slic3r/Config/Snapshot.cpp:599
-msgid "PrusaSlicer error"
-msgstr "Errore PrusaSlicer"
+msgid "WaspSlicer error"
+msgstr "Errore WaspSlicer"
 
 #: src/slic3r/GUI/GUI_Init.cpp:57 src/slic3r/GUI/GUI_Init.cpp:60
-msgid "PrusaSlicer GUI initialization failed"
-msgstr "Inizializzazione GUI PrusaSlicer non riuscita"
+msgid "WaspSlicer GUI initialization failed"
+msgstr "Inizializzazione GUI WaspSlicer non riuscita"
 
 #: src/slic3r/GUI/BackgroundSlicingProcess.cpp:84
 #, boost-format
-msgid "PrusaSlicer has encountered a fatal error: \"%1%\""
-msgstr "PrusaSlicer ha riscontrato un errore fatale: \"%1%\""
+msgid "WaspSlicer has encountered a fatal error: \"%1%\""
+msgstr "WaspSlicer ha riscontrato un errore fatale: \"%1%\""
 
 #: src/slic3r/GUI/GUI_App.cpp:706
 msgid ""
-"PrusaSlicer has encountered a localization error. Please report to "
-"PrusaSlicer team, what language was active and in which scenario this issue "
+"WaspSlicer has encountered a localization error. Please report to "
+"WaspSlicer team, what language was active and in which scenario this issue "
 "happened. Thank you.\n"
 "\n"
 "The application will now terminate."
 msgstr ""
-"PrusaSlicer ha riscontrato un errore di localizzazione. Si prega di riferire "
-"al team di PrusaSlicer, quale lingua era attiva e in quale scenario si è "
+"WaspSlicer ha riscontrato un errore di localizzazione. Si prega di riferire "
+"al team di WaspSlicer, quale lingua era attiva e in quale scenario si è "
 "verificato questo problema. Grazie.\n"
 "\n"
 "L'applicazione terminerà ora."
 
 #: src/slic3r/Config/Snapshot.cpp:598
 msgid ""
-"PrusaSlicer has encountered an error while taking a configuration snapshot."
+"WaspSlicer has encountered an error while taking a configuration snapshot."
 msgstr ""
-"PrusaSlicer ha riscontrato un errore durante l'acquisizione di un'istantanea "
+"WaspSlicer ha riscontrato un errore durante l'acquisizione di un'istantanea "
 "di configurazione."
 
 #: src/slic3r/GUI/AboutDialog.cpp:273
 msgid ""
-"PrusaSlicer is based on Slic3r by Alessandro Ranellucci and the RepRap "
+"WaspSlicer is based on Slic3r by Alessandro Ranellucci and the RepRap "
 "community."
 msgstr ""
-"PrusaSlicer è basato su Slic3r di Alessandro Ranellucci e la comunità RepRap."
+"WaspSlicer è basato su Slic3r di Alessandro Ranellucci e la comunità RepRap."
 
 #: src/slic3r/GUI/MainFrame.cpp:232
-msgid "PrusaSlicer is closing"
-msgstr "PrusaSlicer si sta chiudendo"
+msgid "WaspSlicer is closing"
+msgstr "WaspSlicer si sta chiudendo"
 
 #: src/slic3r/GUI/UpdateDialogs.cpp:95
 msgid ""
-"PrusaSlicer is not using the newest configuration available.\n"
+"WaspSlicer is not using the newest configuration available.\n"
 "Configuration Wizard may not offer the latest printers, filaments and SLA "
 "materials to be installed."
 msgstr ""
-"PrusaSlicer non sta usando la configurazione più recente disponibile.\n"
+"WaspSlicer non sta usando la configurazione più recente disponibile.\n"
 "La configurazione guidata potrebbe non offrire la possibilità di installare "
 "le ultime stampanti, filamenti e materiali SLA."
 
 #: src/slic3r/GUI/GUI_App.cpp:3100 src/slic3r/GUI/GUI_App.cpp:3123
-msgid "PrusaSlicer: Open hyperlink"
-msgstr "PrusaSlicer: aprire collegamento"
+msgid "WaspSlicer: Open hyperlink"
+msgstr "WaspSlicer: aprire collegamento"
 
 #: src/slic3r/GUI/NotificationManager.hpp:924
 msgid ""
-"PrusaSlicer recieved a download request from Printables.com, but it's not "
+"WaspSlicer recieved a download request from Printables.com, but it's not "
 "allowed. You can allow it"
 msgstr ""
-"PrusaSlicer ha ricevuto una richiesta di download da Printables.com, ma non "
+"WaspSlicer ha ricevuto una richiesta di download da Printables.com, ma non "
 "è autorizzata. È possibile autorizzarla"
 
 #: src/slic3r/GUI/OpenGLManager.cpp:258
 #, c-format, boost-format
 msgid ""
-"PrusaSlicer requires OpenGL 2.0 capable graphics driver to run correctly, \n"
+"WaspSlicer requires OpenGL 2.0 capable graphics driver to run correctly, \n"
 "while OpenGL version %s, render %s, vendor %s was detected."
 msgstr ""
-"PrusaSlicer richiede un driver video con supporto OpenGL 2.0 per funzionare "
+"WaspSlicer richiede un driver video con supporto OpenGL 2.0 per funzionare "
 "correttamente, mentre è stata rilevata la versione %s OpenGL, render %s, "
 "distributore %s."
 
 #: src/slic3r/GUI/OpenGLManager.cpp:376
 #, c-format, boost-format
 msgid ""
-"PrusaSlicer requires OpenGL ES 2.0 capable graphics driver to run "
+"WaspSlicer requires OpenGL ES 2.0 capable graphics driver to run "
 "correctly, \n"
 "while OpenGL version %s, render %s, vendor %s was detected."
 msgstr ""
-"PrusaSlicer richiede un driver grafico OpenGL ES 2.0 per funzionare "
+"WaspSlicer richiede un driver grafico OpenGL ES 2.0 per funzionare "
 "correttamente, ma è stata rilevata la versione %s di OpenGL, render %s, "
 "fornitore %s."
 
 #: src/slic3r/GUI/OpenGLManager.cpp:379
 #, c-format, boost-format
 msgid ""
-"PrusaSlicer requires OpenGL %s capable graphics driver to run correctly, \n"
+"WaspSlicer requires OpenGL %s capable graphics driver to run correctly, \n"
 "while OpenGL version %s, render %s, vendor %s was detected."
 msgstr ""
-"PrusaSlicer richiede un driver grafico OpenGL %s per funzionare correttamente, "
+"WaspSlicer richiede un driver grafico OpenGL %s per funzionare correttamente, "
 "ma è stata rilevata la versione %s di OpenGL, render %s, fornitore %s."
 
 #: src/slic3r/GUI/GUI_App.cpp:1338
-msgid "PrusaSlicer started after a crash"
-msgstr "PrusaSlicer è stato avviato dopo un crash"
+msgid "WaspSlicer started after a crash"
+msgstr "WaspSlicer è stato avviato dopo un crash"
 
 #: src/slic3r/GUI/ConfigWizard.cpp:1274
 msgid ""
-"PrusaSlicer's user interfaces comes in three variants:\n"
+"WaspSlicer's user interfaces comes in three variants:\n"
 "Simple, Advanced, and Expert.\n"
 "The Simple mode shows only the most frequently used settings relevant for "
 "regular 3D printing. The other two offer progressively more sophisticated "
 "fine-tuning, they are suitable for advanced and expert users, respectively."
 msgstr ""
-"L'interfaccia utente di PrusaSlicer è disponibile in tre varianti:\n"
+"L'interfaccia utente di WaspSlicer è disponibile in tre varianti:\n"
 "Semplice, Avanzata ed Esperto.\n"
 "La modalità Semplice mostra solo le impostazioni rilevanti utilizzate più "
 "spesso per una semplice stampa 3D. Le altre due offrono progressivamente "
@@ -11575,16 +11575,16 @@ msgstr ""
 "rispettivamente."
 
 #: src/slic3r/GUI/ConfigSnapshotDialog.cpp:60
-msgid "PrusaSlicer version"
-msgstr "versione PrusaSlicer"
+msgid "WaspSlicer version"
+msgstr "versione WaspSlicer"
 
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:903
-msgid "PrusaSlicer will remember your action."
-msgstr "PrusaSlicer ricorderà la tua azione."
+msgid "WaspSlicer will remember your action."
+msgstr "WaspSlicer ricorderà la tua azione."
 
 #: src/slic3r/GUI/GUI_App.cpp:3107 src/slic3r/GUI/Plater.cpp:1732
-msgid "PrusaSlicer will remember your choice."
-msgstr "PrusaSlicer ricorderà la tua scelta."
+msgid "WaspSlicer will remember your choice."
+msgstr "WaspSlicer ricorderà la tua scelta."
 
 #: src/libslic3r/PrintConfig.cpp:3056
 msgid ""
@@ -11885,12 +11885,12 @@ msgstr "R&icarica da disco"
 msgid ""
 "Reload from disk\n"
 "Did you know that if you created a newer version of your model, you can "
-"simply reload it in PrusaSlicer? Right-click the model in the 3D view and "
+"simply reload it in WaspSlicer? Right-click the model in the 3D view and "
 "choose Reload from disk. Read more in the documentation."
 msgstr ""
 "Ricarica da disco\n"
 "Sapevi che se hai creato una versione più recente del tuo modello, puoi "
-"semplicemente ricaricarlo in PrusaSlicer? Fai clic destro sul modello nella "
+"semplicemente ricaricarlo in WaspSlicer? Fai clic destro sul modello nella "
 "vista 3D e scegli Ricarica da disco. Leggi di più nella documentazione."
 
 #: src/slic3r/GUI/KBShortcutsDialog.cpp:102
@@ -12782,11 +12782,11 @@ msgstr "Cerca"
 msgid ""
 "Search functionality\n"
 "Did you know that you use the<a>Search</a>tool to quickly find a specific "
-"PrusaSlicer setting? Or use the familiar shortcut <b>Ctrl+F</b>."
+"WaspSlicer setting? Or use the familiar shortcut <b>Ctrl+F</b>."
 msgstr ""
 "Funzionalità di ricerca\n"
 "Sapevi che puoi usare lo strumento di ricerca per trovare rapidamente una "
-"specifica impostazione di PrusaSlicer? Oppure usa la familiare scorciatoia "
+"specifica impostazione di WaspSlicer? Oppure usa la familiare scorciatoia "
 "<b>Ctrl+F</b>."
 
 #: src/slic3r/GUI/ImGuiWrapper.cpp:963 src/slic3r/GUI/Search.cpp:465
@@ -13515,12 +13515,12 @@ msgstr "Galleria delle forme"
 #: resources/data/hints.ini: [hint:Shapes gallery]
 msgid ""
 "Shapes gallery\n"
-"Did you know that PrusaSlicer has a Shapes Gallery? You can use the included "
+"Did you know that WaspSlicer has a Shapes Gallery? You can use the included "
 "models as modifiers, negative volumes or as printable objects. Right-click "
 "the platter and select<a>Add Shape - Gallery</a>."
 msgstr ""
 "Galleria forme\n"
-"Sapevi che PrusaSlicer ha una Galleria delle Forme? È possibile utilizzare i "
+"Sapevi che WaspSlicer ha una Galleria delle Forme? È possibile utilizzare i "
 "modelli inclusi come modificatori, volumi negativi o come oggetti "
 "stampabili. Fai clic destro sul piano e seleziona<a>Aggiungi forma - "
 "Galleria</a>."
@@ -14294,13 +14294,13 @@ msgstr "Alcuni filamenti sono stati disinstallati."
 msgid ""
 "Some G/M-code commands, including temperature control and others, are not "
 "universal. Set this option to your printer's firmware to get a compatible "
-"output. The \"No extrusion\" flavor prevents PrusaSlicer from exporting any "
+"output. The \"No extrusion\" flavor prevents WaspSlicer from exporting any "
 "extrusion value at all."
 msgstr ""
 "Alcuni comandi G/M-code, incluso il controllo di temperatura e altri, non "
 "sono universali. Imposta questa opzione nel firmware della tua stampante per "
 "ottenere un output compatibile. La versione \"No extrusion\" evita che "
-"PrusaSlicer non esporti alcun valore."
+"WaspSlicer non esporti alcun valore."
 
 #: src/libslic3r/GCode.cpp:573
 msgid "(Some lines not shown)"
@@ -14671,8 +14671,8 @@ msgstr ""
 "Cosa vuoi fare adesso?"
 
 #: src/slic3r/GUI/Plater.cpp:5667 src/slic3r/GUI/Plater.cpp:6019
-msgid "Start new PrusaSlicer instance"
-msgstr "Avvia una nuova istanza PrusaSlicer"
+msgid "Start new WaspSlicer instance"
+msgstr "Avvia una nuova istanza WaspSlicer"
 
 #: src/slic3r/GUI/MainFrame.cpp:1300
 msgid "Start new slicing process"
@@ -15306,39 +15306,39 @@ msgstr "Il diametro della punta delle ramificazioni del supporto organico."
 #, c-format, boost-format
 msgid ""
 "The dimensions of the object from file %s seem to be defined in inches.\n"
-"The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate "
+"The internal unit of WaspSlicer is a millimeter. Do you want to recalculate "
 "the dimensions of the object?"
 msgid_plural ""
 "The dimensions of some objects from file %s seem to be defined in inches.\n"
-"The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate "
+"The internal unit of WaspSlicer is a millimeter. Do you want to recalculate "
 "the dimensions of these objects?"
 msgstr[0] ""
 "Le dimensioni dell'oggetto del file %s sembrano essere definite in pollici.\n"
-"L'unità interna di PrusaSlicer è in millimetri. Vuoi ricalcolare le "
+"L'unità interna di WaspSlicer è in millimetri. Vuoi ricalcolare le "
 "dimensioni dell'oggetto?"
 msgstr[1] ""
 "Le dimensioni di alcuni oggetti del file %s sembrano essere definite in "
 "pollici.\n"
-"L'unità interna di PrusaSlicer è in millimetri. Vuoi ricalcolare le "
+"L'unità interna di WaspSlicer è in millimetri. Vuoi ricalcolare le "
 "dimensioni di questi oggetti?"
 
 #: src/slic3r/GUI/Plater.cpp:2585
 #, c-format, boost-format
 msgid ""
 "The dimensions of the object from file %s seem to be defined in meters.\n"
-"The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate "
+"The internal unit of WaspSlicer is a millimeter. Do you want to recalculate "
 "the dimensions of the object?"
 msgid_plural ""
 "The dimensions of some objects from file %s seem to be defined in meters.\n"
-"The internal unit of PrusaSlicer is a millimeter. Do you want to recalculate "
+"The internal unit of WaspSlicer is a millimeter. Do you want to recalculate "
 "the dimensions of these objects?"
 msgstr[0] ""
 "Le dimensioni dell'oggetto del file %s sembrano essere definite in metri. "
-"L'unità interna di PrusaSlicer è il millimetro. Vuoi ricalcolare le "
+"L'unità interna di WaspSlicer è il millimetro. Vuoi ricalcolare le "
 "dimensioni dell'oggetto?"
 msgstr[1] ""
 "Le dimensioni di alcuni oggetti del file %s sembrano essere definite in "
-"metri. L'unità interna di PrusaSlicer è il millimetro. Vuoi ricalcolare le "
+"metri. L'unità interna di WaspSlicer è il millimetro. Vuoi ricalcolare le "
 "dimensioni di questi oggetti?"
 
 #: src/slic3r/GUI/Downloader.cpp:181
@@ -15771,16 +15771,16 @@ msgstr ""
 #: src/slic3r/GUI/Plater.cpp:2518
 msgid ""
 "The preset below was temporarily installed on the active instance of "
-"PrusaSlicer"
+"WaspSlicer"
 msgid_plural ""
 "The presets below were temporarily installed on the active instance of "
-"PrusaSlicer"
+"WaspSlicer"
 msgstr[0] ""
 "Il seguente preset è stato installato temporaneamente sull'istanza attiva di "
-"PrusaSlicer"
+"WaspSlicer"
 msgstr[1] ""
 "I seguenti preset sono stati installati temporaneamente sull'istanza attiva "
-"di PrusaSlicer"
+"di WaspSlicer"
 
 #: src/slic3r/GUI/GUI_App.cpp:2534 src/slic3r/GUI/GUI_App.cpp:2595
 msgid "The preset modifications are successfully saved"
@@ -15899,26 +15899,26 @@ msgstr ""
 #: src/libslic3r/Format/3mf.cpp:1746
 msgid ""
 "The selected 3MF contains FDM supports painted object using a newer version "
-"of PrusaSlicer and is not compatible."
+"of WaspSlicer and is not compatible."
 msgstr ""
 "Il file 3MF selezionato contiene dei supporti FDM dipinti utilizzando una "
-"versione più recente di PrusaSlicer e non è compatibile."
+"versione più recente di WaspSlicer e non è compatibile."
 
 #: src/libslic3r/Format/3mf.cpp:1754
 msgid ""
 "The selected 3MF contains multi-material painted object using a newer "
-"version of PrusaSlicer and is not compatible."
+"version of WaspSlicer and is not compatible."
 msgstr ""
 "Il 3MF selezionato contiene un oggetto multi-materiale dipinto utilizzando "
-"una versione più recente di PrusaSlicer e non è compatibile."
+"una versione più recente di WaspSlicer e non è compatibile."
 
 #: src/libslic3r/Format/3mf.cpp:1750
 msgid ""
 "The selected 3MF contains seam painted object using a newer version of "
-"PrusaSlicer and is not compatible."
+"WaspSlicer and is not compatible."
 msgstr ""
 "Il 3MF selezionato contiene un oggetto con giunzione dipinta che utilizza "
-"una versione più recente di PrusaSlicer e non è compatibile."
+"una versione più recente di WaspSlicer e non è compatibile."
 
 #: src/libslic3r/Format/3mf.cpp:1735
 #, boost-format
@@ -16294,13 +16294,13 @@ msgstr ""
 #: src/slic3r/GUI/GUI_ObjectList.cpp:2066
 msgid ""
 "This action will break a cut correspondence.\n"
-"After that PrusaSlicer can't guarantee model consistency.\n"
+"After that WaspSlicer can't guarantee model consistency.\n"
 "\n"
 "To manipulate with solid parts or negative volumes you have to invalidate "
 "cut infornation first."
 msgstr ""
 "Questa azione interromperà una corrispondenza di taglio.\n"
-"In seguito PrusaSlicer non potrà garantire la coerenza del modello.\n"
+"In seguito WaspSlicer non potrà garantire la coerenza del modello.\n"
 "\n"
 "Per manipolare parti solide o volumi negativi è necessario prima invalidare "
 "le informazioni sul taglio."
@@ -16308,13 +16308,13 @@ msgstr ""
 #: src/slic3r/GUI/GUI_ObjectList.cpp:2066
 msgid ""
 "This action will break a cut information.\n"
-"After that PrusaSlicer can't guarantee model consistency.\n"
+"After that WaspSlicer can't guarantee model consistency.\n"
 "\n"
 "To manipulate with solid parts or negative volumes you have to invalidate "
 "cut infornation first."
 msgstr ""
 "Questa azione interromperà le informazioni sul taglio.\n"
-"Dopo di che PrusaSlicer non potrà garantire la coerenza del modello.\n"
+"Dopo di che WaspSlicer non potrà garantire la coerenza del modello.\n"
 "\n"
 "Per manipolare parti solide o volumi negativi è necessario prima invalidare "
 "le informazioni di taglio."
@@ -16367,17 +16367,17 @@ msgstr ""
 #: src/libslic3r/PrintConfig.cpp:2878
 msgid ""
 "This custom code is inserted before every toolchange. Placeholder variables "
-"for all PrusaSlicer settings as well as {toolchange_z}, {previous_extruder} "
+"for all WaspSlicer settings as well as {toolchange_z}, {previous_extruder} "
 "and {next_extruder} can be used. When a tool-changing command which changes "
-"to the correct extruder is included (such as T{next_extruder}), PrusaSlicer "
+"to the correct extruder is included (such as T{next_extruder}), WaspSlicer "
 "will emit no other such command. It is therefore possible to script custom "
 "behaviour both before and after the toolchange."
 msgstr ""
 "Questo codice personalizzato viene inserito prima di ogni cambio di "
 "strumento. È possibile utilizzare variabili segnaposto per tutte le "
-"impostazioni di PrusaSlicer così come {toolchange_z}, {previous_extruder} e "
+"impostazioni di WaspSlicer così come {toolchange_z}, {previous_extruder} e "
 "{next_extruder}. Quando è incluso un comando di cambio utensile che passa "
-"all'estrusore corretto (come T{next_extruder}), PrusaSlicer non emetterà "
+"all'estrusore corretto (come T{next_extruder}), WaspSlicer non emetterà "
 "altri comandi simili. È quindi possibile scrivere un comportamento "
 "personalizzato sia prima che dopo il cambio strumento."
 
@@ -16386,24 +16386,24 @@ msgid ""
 "This end procedure is inserted at the end of the output file, before the "
 "printer end gcode (and before any toolchange from this filament in case of "
 "multimaterial printers). Note that you can use placeholder variables for all "
-"PrusaSlicer settings. If you have multiple extruders, the gcode is processed "
+"WaspSlicer settings. If you have multiple extruders, the gcode is processed "
 "in extruder order."
 msgstr ""
 "Questa procedura finale è inserita alla fine del file di output, prima che "
 "la stampante completi il gcode (e prima di qualunque cambio strumento da "
 "questo filamento in caso di stampanti multi-material). Da notare che è "
 "possibile inserire variabili segnaposto per tutte le impostazioni di "
-"PrusaSlicer. Se hai estrusori multipli, il gcode è processato nell'ordine "
+"WaspSlicer. Se hai estrusori multipli, il gcode è processato nell'ordine "
 "degli estrusori."
 
 #: src/libslic3r/PrintConfig.cpp:686
 msgid ""
 "This end procedure is inserted at the end of the output file. Note that you "
-"can use placeholder variables for all PrusaSlicer settings."
+"can use placeholder variables for all WaspSlicer settings."
 msgstr ""
 "Questa procedura finale è inserita alla fine del file di output. Da notare "
 "che è possibile usare variabili segnaposto per tutte le impostazioni di "
-"PrusaSlicer."
+"WaspSlicer."
 
 #: src/libslic3r/PrintConfig.cpp:1843
 msgid ""
@@ -16933,22 +16933,22 @@ msgid ""
 "This start procedure is inserted at the beginning, after any printer start "
 "gcode (and after any toolchange to this filament in case of multi-material "
 "printers). This is used to override settings for a specific filament. If "
-"PrusaSlicer detects M104, M109, M140 or M190 in your custom codes, such "
+"WaspSlicer detects M104, M109, M140 or M190 in your custom codes, such "
 "commands will not be prepended automatically so you're free to customize the "
 "order of heating commands and other custom actions. Note that you can use "
-"placeholder variables for all PrusaSlicer settings, so you can put a \"M109 "
+"placeholder variables for all WaspSlicer settings, so you can put a \"M109 "
 "S[first_layer_temperature]\" command wherever you want. If you have multiple "
 "extruders, the gcode is processed in extruder order."
 msgstr ""
 "Questa procedura di inizio è inserita all'inizio, dopo un qualsiasi gcode "
 "iniziale (e dopo un qualunque cambio strumento per questo filamento nel caso "
 "di stampanti multi-material). Viene utilizzato per scavalcare le "
-"impostazioni per un filamento specifico. Se PrusaSlicer rileva M104, M109, "
+"impostazioni per un filamento specifico. Se WaspSlicer rileva M104, M109, "
 "M140 o M190 nei codici personalizzati, questi comandi non vengono anteposti "
 "automaticamente così si è liberi di personalizzare liberamente l'ordine dei "
 "comandi di riscaldamento e altre azioni personalizzate. Da notare che è "
 "possibile utilizzare delle variabili segnaposto per tutte le impostazioni di "
-"PrusaSlicer, così è possibile inserire un comando \"M109 "
+"WaspSlicer, così è possibile inserire un comando \"M109 "
 "S[first_layer_temperature]\" ovunque lo si desideri. Se hai estrusori "
 "multipli, il gcode è processato nell'ordine degli estrusori."
 
@@ -16956,20 +16956,20 @@ msgstr ""
 msgid ""
 "This start procedure is inserted at the beginning, after bed has reached the "
 "target temperature and extruder just started heating, and before extruder "
-"has finished heating. If PrusaSlicer detects M104 or M190 in your custom "
+"has finished heating. If WaspSlicer detects M104 or M190 in your custom "
 "codes, such commands will not be prepended automatically so you're free to "
 "customize the order of heating commands and other custom actions. Note that "
-"you can use placeholder variables for all PrusaSlicer settings, so you can "
+"you can use placeholder variables for all WaspSlicer settings, so you can "
 "put a \"M109 S[first_layer_temperature]\" command wherever you want."
 msgstr ""
 "Questa procedura di inizio è inserita all'inizio, dopo che il piano ha "
 "raggiunto la temperatura impostata e appena l'estrusore inizia il "
 "riscaldamento, e prima che l'estrusore completi il riscaldamento. Se "
-"PrusaSlicer rileva M104 o M190 nel tuo codice personalizzato, questi comandi "
+"WaspSlicer rileva M104 o M190 nel tuo codice personalizzato, questi comandi "
 "non vengono anteposti automaticamente così si è liberi di personalizzare "
 "l'ordine dei comandi di riscaldamento e altre azioni personalizzate. Da "
 "notare che è possibile utilizzare delle variabili segnaposto per tutte le "
-"impostazioni di PrusaSlicer, così è possibile inserire un comando \"M109 "
+"impostazioni di WaspSlicer, così è possibile inserire un comando \"M109 "
 "S[first_layer_temperature]\" ovunque si desideri."
 
 #: src/libslic3r/PrintConfig.cpp:1006
@@ -17010,14 +17010,14 @@ msgstr ""
 
 #: src/libslic3r/PrintConfig.cpp:4571
 msgid ""
-"This version of PrusaSlicer may not understand configurations produced by "
-"the newest PrusaSlicer versions. For example, newer PrusaSlicer may extend "
+"This version of WaspSlicer may not understand configurations produced by "
+"the newest WaspSlicer versions. For example, newer WaspSlicer may extend "
 "the list of supported firmware flavors. One may decide to bail out or to "
 "substitute an unknown value with a default silently or verbosely."
 msgstr ""
-"Questa versione di PrusaSlicer potrebbe non comprendere le configurazioni "
-"realizzate dalle versioni più recenti di PrusaSlicer. Per esempio, "
-"PrusaSlicer più recente può estendere la lista dei flavor di firmware "
+"Questa versione di WaspSlicer potrebbe non comprendere le configurazioni "
+"realizzate dalle versioni più recenti di WaspSlicer. Per esempio, "
+"WaspSlicer più recente può estendere la lista dei flavor di firmware "
 "supportati. Si può decidere di abbandonare o di sostituire un valore "
 "sconosciuto con un valore predefinito in modo silenzioso o verboso."
 
@@ -18154,7 +18154,7 @@ msgid ""
 "identify you later. To detect duplicate entries, a unique number derived "
 "from your system is sent, but the source information cannot be "
 "reconstructed. Apart from that, only general data about your OS, hardware "
-"and OpenGL installation are sent. PrusaSlicer is open source, if you want to "
+"and OpenGL installation are sent. WaspSlicer is open source, if you want to "
 "inspect the code actually performing the communication, see %1%."
 msgstr ""
 "Non inviamo alcuna informazione personale e nulla che permetta di "
@@ -18162,7 +18162,7 @@ msgstr ""
 "numero unico derivato dal vostro sistema, ma le informazioni di origine non "
 "possono essere ricostruite. A parte questo, vengono inviati solo dati "
 "generali sul tuo sistema operativo, l'hardware e l'installazione di OpenGL. "
-"PrusaSlicer è open source, se vuoi ispezionare il codice che esegue "
+"WaspSlicer è open source, se vuoi ispezionare il codice che esegue "
 "effettivamente la comunicazione, vedi %1%."
 
 #: src/slic3r/GUI/ConfigWizard.cpp:488
@@ -18618,18 +18618,18 @@ msgstr "Stai aprendo %1% versione %2%."
 
 #: src/slic3r/GUI/GUI_App.cpp:1051
 msgid ""
-"You are running a 32 bit build of PrusaSlicer on 64-bit Windows.\n"
-"32 bit build of PrusaSlicer will likely not be able to utilize all the RAM "
+"You are running a 32 bit build of WaspSlicer on 64-bit Windows.\n"
+"32 bit build of WaspSlicer will likely not be able to utilize all the RAM "
 "available in the system.\n"
-"Please download and install a 64 bit build of PrusaSlicer from https://www."
-"prusa3d.cz/prusaslicer/.\n"
+"Please download and install a 64 bit build of WaspSlicer from https://www."
+"wasp3d.cz/waspslicer/.\n"
 "Do you wish to continue?"
 msgstr ""
-"Stai eseguendo una build a 32 bit di PrusaSlicer su Windows a 64 bit.\n"
-"La build a 32 bit di PrusaSlicer probabilmente non sarà in grado di "
+"Stai eseguendo una build a 32 bit di WaspSlicer su Windows a 64 bit.\n"
+"La build a 32 bit di WaspSlicer probabilmente non sarà in grado di "
 "utilizzare tutta la RAM disponibile nel sistema.\n"
-"Per favore, scarica e installa una build a 64 bit di PrusaSlicer da https://"
-"www.prusa3d.cz/prusaslicer/.\n"
+"Per favore, scarica e installa una build a 64 bit di WaspSlicer da https://"
+"www.wasp3d.cz/waspslicer/.\n"
 "Vuoi continuare?"
 
 #: src/slic3r/GUI/Plater.cpp:5097
@@ -18818,11 +18818,11 @@ msgstr "Hai iniziato la selezione con %s elementi."
 msgid ""
 "You try to delete an object which is a part of a cut object.\n"
 "This action will break a cut correspondence.\n"
-"After that PrusaSlicer can't guarantee model consistency"
+"After that WaspSlicer can't guarantee model consistency"
 msgstr ""
 "Stai provando a eliminare un oggetto che fa parte di un oggetto tagliato.\n"
 "Questa azione interromperà la corrispondenza di taglio.\n"
-"In seguito PrusaSlicer non potrà garantire la coerenza del modello"
+"In seguito WaspSlicer non potrà garantire la coerenza del modello"
 
 #: src/slic3r/GUI/Preferences.cpp:429
 msgid ""
@@ -18841,23 +18841,23 @@ msgstr ""
 #: src/slic3r/GUI/Plater.cpp:1733
 msgid ""
 "You will not be asked about it again, when: \n"
-"- Closing PrusaSlicer,\n"
+"- Closing WaspSlicer,\n"
 "- Loading or creating a new project"
 msgstr ""
 "Non ti verrà chiesto nuovamente quando: \n"
-"- Alla chiusura di PrusaSlicer,\n"
+"- Alla chiusura di WaspSlicer,\n"
 "- Caricando o creando un nuovo progetto"
 
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:900
 msgid ""
 "You will not be asked about the unsaved changes in presets the next time "
 "you: \n"
-"- Closing PrusaSlicer while some presets are modified,\n"
+"- Closing WaspSlicer while some presets are modified,\n"
 "- Loading a new project while some presets are modified"
 msgstr ""
 "Non verrà chiesto nulla riguardo alle modifiche ai preset non salvate la "
 "prossima volta che: \n"
-"- Chiudi PrusaSlicer mentre alcuni preset sono stati modificati,\n"
+"- Chiudi WaspSlicer mentre alcuni preset sono stati modificati,\n"
 "- Carichi un nuovo progetto mentre alcuni preset sono stati modificati"
 
 #: src/slic3r/GUI/UnsavedChangesDialog.cpp:898
