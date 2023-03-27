@@ -3115,20 +3115,20 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("aria_calda", coInts);
     def->label = L("temperature");
-    def->tooltip = L("hot air temperature. Set it to zero to disable"
+    def->tooltip = L("room heating temperature. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("getto aria calda");
+    def->full_label = L("room heating");
     def->min = 0;
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("aria_calda1", coInts);
     def->label = L("temperature");
-    def->tooltip = L("hot air temperature. Set it to zero to disable"
+    def->tooltip = L("room heating temperature. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("getto aria calda");
+    def->full_label = L("room heating");
     def->min = 0;
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 0 });
@@ -3145,10 +3145,10 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("aria_calda2", coInts);
     def->label = L("temperature");
-    def->tooltip = L("hot air temperature. Set it to zero to disable"
+    def->tooltip = L("room heating temperature. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("getto aria calda");
+    def->full_label = L("room heating");
     def->min = 0;
     def->max = max_temp;
     def->mode = comExpert;
@@ -3167,10 +3167,10 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("aria_calda3", coInts);
     def->label = L("temperature");
-    def->tooltip = L("hot air temperature. Set it to zero to disable"
+    def->tooltip = L("room heating temperature. Set it to zero to disable"
                        "temperature control commands in the output G-code.");
     def->sidetext = L("°C");
-    def->full_label = L("getto aria calda");
+    def->full_label = L("room heating");
     def->min = 0;
     def->max = max_temp;
     def->mode = comExpert;
