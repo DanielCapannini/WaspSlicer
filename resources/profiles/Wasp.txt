@@ -14,4 +14,3 @@ family = Delta
 bed_model = 2040_plate.stl
 bed_texture =  2040_plate.svg
 default_materials = Generic PLA @Wasp; Generic PETG @Wasp; Generic ABS @Wasp; Generic SPLA @Wasp; Generic FLEX @Wasp
-
