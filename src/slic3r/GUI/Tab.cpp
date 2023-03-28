@@ -2006,21 +2006,21 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("layer_range_min5"));
         optgroup->append_line(line);
 
-        line = { L("aria calda"), ""};
+        line = { L("room heating"), ""};
         line.append_option(optgroup->get_option("aria_calda"));
         optgroup->append_line(line);
 
-        line = { L("aria calda new temperature"), ""};
+        line = { L("room heating new temperature"), ""};
         line.append_option(optgroup->get_option("aria_calda1"));
         line.append_option(optgroup->get_option("layer_air1"));
         optgroup->append_line(line);
 
-        line = { L("aria calda new temperature"), ""};
+        line = { L("room heating new temperature"), ""};
         line.append_option(optgroup->get_option("aria_calda2"));
         line.append_option(optgroup->get_option("layer_air2"));
         optgroup->append_line(line);
 
-        line = { L("aria calda new temperature"), ""};
+        line = { L("room heating new temperature"), ""};
         line.append_option(optgroup->get_option("aria_calda3"));
         line.append_option(optgroup->get_option("layer_air3"));
         optgroup->append_line(line);
