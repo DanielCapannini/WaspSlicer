@@ -2205,7 +2205,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercents { 0. });
 
-    def = this->add("retract_before_wipe_mm", coInt);
+    def = this->add("retract_before_wipe_mm", coInts);
     def->label = L("Retract amount before wipe mm");
     def->tooltip = L("With bowden extruders, it may be wise to do some amount of quick retract "
                    "before doing the wipe movement.");
