@@ -120,6 +120,7 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
         "printer_notes",
         "retract_before_travel",
         "retract_before_wipe",
+        "retract_before_wipe_mm",
         "retract_layer_change",
         "retract_length",
         "retract_length_toolchange",

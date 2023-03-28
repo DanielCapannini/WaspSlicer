@@ -1881,7 +1881,8 @@ void TabFilament::add_filament_overrides_page()
                                         "filament_retract_before_travel",
                                         "filament_retract_layer_change",
                                         "filament_wipe",
-                                        "filament_retract_before_wipe"
+                                        "filament_retract_before_wipe",
+                                        "filament_retract_before_wipe_mm"
                                      })
         create_line_with_near_label_widget(optgroup, opt_key, extruder_idx);
 }
@@ -1907,7 +1908,8 @@ void TabFilament::update_filament_overrides_page()
                                             "filament_retract_before_travel",
                                             "filament_retract_layer_change",
                                             "filament_wipe",
-                                            "filament_retract_before_wipe"
+                                            "filament_retract_before_wipe",
+                                            "filament_retract_before_wipe_mm"
                                         };
 
     const int extruder_idx = 0; // #ys_FIXME
@@ -2745,7 +2747,7 @@ const std::vector<std::string> extruder_options = {
     "min_layer_height", "max_layer_height", "extruder_offset",
     "retract_length", "retract_lift", "retract_lift_above", "retract_lift_below",
     "retract_speed", "deretract_speed", "retract_restart_extra", "retract_before_travel",
-    "retract_layer_change", "wipe", "retract_before_wipe",
+    "retract_layer_change", "wipe", "retract_before_wipe", "retract_before_wipe_mm",
     "retract_length_toolchange", "retract_restart_extra_toolchange",
 };
 
@@ -2901,6 +2903,7 @@ void TabPrinter::build_extruder_pages(size_t n_before_extruders)
         optgroup->append_single_option_line("retract_before_travel", "", extruder_idx);
         optgroup->append_single_option_line("retract_layer_change", "", extruder_idx);
         optgroup->append_single_option_line("wipe", "", extruder_idx);
+        optgroup->append_single_option_line("retract_before_wipe_mm", "", extruder_idx);
         optgroup->append_single_option_line("retract_before_wipe", "", extruder_idx);
 
         optgroup = page->new_optgroup(L("Retraction when tool is disabled (advanced settings for multi-extruder setups)"));
@@ -3124,12 +3127,13 @@ void TabPrinter::toggle_options()
 
         // some options only apply when not using firmware retraction
         vec.resize(0);
-        vec = { "retract_speed", "deretract_speed", "retract_before_wipe", "retract_restart_extra", "wipe" };
+        vec = { "retract_speed", "deretract_speed", "retract_before_wipe", "retract_before_wipe_mm", "retract_restart_extra", "wipe" };
         for (auto el : vec)
             toggle_option(el, retraction && !use_firmware_retraction, i);
 
         bool wipe = m_config->opt_bool("wipe", i);
         toggle_option("retract_before_wipe", wipe, i);
+        toggle_option("retract_before_wipe_mm", wipe, i);
 
         if (use_firmware_retraction && wipe) {
             //wxMessageDialog dialog(parent(),
