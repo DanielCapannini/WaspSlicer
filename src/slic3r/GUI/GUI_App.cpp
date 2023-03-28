@@ -3243,7 +3243,7 @@ void GUI_App::window_pos_sanitize(wxTopLevelWindow* window)
 bool GUI_App::config_wizard_startup()
 {
     if (!m_app_conf_exists || preset_bundle->printers.only_default_printers()) {
-        //run_wizard(ConfigWizard::RR_DATA_EMPTY);
+        run_wizard(ConfigWizard::RR_DATA_EMPTY);
         return true;
     } else if (get_app_config()->legacy_datadir()) {
         // Looks like user has legacy pre-vendorbundle data directory,
@@ -3252,7 +3252,7 @@ bool GUI_App::config_wizard_startup()
         MsgDataLegacy dlg;
         dlg.ShowModal();
 
-        //run_wizard(ConfigWizard::RR_DATA_LEGACY);
+        run_wizard(ConfigWizard::RR_DATA_LEGACY);
         return true;
     } 
 #ifndef __APPLE__    
