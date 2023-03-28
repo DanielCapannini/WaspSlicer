@@ -2209,7 +2209,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Retract amount before wipe mm");
     def->tooltip = L("With bowden extruders, it may be wise to do some amount of quick retract "
                    "before doing the wipe movement.");
-    def->sidetext = L("mm");
+    def->sidetext = L("mm (zero to disable)");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats { 0. });
 
