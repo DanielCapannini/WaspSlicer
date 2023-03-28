@@ -3133,7 +3133,7 @@ void TabPrinter::toggle_options()
 
         bool wipe = m_config->opt_bool("wipe", i);
         toggle_option("retract_before_wipe", wipe, i);
-        toggle_option("retract_before_wipe_mm", wipe, i);
+        //toggle_option("retract_before_wipe_mm", wipe, i);
 
         if (use_firmware_retraction && wipe) {
             //wxMessageDialog dialog(parent(),
