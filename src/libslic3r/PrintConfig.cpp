@@ -3535,9 +3535,8 @@ void PrintConfigDef::init_fff_params()
         "retract_length", "retract_lift", "retract_lift_above", "retract_lift_below", "retract_speed", "deretract_speed", "retract_restart_extra", "retract_before_travel",
         // bools
         "retract_layer_change", "wipe",
-        "retract_before_wipe_mm",
         // percents
-        "retract_before_wipe"}) {
+        "retract_before_wipe","retract_before_wipe_mm"}) {
         auto it_opt = options.find(opt_key);
         assert(it_opt != options.end());
         def = this->add_nullable(std::string("filament_") + opt_key, it_opt->second.type);
