@@ -2205,7 +2205,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercents { 0. });
 
-    def = this->add("retract_before_wipe_mm", coInt);
+    def = this->add("retract_before_wipe_mm", coFloats);
     def->label = L("Retract amount before wipe mm");
     def->tooltip = L("With bowden extruders, it may be wise to do some amount of quick retract "
                    "before doing the wipe movement.");
@@ -3549,7 +3549,6 @@ void PrintConfigDef::init_fff_params()
         case coFloats   : def->set_default_value(new ConfigOptionFloatsNullable  (static_cast<const ConfigOptionFloats*  >(it_opt->second.default_value.get())->values)); break;
         case coPercents : def->set_default_value(new ConfigOptionPercentsNullable(static_cast<const ConfigOptionPercents*>(it_opt->second.default_value.get())->values)); break;
         case coBools    : def->set_default_value(new ConfigOptionBoolsNullable   (static_cast<const ConfigOptionBools*   >(it_opt->second.default_value.get())->values)); break;
-        case coInt     : def->set_default_value(new ConfigOptionIntsNullable    (static_cast<const ConfigOptionInts*    >(it_opt->second.default_value.get())->values)); break;
         default: assert(false);
         }
     }

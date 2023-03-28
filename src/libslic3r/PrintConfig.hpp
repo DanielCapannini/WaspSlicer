@@ -701,7 +701,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,               max_volumetric_extrusion_rate_slope_positive))
     ((ConfigOptionFloat,               max_volumetric_extrusion_rate_slope_negative))
     ((ConfigOptionPercents,            retract_before_wipe))
-    ((ConfigOptionInt,            retract_before_wipe_mm))
+    ((ConfigOptionFloats,            retract_before_wipe_mm))
     ((ConfigOptionFloats,              retract_length))
     ((ConfigOptionFloats,              retract_length_toolchange))
     ((ConfigOptionFloats,              retract_lift))
