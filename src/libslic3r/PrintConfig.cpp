@@ -2211,7 +2211,7 @@ void PrintConfigDef::init_fff_params()
                    "before doing the wipe movement.");
     def->sidetext = L("mm");
     def->mode = comAdvanced;
-    def->set_default_value(new ConfigOptionInt(0));
+    def->set_default_value(ew ConfigOptionFloats { 0. });
 
     def = this->add("retract_layer_change", coBools);
     def->label = L("Retract on layer change");
