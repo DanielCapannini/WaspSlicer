@@ -2240,7 +2240,7 @@ void PrintConfigDef::init_fff_params()
     def->label =L("mm costing estrusion");
     def->tooltip= L("");
     def->mode = comAdvanced;
-    def->set_default_value(new ConfigOptionFloats { 0. })
+    def->set_default_value(new ConfigOptionFloats { 0. });
 
     def = this->add("retract_layer_change", coBools);
     def->label = L("Retract on layer change");
