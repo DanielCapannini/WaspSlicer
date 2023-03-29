@@ -2167,6 +2167,15 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInt(0));
 
+    def = this->add("raft_start", coInt);
+    def->label = L("Raft start");
+    def->category = L("Support material");
+    def->tooltip = L("");
+    def->sidetext = L("layers");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(0));
+
     def = this->add("resolution", coFloat);
     def->label = L("Slice resolution");
     def->tooltip = L("Minimum detail resolution, used to simplify the input file for speeding up "
