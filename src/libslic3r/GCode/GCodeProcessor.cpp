@@ -66,6 +66,8 @@ const float GCodeProcessor::Wipe_Height = 0.05f;
 const std::string GCodeProcessor::Mm3_Per_Mm_Tag = "MM3_PER_MM:";
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
 
+
+
 static void set_option_value(ConfigOptionFloats& option, size_t id, float value)
 {
     if (id < option.values.size())
@@ -1000,6 +1002,17 @@ static inline const char* remove_eols(const char *begin, const char *end) {
     return end;
 }
 
+float mmHeight = 0.00f;
+float mmWidth = 0.00f;
+
+void GCodeProcessor::mm_height(float height){
+    mmHeight=height;
+}
+
+void GCodeProcessor::mm_width(float width){
+    mmWidth=width;
+}
+
 // Load a G-code into a stand-alone G-code viewer.
 // throws CanceledException through print->throw_if_canceled() (sent by the caller as callback).
 void GCodeProcessor::process_file(const std::string& filename, std::function<void()> cancel_callback)
@@ -1096,7 +1109,8 @@ void GCodeProcessor::finalize(bool perform_post_process)
     // update width/height of wipe moves
     for (GCodeProcessorResult::MoveVertex& move : m_result.moves) {
         if (move.type == EMoveType::Wipe) {
-            move.width = Wipe_Width;
+            mmWidth==0 ? move.width = Wipe_Width : move.width = mmWidth;
+            mmHeight==0 ? move.height = Wipe_Height : move.height = mmHeight;
             move.height = Wipe_Height;
         }
     }

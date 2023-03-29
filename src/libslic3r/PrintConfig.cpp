@@ -2205,8 +2205,16 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionPercents { 0. });
 
-    def = this->add("filament_retract_before_wipe_mm", coFloats);
-    def->label = L("Retract amount before wipe mm");
+    def = this->add("filament_retract_before_wipe_mm_w", coFloats);
+    def->label = L("Retract amount before wipe mm Width");
+    def->tooltip = L("With bowden extruders, it may be wise to do some amount of quick retract "
+                   "before doing the wipe movement.");
+    def->sidetext = L("mm (zero to disable)");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloats { 0. });
+
+    def = this->add("filament_retract_before_wipe_mm_h", coFloats);
+    def->label = L("Retract amount before wipe mm Height");
     def->tooltip = L("With bowden extruders, it may be wise to do some amount of quick retract "
                    "before doing the wipe movement.");
     def->sidetext = L("mm (zero to disable)");
@@ -3560,7 +3568,7 @@ void PrintConfigDef::init_extruder_option_keys()
     m_extruder_option_keys = {
         "nozzle_diameter", "min_layer_height", "max_layer_height", "extruder_offset",
         "retract_length", "retract_lift", "retract_lift_above", "retract_lift_below", "retract_speed", "deretract_speed",
-        "retract_before_wipe", "filament_retract_before_wipe_mm", "retract_restart_extra", "retract_before_travel", "wipe",
+        "retract_before_wipe", "filament_retract_before_wipe_mm_w", "filament_retract_before_wipe_mm_h", "retract_restart_extra", "retract_before_travel", "wipe",
         "retract_layer_change", "retract_length_toolchange", "retract_restart_extra_toolchange", "extruder_colour",
         "default_filament_profile"
     };
@@ -3568,7 +3576,8 @@ void PrintConfigDef::init_extruder_option_keys()
     m_extruder_retract_keys = {
         "deretract_speed",
         "retract_before_travel",
-        "filament_retract_before_wipe_mm",
+        "filament_retract_before_wipe_mm_w",
+        "filament_retract_before_wipe_mm_h",
         "retract_before_wipe",
         "retract_layer_change",
         "retract_length",

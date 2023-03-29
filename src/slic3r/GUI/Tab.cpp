@@ -1882,7 +1882,8 @@ void TabFilament::add_filament_overrides_page()
                                         "filament_retract_layer_change",
                                         "filament_wipe",
                                         "filament_retract_before_wipe",
-                                        "filament_retract_before_wipe_mm"
+                                        "filament_retract_before_wipe_mm_w",
+                                        "filament_retract_before_wipe_mm_h"
                                      })
         create_line_with_near_label_widget(optgroup, opt_key, extruder_idx);
 }
@@ -1909,7 +1910,8 @@ void TabFilament::update_filament_overrides_page()
                                             "filament_retract_layer_change",
                                             "filament_wipe",
                                             "filament_retract_before_wipe",
-                                            "filament_retract_before_wipe_mm"
+                                            "filament_retract_before_wipe_mm_w",
+                                            "filament_retract_before_wipe_mm_h"
                                         };
 
     const int extruder_idx = 0; // #ys_FIXME
@@ -2747,7 +2749,7 @@ const std::vector<std::string> extruder_options = {
     "min_layer_height", "max_layer_height", "extruder_offset",
     "retract_length", "retract_lift", "retract_lift_above", "retract_lift_below",
     "retract_speed", "deretract_speed", "retract_restart_extra", "retract_before_travel",
-    "retract_layer_change", "wipe", "retract_before_wipe", "filament_retract_before_wipe_mm",
+    "retract_layer_change", "wipe", "retract_before_wipe", "filament_retract_before_wipe_mm_w", "filament_retract_before_wipe_mm_h",
     "retract_length_toolchange", "retract_restart_extra_toolchange",
 };
 
@@ -2903,7 +2905,8 @@ void TabPrinter::build_extruder_pages(size_t n_before_extruders)
         optgroup->append_single_option_line("retract_before_travel", "", extruder_idx);
         optgroup->append_single_option_line("retract_layer_change", "", extruder_idx);
         optgroup->append_single_option_line("wipe", "", extruder_idx);
-        optgroup->append_single_option_line("filament_retract_before_wipe_mm", "", extruder_idx);
+        optgroup->append_single_option_line("filament_retract_before_wipe_mm_w", "", extruder_idx);
+        optgroup->append_single_option_line("filament_retract_before_wipe_mm_h", "", extruder_idx);
         optgroup->append_single_option_line("retract_before_wipe", "", extruder_idx);
 
         optgroup = page->new_optgroup(L("Retraction when tool is disabled (advanced settings for multi-extruder setups)"));
