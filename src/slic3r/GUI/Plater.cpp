@@ -5335,8 +5335,9 @@ void Plater::load_gcode(const wxString& filename)
     GCodeProcessor processor;
     try
     {
-        processor.mm_height(config.otp_float("filament_retract_before_wipe_mm_h")/100);
-        processor.mm_width(config.otp_float("filament_retract_before_wipe_mm_w")/100);
+        DynamicPrintConfig &configm = wxGetApp().preset_bundle->prints.get_edited_preset().config;
+        processor.mm_height(configm.otp_float("filament_retract_before_wipe_mm_h")/100);
+        processor.mm_width(configm.otp_float("filament_retract_before_wipe_mm_w")/100);
         processor.process_file(filename.ToUTF8().data());
     }
     catch (const std::exception& ex)
