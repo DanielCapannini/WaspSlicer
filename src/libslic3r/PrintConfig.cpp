@@ -2236,7 +2236,7 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBools { false });
 
-    def = this->add("filament_costing_mm", coFloat);
+    def = this->add("filament_costing_mm", coFloats);
     def->label =L("mm costing estrusion");
     def->tooltip= L("");
     def->mode = comAdvanced;
