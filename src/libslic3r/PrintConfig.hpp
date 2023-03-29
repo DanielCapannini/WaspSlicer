@@ -704,6 +704,8 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionPercents,            retract_before_wipe))
     ((ConfigOptionFloats,            filament_retract_before_wipe_mm_w))
     ((ConfigOptionFloats,            filament_retract_before_wipe_mm_h))
+    ((ConfigOptionBools,               filament_costing))
+    ((configOptionFloats,              filament_costing_mm))
     ((ConfigOptionFloats,              retract_length))
     ((ConfigOptionFloats,              retract_length_toolchange))
     ((ConfigOptionFloats,              retract_lift))

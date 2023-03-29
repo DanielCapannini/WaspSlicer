@@ -122,6 +122,8 @@ bool Print::invalidate_state_by_config_options(const ConfigOptionResolver & /* n
         "retract_before_wipe",
         "filament_retract_before_wipe_mm_w",
         "filament_retract_before_wipe_mm_h",
+        "filament_costing", 
+        "filament_costing_mm",
         "retract_layer_change",
         "retract_length",
         "retract_length_toolchange",
