@@ -6,109 +6,58 @@
 
 namespace Slic3r {
 
-/// a SurfaceType should be composed of a Position & density flag
-/// Position: top, bottom, internal
-/// Density: solid, sparse, void
-/// optinally, is can also have one bridge modifier (bridge, over-bridge).
-enum SurfaceType  : uint16_t { 
-    stNone = 0,
-    /// Position: Top horizontal surface, visible from the top.
-    stPosTop        = 1 << 0,
-    /// Position: Bottom horizontal surface, visible from the bottom, printed with a normal extrusion flow.
-    stPosBottom     = 1 << 1,
-    /// Position: Normal sparse infill.
-    stPosInternal   = 1 << 2,
-    /// Position: Inner/outer perimeters. Mainly used for coloring
-    stPosPerimeter  = 1 << 3,
-    /// Density: Solid infill (100%).
-    stDensSolid     = 1 << 4,
-    /// Density: Sparse infill (>0% & <100%).
-    stDensSparse    = 1 << 5,
-    /// Density: or if sparse infill layers get combined into a single layer.
-    stDensVoid      = 1 << 6,
-    /// Bridge Modifier: 1st layer of dense infill over sparse infill, printed with a bridging extrusion flow.
-    stModBridge = 1 << 7,
-    /// Bridge Modifier: 2nd layer of dense infill over sparse infill/nothing, may be printed with an over-extruding flow.
-    stModOverBridge = 1 << 8,
+enum SurfaceType { 
+    // Top horizontal surface, visible from the top.
+    stTop,
+    // Bottom horizontal surface, visible from the bottom, printed with a normal extrusion flow.
+    stBottom,
+    // Bottom horizontal surface, visible from the bottom, unsupported, printed with a bridging extrusion flow.
+    stBottomBridge,
+    // Normal sparse infill.
+    stInternal,
+    // Full infill, supporting the top surfaces and/or defining the verticall wall thickness.
+    stInternalSolid,
+    // 1st layer of dense infill over sparse infill, printed with a bridging extrusion flow.
+    stInternalBridge,
+    // stInternal turns into void surfaces if the sparse infill is used for supports only,
+    // or if sparse infill layers get combined into a single layer.
+    stInternalVoid,
+    // Inner/outer perimeters.
+    stPerimeter,
+    // Number of SurfaceType enums.
+    stCount,
 };
-inline SurfaceType operator|(SurfaceType a, SurfaceType b) {
-    return static_cast<SurfaceType>(static_cast<uint16_t>(a) | static_cast<uint16_t>(b));
-}
-inline SurfaceType operator&(SurfaceType a, SurfaceType b) {
-    return static_cast<SurfaceType>(static_cast<uint16_t>(a) & static_cast<uint16_t>(b));
-}
-inline SurfaceType operator^(SurfaceType a, SurfaceType b) {
-    return static_cast<SurfaceType>(static_cast<uint16_t>(a) ^ static_cast<uint16_t>(b));
-}
-inline SurfaceType operator|=(SurfaceType& a, SurfaceType b) {
-    a = a | b; return a;
-}
-inline SurfaceType operator&=(SurfaceType& a, SurfaceType b) {
-    a = a & b; return a;
-}
-//inline bool operator==(SurfaceType a, SurfaceType b) {
-//    return static_cast<uint16_t>(a) ^ static_cast<uint16_t>(b) == 0;
-//}
-//inline bool operator!=(SurfaceType a, SurfaceType b) {
-//    return static_cast<uint16_t>(a) ^ static_cast<uint16_t>(b) != 0;
-//}
-std::string surfaceType_to_string(SurfaceType st);
-
 
 class Surface
 {
 public:
     SurfaceType     surface_type;
     ExPolygon       expolygon;
-    double          thickness;          // in mm
-    unsigned short  thickness_layers;   // in layers
-    double          bridge_angle;       // in radians, ccw, 0 = East, only 0+ (negative means undefined)
-    unsigned short  extra_perimeters;
-    //for dense infill
-    uint16_t        maxNbSolidLayersOnTop;
-    uint16_t        priority;
+    double          thickness        { -1 };  // in mm
+    unsigned short  thickness_layers {  1 };  // in layers
+    double          bridge_angle     { -1. }; // in radians, ccw, 0 = East, only 0+ (negative means undefined)
+    unsigned short  extra_perimeters {  0 };
     
-    Surface(const Slic3r::Surface &rhs)
-        : surface_type(rhs.surface_type), expolygon(rhs.expolygon),
-            thickness(rhs.thickness), thickness_layers(rhs.thickness_layers), 
-            bridge_angle(rhs.bridge_angle), extra_perimeters(rhs.extra_perimeters),
-            maxNbSolidLayersOnTop(rhs.maxNbSolidLayersOnTop),
-            priority(rhs.priority)
-        {};
-
-    Surface(SurfaceType _surface_type, const ExPolygon &_expolygon)
-        : surface_type(_surface_type), expolygon(_expolygon),
-            thickness(-1), thickness_layers(1), bridge_angle(-1), extra_perimeters(0),
-            maxNbSolidLayersOnTop(-1),
-            priority(0)
-        {};
-    Surface(const Surface &other, const ExPolygon &_expolygon)
-        : surface_type(other.surface_type), expolygon(_expolygon),
-            thickness(other.thickness), thickness_layers(other.thickness_layers), 
-            bridge_angle(other.bridge_angle), extra_perimeters(other.extra_perimeters),
-            maxNbSolidLayersOnTop(other.maxNbSolidLayersOnTop),
-            priority(other.priority)
-        {};
-    Surface(Surface &&rhs)
-        : surface_type(rhs.surface_type), expolygon(std::move(rhs.expolygon)),
-            thickness(rhs.thickness), thickness_layers(rhs.thickness_layers), 
-            bridge_angle(rhs.bridge_angle), extra_perimeters(rhs.extra_perimeters),
-            maxNbSolidLayersOnTop(rhs.maxNbSolidLayersOnTop),
-            priority(rhs.priority)
-        {};
-    Surface(SurfaceType _surface_type, const ExPolygon &&_expolygon)
-        : surface_type(_surface_type), expolygon(std::move(_expolygon)),
-            thickness(-1), thickness_layers(1), bridge_angle(-1), extra_perimeters(0),
-            maxNbSolidLayersOnTop(-1),
-            priority(-1)
-        {};
-    Surface(const Surface &other, const ExPolygon &&_expolygon)
-        : surface_type(other.surface_type), expolygon(std::move(_expolygon)),
-            thickness(other.thickness), thickness_layers(other.thickness_layers), 
-            bridge_angle(other.bridge_angle), extra_perimeters(other.extra_perimeters),
-            maxNbSolidLayersOnTop(other.maxNbSolidLayersOnTop),
-            priority(other.priority)
-        {};
+    Surface(const Slic3r::Surface &rhs) :
+        surface_type(rhs.surface_type), expolygon(rhs.expolygon),
+        thickness(rhs.thickness), thickness_layers(rhs.thickness_layers), 
+        bridge_angle(rhs.bridge_angle), extra_perimeters(rhs.extra_perimeters) {}
+    Surface(SurfaceType surface_type, const ExPolygon &expolygon) : 
+        surface_type(surface_type), expolygon(expolygon) {}
+    Surface(const Surface &templ, const ExPolygon &expolygon) :
+        surface_type(templ.surface_type), expolygon(expolygon),
+        thickness(templ.thickness), thickness_layers(templ.thickness_layers),
+        bridge_angle(templ.bridge_angle), extra_perimeters(templ.extra_perimeters) {}
+    Surface(Surface &&rhs) :
+        surface_type(rhs.surface_type), expolygon(std::move(rhs.expolygon)),
+        thickness(rhs.thickness), thickness_layers(rhs.thickness_layers), 
+        bridge_angle(rhs.bridge_angle), extra_perimeters(rhs.extra_perimeters) {}
+    Surface(SurfaceType surface_type, ExPolygon &&expolygon) : 
+        surface_type(surface_type), expolygon(std::move(expolygon)) {}
+    Surface(const Surface &templ, ExPolygon &&expolygon) :
+        surface_type(templ.surface_type), expolygon(std::move(expolygon)),
+            thickness(templ.thickness), thickness_layers(templ.thickness_layers), 
+            bridge_angle(templ.bridge_angle), extra_perimeters(templ.extra_perimeters) {}
 
     Surface& operator=(const Surface &rhs)
     {
@@ -118,8 +67,6 @@ public:
         thickness_layers = rhs.thickness_layers;
         bridge_angle     = rhs.bridge_angle;
         extra_perimeters = rhs.extra_perimeters;
-        maxNbSolidLayersOnTop = rhs.maxNbSolidLayersOnTop;
-        priority         = rhs.priority;
         return *this;
     }
 
@@ -131,28 +78,24 @@ public:
         thickness_layers = rhs.thickness_layers;
         bridge_angle     = rhs.bridge_angle;
         extra_perimeters = rhs.extra_perimeters;
-        maxNbSolidLayersOnTop = rhs.maxNbSolidLayersOnTop;
-        priority         = rhs.priority;
         return *this;
     }
 
 	double area() 		 const { return this->expolygon.area(); }
-    bool empty() const { return expolygon.empty(); }
-    void clear() { expolygon.clear(); }
-    bool has_fill_solid() const;
-    bool has_fill_sparse() const;
-    bool has_fill_void() const;
-    bool has_pos_external() const;
-    bool has_pos_top() const;
-    bool has_pos_internal() const;
-    bool has_pos_bottom() const;
-    bool has_mod_bridge() const;
-    bool has_mod_overBridge() const;
+    bool   empty() 		 const { return expolygon.empty(); }
+    void   clear() 			   { expolygon.clear(); }
+
+    // The following methods do not test for stPerimeter.
+	bool   is_top()      const { return this->surface_type == stTop; }
+	bool   is_bottom()   const { return this->surface_type == stBottom || this->surface_type == stBottomBridge; }
+	bool   is_bridge()   const { return this->surface_type == stBottomBridge || this->surface_type == stInternalBridge; }
+	bool   is_external() const { return this->is_top() || this->is_bottom(); }
+	bool   is_internal() const { return ! this->is_external(); }
+	bool   is_solid()    const { return this->is_external() || this->surface_type == stInternalSolid || this->surface_type == stInternalBridge; }
 };
 
 typedef std::vector<Surface> Surfaces;
-typedef std::vector<Surface*> SurfacesPtr;
-typedef std::vector<const Surface*> SurfacesConstPtr;
+typedef std::vector<const Surface*> SurfacesPtr;
 
 inline Polygons to_polygons(const Surface &surface)
 {
@@ -194,21 +137,6 @@ inline Polygons to_polygons(const SurfacesPtr &src)
     return polygons;
 }
 
-inline Polygons to_polygons(const SurfacesConstPtr &src)
-{
-    size_t num = 0;
-    for (SurfacesConstPtr::const_iterator it = src.begin(); it != src.end(); ++it)
-        num += (*it)->expolygon.holes.size() + 1;
-    Polygons polygons;
-    polygons.reserve(num);
-    for (SurfacesConstPtr::const_iterator it = src.begin(); it != src.end(); ++it) {
-        polygons.emplace_back((*it)->expolygon.contour);
-        for (Polygons::const_iterator ith = (*it)->expolygon.holes.begin(); ith != (*it)->expolygon.holes.end(); ++ith)
-            polygons.emplace_back(*ith);
-    }
-    return polygons;
-}
-
 inline ExPolygons to_expolygons(const Surfaces &src)
 {
     ExPolygons expolygons;
@@ -220,12 +148,12 @@ inline ExPolygons to_expolygons(const Surfaces &src)
 
 inline ExPolygons to_expolygons(Surfaces &&src)
 {
-    ExPolygons expolygons;
-    expolygons.reserve(src.size());
-    for (Surfaces::const_iterator it = src.begin(); it != src.end(); ++it)
-        expolygons.emplace_back(ExPolygon(std::move(it->expolygon)));
-    src.clear();
-    return expolygons;
+	ExPolygons expolygons;
+	expolygons.reserve(src.size());
+	for (auto it = src.begin(); it != src.end(); ++it)
+		expolygons.emplace_back(ExPolygon(std::move(it->expolygon)));
+	src.clear();
+	return expolygons;
 }
 
 inline ExPolygons to_expolygons(const SurfacesPtr &src)
@@ -233,15 +161,6 @@ inline ExPolygons to_expolygons(const SurfacesPtr &src)
     ExPolygons expolygons;
     expolygons.reserve(src.size());
     for (SurfacesPtr::const_iterator it = src.begin(); it != src.end(); ++it)
-        expolygons.emplace_back((*it)->expolygon);
-    return expolygons;
-}
-
-inline ExPolygons to_expolygons(const SurfacesConstPtr &src)
-{
-    ExPolygons expolygons;
-    expolygons.reserve(src.size());
-    for (SurfacesConstPtr::const_iterator it = src.begin(); it != src.end(); ++it)
         expolygons.emplace_back((*it)->expolygon);
     return expolygons;
 }
@@ -293,6 +212,7 @@ inline void polygons_append(Polygons &dst, const SurfacesPtr &src)
     }
 }
 
+/*
 inline void polygons_append(Polygons &dst, SurfacesPtr &&src) 
 { 
     dst.reserve(dst.size() + number_polygons(src));
@@ -302,6 +222,7 @@ inline void polygons_append(Polygons &dst, SurfacesPtr &&src)
         (*it)->expolygon.holes.clear();
     }
 }
+*/
 
 // Append a vector of Surfaces at the end of another vector of polygons.
 inline void surfaces_append(Surfaces &dst, const ExPolygons &src, SurfaceType surfaceType) 
@@ -332,8 +253,8 @@ inline void surfaces_append(Surfaces &dst, ExPolygons &&src, SurfaceType surface
 inline void surfaces_append(Surfaces &dst, ExPolygons &&src, const Surface &surfaceTempl) 
 { 
     dst.reserve(dst.size() + number_polygons(src));
-    for (ExPolygons::const_iterator it = src.begin(); it != src.end(); ++ it)
-        dst.emplace_back(Surface(surfaceTempl, std::move(*it)));
+    for (ExPolygon& explg : src)
+        dst.emplace_back(Surface(surfaceTempl, std::move(explg)));
     src.clear();
 }
 

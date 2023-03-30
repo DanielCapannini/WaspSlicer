@@ -17,7 +17,7 @@ class MultiPoint
 public:
     Points points;
     
-    MultiPoint() {}
+    MultiPoint() = default;
     MultiPoint(const MultiPoint &other) : points(other.points) {}
     MultiPoint(MultiPoint &&other) : points(std::move(other.points)) {}
     MultiPoint(std::initializer_list<Point> list) : points(list) {}
@@ -36,15 +36,16 @@ public:
     const Point& front() const { return this->points.front(); }
     const Point& back() const { return this->points.back(); }
     const Point& first_point() const { return this->front(); }
-    virtual const Point& last_point() const = 0;
-    virtual Lines lines() const = 0;
     size_t size() const { return points.size(); }
     bool   empty() const { return points.empty(); }
-    double length() const;
     bool   is_valid() const { return this->points.size() >= 2; }
 
+    // Return index of a polygon point exactly equal to point.
+    // Return -1 if no such point exists.
     int  find_point(const Point &point) const;
-    bool has_boundary_point(const Point &point) const;
+    // Return index of the closest point to point closer than scaled_epsilon.
+    // Return -1 if no such point exists.
+    int  find_point(const Point &point, const double scaled_epsilon) const;
     int  closest_point_index(const Point &point) const {
         int idx = -1;
         if (! this->points.empty()) {
@@ -80,14 +81,7 @@ public:
         }
     }
 
-    bool intersection(const Line& line, Point* intersection) const;
-    bool first_intersection(const Line& line, Point* intersection) const;
-    bool intersections(const Line &line, Points *intersections) const;
-    // Projection of a point onto the lines defined by the points.
-    virtual Point point_projection(const Point &point) const;
-
-    static Points _douglas_peucker(const Points& points, const double tolerance);
-    static Points _douglas_peucker_plus(const Points& points, const double tolerance, const double min_length);
+    static Points _douglas_peucker(const Points &points, const double tolerance);
     static Points visivalingam(const Points& pts, const double& tolerance);
 
     inline auto begin()        { return points.begin(); }
@@ -107,8 +101,6 @@ public:
 
     void translate(double x, double y);
     void translate(const Point& vector);
-    virtual Lines3 lines() const = 0;
-    double length() const;
     bool is_valid() const { return this->points.size() >= 2; }
 
     BoundingBox3 bounding_box() const;

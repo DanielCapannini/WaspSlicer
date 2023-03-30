@@ -19,9 +19,7 @@ public:
     	m_enabled 		   = en;
     }
 
-    std::string process_layer(const std::string& gcode);
-
-    bool is_transition_layer() { return m_transition_layer; }
+    std::string process_layer(const std::string &gcode);
     
 private:
     const PrintConfig  &m_config;
