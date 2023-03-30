@@ -142,7 +142,7 @@ SlicingParameters SlicingParameters::create_from_config(
             // Number of the base raft layers is decreased by the first layer.
             params.raft_base_top_z       = first_layer_height + coordf_t(params.base_raft_layers - 1) * params.base_raft_layer_height;
             // Number of the interface raft layers is decreased by the contact layer.
-            params.raft_interface_top_z  = params.raft_base_top_z + coordf_t(params.interface_raft_layers - 1) * params.interface_raft_layer_height;
+            params.raft_interface_top_z  = params.raft_base_top_z + coordf_t(params.interface_raft_layers) * params.interface_raft_layer_height;
 			params.raft_contact_top_z    = params.raft_interface_top_z + params.contact_raft_layer_height;
 		}
         coordf_t print_z = params.raft_contact_top_z + params.gap_raft_object;
