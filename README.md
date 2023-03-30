@@ -9,7 +9,8 @@ compatible with any modern printer based on the RepRap toolchain, including all
 those based on the Marlin, Wasp, Sprinter and Repetier firmware. It also works
 with Mach3, LinuxCNC and Machinekit controllers.
 
-WaspSlicer is based on WaspSlicer and WaspSlicer is based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
+WaspSlicer is based on PrusaSlicer and 
+WaspSlicer is based on PrusaSlicer is based on [Slic3r](https://github.com/Slic3r/Slic3r) by Alessandro Ranellucci and the RepRap community.
 
 See the [documentation directory](doc/) for more information.
 
