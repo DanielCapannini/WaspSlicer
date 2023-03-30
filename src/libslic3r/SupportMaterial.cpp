@@ -1685,7 +1685,7 @@ static inline std::pair<SupportGeneratorLayer*, SupportGeneratorLayer*> new_cont
     if (layer_id == 0) {
         // This is a raft contact layer sitting directly on the print bed.
         assert(slicing_params.has_raft());
-        print_z  = slicing_params.raft_interface_top_z;
+        print_z  = slicing_params.raft_contact_top_z;
         bottom_z = slicing_params.raft_interface_top_z;
         height   = slicing_params.contact_raft_layer_height;
     } else if (slicing_params.soluble_interface) {
@@ -3005,7 +3005,7 @@ SupportGeneratorLayersPtr generate_raft_base(
         // Do not add the raft contact layer, only add the raft layers below the contact layer.
         // Insert the 1st layer.
         {
-            SupportGeneratorLayer &new_layer = layer_allocate(layer_storage, (slicing_params.base_raft_layers > 0) ? SupporLayerType::RaftBase : SupporLayerType::RaftInterface);
+            SupportGeneratorLayer &new_layer = layer_allocate(layer_storage, (slicing_params.base_raft_layers > 0) ? SupporLayerType::RaftBase : SupporLayerType::RaftBase);
             raft_layers.push_back(&new_layer);
             new_layer.print_z = slicing_params.first_print_layer_height;
             new_layer.height  = slicing_params.first_print_layer_height;
@@ -3026,7 +3026,7 @@ SupportGeneratorLayersPtr generate_raft_base(
         // Insert the interface layers.
         for (size_t i = 1; i < slicing_params.interface_raft_layers; ++ i) {
             coordf_t print_z = raft_layers.back()->print_z;
-            SupportGeneratorLayer &new_layer = layer_allocate(layer_storage, SupporLayerType::RaftInterface);
+            SupportGeneratorLayer &new_layer = layer_allocate(layer_storage, SupporLayerType::RaftBase);
             raft_layers.push_back(&new_layer);
             new_layer.print_z = print_z + slicing_params.interface_raft_layer_height;
             new_layer.height  = slicing_params.interface_raft_layer_height;
