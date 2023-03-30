@@ -61,4 +61,6 @@ these documentation pages:
 ### What's WaspSlicer license?
 
 WaspSlicer is licensed under the _GNU Affero General Public License, version 3_.
-The WaspSlicer is based on WaspSlicer and WaspSlicer is originally based on Slic3r by Alessandro Ranellucci.
+The WaspSlicer is based on 
+WaspSlicer is based on PrusaSlicer and 
+WaspSlicer is based on PrusaSlicer is originally based on Slic3r by Alessandro Ranellucci.
