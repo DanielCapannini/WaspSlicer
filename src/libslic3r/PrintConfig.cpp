@@ -3188,6 +3188,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("firecap temperature");
     def->min = 0;
     def->max = max_temp;
+    def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_firecap2", coInts);
@@ -3198,6 +3199,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("number layer");
     def->min = 0;
     def->max = max_temp;
+    def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("firecap_temperature3", coInts);
@@ -3208,6 +3210,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("firecap temperature");
     def->min = 0;
     def->max = max_temp;
+    def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("layer_firecap3", coInts);
@@ -3218,6 +3221,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("number layer");
     def->min = 0;
     def->max = max_temp;
+    def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
     def = this->add("aria_calda", coInts);
