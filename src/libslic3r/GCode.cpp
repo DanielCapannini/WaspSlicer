@@ -1211,6 +1211,12 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
         start_gcode += std::to_string(aria_caldal);
         start_gcode += "\n";
     }
+    int firecap = print.config().firecap_temperature.get_at(initial_extruder_id);
+    if(firecap != 0){
+        start_gcode += "M104 S";
+        start_gcode += std::to_string(firecap);
+        start_gcode += "\n";
+    }
     // Set bed temperature if the start G-code does not contain any bed temp control G-codes.
     this->_print_first_layer_bed_temperature(file, print, start_gcode, initial_extruder_id, true);
     // Set extruder(s) temperature before and after start G-code.
@@ -2113,6 +2119,24 @@ LayerResult GCode::process_layer(
             if(print.config().layer_temperature5.get_at(extruder.id()) != 0 && print.config().layer_range_min5.get_at(extruder.id()) == m_layer_index)
                 gcode += m_writer.set_temperature(print.config().layer_temperature5.get_at(extruder.id()), false, extruder.id());
             
+            int firecap_temperature1 = print.config().firecap_temperature1.get_at(extruder.id());
+            if(firecap_temperature1 != 0 && print.config().layer_firecap1.get_at(extruder.id()) == m_layer_index){
+                gcode += "M104 S";
+                gcode += std::to_string(firecap_temperature1);
+                gcode += "\n";
+            }
+            int firecap_temperature2 = print.config().firecap_temperature2.get_at(extruder.id());
+            if(firecap_temperature2 != 0 && print.config().layer_firecap2.get_at(extruder.id()) == m_layer_index){
+                gcode += "M104 S";
+                gcode += std::to_string(firecap_temperature2);
+                gcode += "\n";
+            }
+            int firecap_temperature3 = print.config().firecap_temperature3.get_at(extruder.id());
+            if(firecap_temperature3 != 0 && print.config().layer_firecap3.get_at(extruder.id()) == m_layer_index){
+                gcode += "M104 S";
+                gcode += std::to_string(firecap_temperature3);
+                gcode += "\n";
+            }
             int aria_calda1 = print.config().aria_calda1.get_at(extruder.id());
             if(aria_calda1 != 0 && print.config().layer_air1.get_at(extruder.id()) == m_layer_index){
                 gcode += "M104 T5 S";

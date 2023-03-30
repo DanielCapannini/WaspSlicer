@@ -2011,6 +2011,25 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("layer_range_min5"));
         optgroup->append_line(line);
 
+        line = { L("firecap"), "" };
+        line.append_option(optgroup->get_option("firecap_temperature"));
+        optgroup->append_line(line);
+
+        line = { L("firecap new temperature"), "" };
+        line.append_option(optgroup->get_option("firecap_temperature1"));
+        line.append_option(optgroup->get_option("layer_firecap1"));
+        optgroup->append_line(line);
+
+        line = { L("firecap new temperature"), "" };
+        line.append_option(optgroup->get_option("firecap_temperature2"));
+        line.append_option(optgroup->get_option("layer_firecap2"));
+        optgroup->append_line(line);
+
+        line = { L("firecap new temperature"), "" };
+        line.append_option(optgroup->get_option("firecap_temperature3"));
+        line.append_option(optgroup->get_option("layer_firecap3"));
+        optgroup->append_line(line);
+
         line = { L("room heating"), ""};
         line.append_option(optgroup->get_option("aria_calda"));
         optgroup->append_line(line);

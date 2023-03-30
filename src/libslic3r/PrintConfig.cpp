@@ -3150,6 +3150,76 @@ void PrintConfigDef::init_fff_params()
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionInts { 0 });
 
+    def = this->add("firecap_temperature", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("firecap temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("firecap temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("firecap_temperature1", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("firecap temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("firecap temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_firecap1", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("firecap_temperature2", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("firecap temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("firecap temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_firecap2", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("firecap_temperature3", coInts);
+    def->label = L("temperature");
+    def->tooltip = L("firecap temperature. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("°C");
+    def->full_label = L("firecap temperature");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
+    def = this->add("layer_firecap3", coInts);
+    def->label = L("n_layer");
+    def->tooltip = L("number of layers where the new temperature starts. Set it to zero to disable"
+                       "temperature control commands in the output G-code.");
+    def->sidetext = L("");
+    def->full_label = L("number layer");
+    def->min = 0;
+    def->max = max_temp;
+    def->set_default_value(new ConfigOptionInts { 0 });
+
     def = this->add("aria_calda", coInts);
     def->label = L("temperature");
     def->tooltip = L("room heating temperature. Set it to zero to disable"
