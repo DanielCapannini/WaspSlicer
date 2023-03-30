@@ -30,11 +30,15 @@ class VendorProfile
 {
 public:
     std::string                     name;
+    std::string                     full_name;
+    std::vector<PrinterTechnology>  technologies;
     std::string                     id;
     Semver                          config_version;
     std::string                     config_update_url;
     std::string                     changelog_url;
-    bool                            templates_profile { false };
+
+    //families
+    std::map<std::string, uint8_t> family_2_line_size;
 
     struct PrinterVariant {
         PrinterVariant() {}
@@ -53,7 +57,8 @@ public:
         // Vendor & Printer Model specific print bed model & texture.
         std::string 			 	bed_model;
         std::string 				bed_texture;
-        std::string                 thumbnail;
+        bool                        bed_with_grid;
+        std::string 				thumbnail;
 
         PrinterVariant*       variant(const std::string &name) {
             for (auto &v : this->variants)
@@ -106,21 +111,26 @@ typedef std::map<std::string, VendorProfile> VendorMap;
 class Preset
 {
 public:
-    enum Type
+    enum Type : uint8_t
     {
-        TYPE_INVALID,
-        TYPE_PRINT,
-        TYPE_SLA_PRINT,
-        TYPE_FILAMENT,
-        TYPE_SLA_MATERIAL,
-        TYPE_PRINTER,
-        TYPE_COUNT,
+        TYPE_INVALID = 0,
+        TYPE_PRINT1 = 1 << 0,
+        TYPE_MATERIAL = 1 << 1,
+        TYPE_PRINTER = 1 << 2,
+        TYPE_TAB = TYPE_PRINT1 | TYPE_MATERIAL | TYPE_PRINTER,
+        TYPE_FFF = 1 << 3,
+        TYPE_FFF_PRINT = TYPE_FFF | TYPE_PRINT1,
+        TYPE_FFF_FILAMENT = TYPE_FFF | TYPE_MATERIAL,
+        TYPE_SLA = 1 << 4,
+        TYPE_SLA_PRINT = TYPE_SLA | TYPE_PRINT1,
+        TYPE_SLA_MATERIAL = TYPE_SLA | TYPE_MATERIAL,
+        TYPE_TECHNOLOGY = TYPE_FFF | TYPE_SLA,
+
         // This type is here to support PresetConfigSubstitutions for physical printers, however it does not belong to the Preset class,
         // PhysicalPrinter class is used instead.
-        TYPE_PHYSICAL_PRINTER,
-        // This type is here to support search through the Preferences
-        TYPE_PREFERENCES,
+        TYPE_PHYSICAL_PRINTER = 1 << 5,
     };
+    static std::string type_name(Type t);
 
     Type                type        = TYPE_INVALID;
 
@@ -183,7 +193,7 @@ public:
     // Returns the "compatible_prints_condition".
     static std::string& compatible_prints_condition(DynamicPrintConfig &cfg) { return cfg.option<ConfigOptionString>("compatible_prints_condition", true)->value; }
     std::string&        compatible_prints_condition() { 
-		assert(this->type == TYPE_FILAMENT || this->type == TYPE_SLA_MATERIAL);
+		assert(this->type == TYPE_FFF_FILAMENT || this->type == TYPE_SLA_MATERIAL);
         return Preset::compatible_prints_condition(this->config);
     }
     const std::string&  compatible_prints_condition() const { return const_cast<Preset*>(this)->compatible_prints_condition(); }
@@ -191,7 +201,7 @@ public:
     // Returns the "compatible_printers_condition".
     static std::string& compatible_printers_condition(DynamicPrintConfig &cfg) { return cfg.option<ConfigOptionString>("compatible_printers_condition", true)->value; }
     std::string&        compatible_printers_condition() {
-		assert(this->type == TYPE_PRINT || this->type == TYPE_SLA_PRINT || this->type == TYPE_FILAMENT || this->type == TYPE_SLA_MATERIAL);
+		assert(this->type == TYPE_FFF_PRINT || this->type == TYPE_SLA_PRINT || this->type == TYPE_FFF_FILAMENT || this->type == TYPE_SLA_MATERIAL);
         return Preset::compatible_printers_condition(this->config);
     }
     const std::string&  compatible_printers_condition() const { return const_cast<Preset*>(this)->compatible_printers_condition(); }
@@ -214,6 +224,9 @@ public:
     // Resize the extruder specific fields, initialize them with the content of the 1st extruder.
     void                set_num_extruders(unsigned int n) { this->config.set_num_extruders(n); }
 
+    // Resize the milling specific fields, initialize them with the content of the 1st extruder.
+    void                set_num_milling(unsigned int n) { this->config.set_num_milling(n); }
+
     // Sort lexicographically by a preset name. The preset name shall be unique across a single PresetCollection.
     bool                operator<(const Preset &other) const { return this->name < other.name; }
 
@@ -223,7 +236,8 @@ public:
     static const std::vector<std::string>&  printer_options();
     // Nozzle options of the printer options.
     static const std::vector<std::string>&  nozzle_options();
-    // Printer machine limits, those are contained in printer_options().
+
+    static const std::vector<std::string>&  milling_options();    // Printer machine limits, those are contained in printer_options().
     static const std::vector<std::string>&  machine_limits_options();
 
     static const std::vector<std::string>&  sla_printer_options();
@@ -248,6 +262,19 @@ protected:
 bool is_compatible_with_print  (const PresetWithVendorProfile &preset, const PresetWithVendorProfile &active_print, const PresetWithVendorProfile &active_printer);
 bool is_compatible_with_printer(const PresetWithVendorProfile &preset, const PresetWithVendorProfile &active_printer, const DynamicPrintConfig *extra_config);
 bool is_compatible_with_printer(const PresetWithVendorProfile &preset, const PresetWithVendorProfile &active_printer);
+
+inline Preset::Type operator|(Preset::Type a, Preset::Type b) {
+    return static_cast<Preset::Type>(static_cast<uint16_t>(a) | static_cast<uint16_t>(b));
+}
+inline Preset::Type operator&(Preset::Type a, Preset::Type b) {
+    return static_cast<Preset::Type>(static_cast<uint16_t>(a) & static_cast<uint16_t>(b));
+}
+inline Preset::Type operator|=(Preset::Type& a, Preset::Type b) {
+    a = a | b; return a;
+}
+inline Preset::Type operator&=(Preset::Type& a, Preset::Type b) {
+    a = a & b; return a;
+}
 
 enum class PresetSelectCompatibleType {
 	// Never select a compatible preset if the newly selected profile is not compatible.
@@ -276,7 +303,7 @@ struct PresetConfigSubstitutions {
 };
 
 // Substitutions having been performed during parsing a set of configuration files, for example when starting up
-// WaspSlicer and reading the user Print / Filament / Printer profiles.
+// PrusaSlicer and reading the user Print / Filament / Printer profiles.
 using PresetsConfigSubstitutions = std::vector<PresetConfigSubstitutions>;
 
 // Collections of presets of the same type (one of the Print, Filament or Printer type).
@@ -343,10 +370,6 @@ public:
     // All presets are marked as not modified and the new preset is activated.
     void            save_current_preset(const std::string &new_name, bool detach = false);
 
-    // Find the preset with a new_name or create a new one,
-    // initialize it with the initial_preset config.
-    Preset&         get_preset_with_name(const std::string& new_name, const Preset* initial_preset);
-
     // Delete the current preset, activate the first visible preset.
     // returns true if the preset was deleted successfully.
     bool            delete_current_preset();
@@ -398,8 +421,8 @@ public:
 	const Preset&   default_preset(size_t idx = 0) const { assert(idx < m_num_default_presets); return m_presets[idx]; }
 	virtual const Preset& default_preset_for(const DynamicPrintConfig & /* config */) const { return this->default_preset(); }
     // Return a preset by an index. If the preset is active, a temporary copy is returned.
-    Preset&         preset(size_t idx, bool respect_active_preset = true)          { return (idx == m_idx_selected && respect_active_preset) ? m_edited_preset : m_presets[idx]; }
-    const Preset&   preset(size_t idx, bool respect_active_preset = true) const    { return const_cast<PresetCollection*>(this)->preset(idx); }
+    Preset&         preset(size_t idx)          { return (idx == m_idx_selected) ? m_edited_preset : m_presets[idx]; }
+    const Preset&   preset(size_t idx) const    { return const_cast<PresetCollection*>(this)->preset(idx); }
     void            discard_current_changes() {
         m_presets[m_idx_selected].reset_dirty();
         m_edited_preset = m_presets[m_idx_selected];
@@ -409,9 +432,9 @@ public:
 
     // Return a preset by its name. If the preset is active, a temporary copy is returned.
     // If a preset is not found by its name, null is returned.
-    Preset*         find_preset(const std::string &name, bool first_visible_if_not_found = false, bool respect_active_preset = true);
-    const Preset*   find_preset(const std::string &name, bool first_visible_if_not_found = false, bool respect_active_preset = true) const 
-        { return const_cast<PresetCollection*>(this)->find_preset(name, first_visible_if_not_found, respect_active_preset); }
+    Preset*         find_preset(const std::string &name, bool first_visible_if_not_found = false);
+    const Preset*   find_preset(const std::string &name, bool first_visible_if_not_found = false) const 
+        { return const_cast<PresetCollection*>(this)->find_preset(name, first_visible_if_not_found); }
 
     size_t          first_visible_idx() const;
     // Return index of the first compatible preset. Certainly at least the '- default -' preset shall be compatible.
@@ -420,7 +443,7 @@ public:
     size_t          first_compatible_idx(PreferedCondition prefered_condition) const
     {
         size_t i = m_default_suppressed ? m_num_default_presets : 0;
-        size_t n = m_presets.size();
+        size_t n = this->m_presets.size();
         size_t i_compatible = n;
         int    match_quality = -1;
         for (; i < n; ++ i)
@@ -475,8 +498,9 @@ public:
     bool                        current_is_dirty() const 
         { return is_dirty(&this->get_edited_preset(), &this->get_selected_preset()); }
     // Compare the content of get_selected_preset() with get_edited_preset() configs, return the list of keys where they differ.
+    // Note that it won't take into account phony settings. Because current_dirty_options() is only used to see if the preset need to be saved.
     std::vector<std::string>    current_dirty_options(const bool deep_compare = false) const
-        { return dirty_options(&this->get_edited_preset(), &this->get_selected_preset(), deep_compare); }
+        { return dirty_options(&this->get_edited_preset(), &this->get_selected_preset(), deep_compare, true); }
     // Compare the content of get_selected_preset() with get_edited_preset() configs, return the list of keys where they differ.
     std::vector<std::string>    current_different_from_parent_options(const bool deep_compare = false) const
         { return dirty_options(&this->get_edited_preset(), this->get_selected_preset_parent(), deep_compare); }
@@ -564,8 +588,7 @@ private:
     size_t update_compatible_internal(const PresetWithVendorProfile &active_printer, const PresetWithVendorProfile *active_print, PresetSelectCompatibleType unselect_if_incompatible);
 public:
     static bool                     is_dirty(const Preset *edited, const Preset *reference);
-    static std::vector<std::string> dirty_options(const Preset *edited, const Preset *reference, const bool deep_compare = false);
-    static bool                     is_independent_from_extruder_number_option(const std::string& opt_key);
+    static std::vector<std::string> dirty_options(const Preset *edited, const Preset *reference, const bool deep_compare = false, const bool ignore_phony = true);
 private:
     // Type of this PresetCollection: TYPE_PRINT, TYPE_FILAMENT or TYPE_PRINTER.
     Preset::Type            m_type;
@@ -621,7 +644,6 @@ namespace PresetUtils {
 	const VendorProfile::PrinterModel* system_printer_model(const Preset &preset);
     std::string system_printer_bed_model(const Preset& preset);
     std::string system_printer_bed_texture(const Preset& preset);
-    bool        vendor_profile_has_all_resources(const VendorProfile& vp);
 } // namespace PresetUtils
 
 
@@ -682,7 +704,7 @@ public:
     bool                operator<(const PhysicalPrinter& other) const { return this->name < other.name; }
 
     // get full printer name included a name of the preset
-    std::string         get_full_name(const std::string &preset_name) const;
+    std::string         get_full_name(std::string preset_name) const;
 
     // get printer name from the full name uncluded preset name
     static std::string  get_short_name(std::string full_name);
@@ -741,9 +763,9 @@ public:
     // If there is last preset for the printer and first_check== false, then delete this printer
     // returns true if all presets were deleted successfully.
     bool            delete_preset_from_printers(const std::string& preset_name);
-    void            rename_preset_in_printers(const std::string& old_name, const std::string& new_name);
+
     // Get list of printers which have more than one preset and "preset_names" preset is one of them
-    std::vector<std::string> get_printers_with_preset( const std::string &preset_name, bool respect_only_preset = true);
+    std::vector<std::string> get_printers_with_preset( const std::string &preset_name);
     // Get list of printers which has only "preset_names" preset
     std::vector<std::string> get_printers_with_only_preset( const std::string &preset_name);
 
@@ -757,7 +779,7 @@ public:
     // Returns the config of the selected printer, or nullptr if no printer is selected.
     DynamicPrintConfig*     get_selected_printer_config() { return (m_idx_selected == size_t(-1)) ? nullptr : &(this->get_selected_printer().config); }
     // Returns the config of the selected printer, or nullptr if no printer is selected.
-    PrinterTechnology       get_selected_printer_technology() { return (m_idx_selected == size_t(-1)) ? PrinterTechnology::ptAny : this->get_selected_printer().printer_technology(); }
+    //PrinterTechnology       get_selected_printer_technology() { return (m_idx_selected == size_t(-1)) ? PrinterTechnology::ptAny : this->get_selected_printer().printer_technology(); }
 
     // Each physical printer can have a several related preset,
     // so, use the next functions to get an exact names of selections in the list:

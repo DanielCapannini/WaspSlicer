@@ -299,9 +299,9 @@ std::pair<double, double> adaptive_fill_line_spacing(const PrintObject &print_ob
     for (size_t region_id = 0; region_id < print_object.num_printing_regions(); ++ region_id) {
         const PrintRegionConfig &config                 = print_object.printing_region(region_id).config();
         bool                     nonempty               = config.fill_density > 0;
-        bool                     has_adaptive_infill    = nonempty && config.fill_pattern == ipAdaptiveCubic;
-        bool                     has_support_infill     = nonempty && config.fill_pattern == ipSupportCubic;
-        double                   infill_extrusion_width = config.infill_extrusion_width.percent ? default_infill_extrusion_width * 0.01 * config.infill_extrusion_width : config.infill_extrusion_width;
+        bool                     has_adaptive_infill    = nonempty && config.fill_pattern.value == ipAdaptiveCubic;
+        bool                     has_support_infill     = nonempty && config.fill_pattern.value == ipSupportCubic;
+        double                   infill_extrusion_width = config.infill_extrusion_width.get_abs_value(max_nozzle_diameter);
         region_fill_data.push_back(RegionFillData({
             has_adaptive_infill ? Tristate::Maybe : Tristate::No,
             has_support_infill ? Tristate::Maybe : Tristate::No,
@@ -316,9 +316,9 @@ std::pair<double, double> adaptive_fill_line_spacing(const PrintObject &print_ob
         for (const Layer *layer : print_object.layers())
             for (size_t region_id = 0; region_id < layer->regions().size(); ++ region_id) {
                 RegionFillData &rd = region_fill_data[region_id];
-                if (rd.has_adaptive_infill == Tristate::Maybe && ! layer->regions()[region_id]->fill_surfaces().empty())
+                if (rd.has_adaptive_infill == Tristate::Maybe && ! layer->regions()[region_id]->fill_surfaces.empty())
                     rd.has_adaptive_infill = Tristate::Yes;
-                if (rd.has_support_infill == Tristate::Maybe && ! layer->regions()[region_id]->fill_surfaces().empty())
+                if (rd.has_support_infill == Tristate::Maybe && ! layer->regions()[region_id]->fill_surfaces.empty())
                     rd.has_support_infill = Tristate::Yes;
             }
 
@@ -519,7 +519,7 @@ static void export_infill_lines_to_svg(const ExPolygon &expoly, const Polylines 
     svg.draw_outline(expoly, "green");
     svg.draw(polylines, "red");
     static constexpr double trim_length = scale_(0.4);
-    for (Polyline polyline : polylines)
+    for (Polyline polyline : polylines) {
         if (! polyline.empty()) {
             Vec2d a = polyline.points.front().cast<double>();
             Vec2d d = polyline.points.back().cast<double>();
@@ -552,6 +552,7 @@ static void export_infill_lines_to_svg(const ExPolygon &expoly, const Polylines 
             }
             svg.draw(polyline, "black");
         }
+    }
     svg.draw(pts, "magenta");
 }
 #endif /* ADAPTIVE_CUBIC_INFILL_DEBUG_OUTPUT */
@@ -638,11 +639,11 @@ static inline Intersection* get_nearest_intersection(std::vector<std::pair<Inter
 
 // Create a line representing the anchor aka hook extrusion based on line_to_offset 
 // translated in the direction of the intersection line (intersection.intersect_line).
-static Line create_offset_line(Line offset_line, const Intersection &intersection, const double scaled_offset)
+static Line create_offset_line(Line offset_line, const Intersection &intersection, const coordf_t scaled_offset)
 {
     offset_line.translate((perp(intersection.closest_line->vector().cast<double>().normalized()) * (intersection.left ? scaled_offset : - scaled_offset)).cast<coord_t>());
     // Extend the line by a small value to guarantee a collision with adjacent lines
-    offset_line.extend(coord_t(scaled_offset * 1.16)); // / cos(PI/6)
+    offset_line.extend(coordf_t(coord_t(scaled_offset * 1.16))); // / cos(PI/6)
     return offset_line;
 }
 
@@ -1318,11 +1319,11 @@ bool has_no_collinear_lines(const Polylines &polylines)
 #endif
 
 void Filler::_fill_surface_single(
-    const FillParams              &params,
+    const FillParams &             params,
     unsigned int                   thickness_layers,
     const std::pair<float, Point> &direction,
     ExPolygon                      expolygon,
-    Polylines                     &polylines_out)
+    Polylines                     &polylines_out) const
 {
     assert (this->adapt_fill_octree);
 
@@ -1389,10 +1390,10 @@ void Filler::_fill_surface_single(
     }
 #endif /* ADAPTIVE_CUBIC_INFILL_DEBUG_OUTPUT */
 
-    const auto hook_length     = coordf_t(std::min<float>(std::numeric_limits<coord_t>::max(), scale_(params.anchor_length)));
-    const auto hook_length_max = coordf_t(std::min<float>(std::numeric_limits<coord_t>::max(), scale_(params.anchor_length_max)));
+    const coordf_t hook_length     = std::min<coordf_t>((coordf_t)std::numeric_limits<coord_t>::max(), scale_d(params.anchor_length));
+    const coordf_t hook_length_max = std::min<coordf_t>((coordf_t)std::numeric_limits<coord_t>::max(), scale_d(params.anchor_length_max));
 
-    Polylines all_polylines_with_hooks = all_polylines.size() > 1 ? connect_lines_using_hooks(std::move(all_polylines), expolygon, this->spacing, hook_length, hook_length_max) : std::move(all_polylines);
+    Polylines all_polylines_with_hooks = all_polylines.size() > 1 ? connect_lines_using_hooks(std::move(all_polylines), expolygon, this->get_spacing(), hook_length, hook_length_max) : std::move(all_polylines);
 
 #ifdef ADAPTIVE_CUBIC_INFILL_DEBUG_OUTPUT
     {
@@ -1401,10 +1402,10 @@ void Filler::_fill_surface_single(
     }
 #endif /* ADAPTIVE_CUBIC_INFILL_DEBUG_OUTPUT */
 
-    if (params.dont_connect() || all_polylines_with_hooks.size() <= 1)
+    if (params.connection == InfillConnection::icNotConnected || all_polylines_with_hooks.size() <= 1)
         append(polylines_out, chain_polylines(std::move(all_polylines_with_hooks)));
     else
-        connect_infill(std::move(all_polylines_with_hooks), expolygon, polylines_out, this->spacing, params);
+        connect_infill(std::move(all_polylines_with_hooks), expolygon, polylines_out, this->get_spacing(), params);
 
 #ifdef ADAPTIVE_CUBIC_INFILL_DEBUG_OUTPUT
     {

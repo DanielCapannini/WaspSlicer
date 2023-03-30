@@ -33,8 +33,10 @@
 #include "ButtonsDescription.hpp"
 #include "Event.hpp"
 #include "wxExtensions.hpp"
+#include "GUI_Tags.hpp"
 #include "ConfigManipulation.hpp"
 #include "OptionsGroup.hpp"
+#include "ScriptExecutor.hpp"
 #include "libslic3r/Preset.hpp"
 
 namespace Slic3r {
@@ -92,6 +94,7 @@ public:
 			m_cb_hide_delete_all_btn();
 	}
 	bool is_empty_substitutions();
+	bool is_active() { return m_grid_sizer; }
 };
 
 // Single Tab page containing a{ vsizer } of{ optgroups }
@@ -111,6 +114,7 @@ public:
 	bool				m_is_modified_values{ false };
 	bool				m_is_nonsys_values{ true };
 
+	std::vector<std::string> descriptions;
 public:
 	std::vector <ConfigOptionsGroupShp> m_optgroups;
 	DynamicPrintConfig* m_config;
@@ -121,6 +125,7 @@ public:
 	size_t		iconID() const { return m_iconID; }
 	void		set_config(DynamicPrintConfig* config_in) { m_config = config_in; }
 	void		reload_config();
+	void		update_script_presets();
     void        update_visibility(ConfigOptionMode mode, bool update_contolls_visibility);
     void        activate(ConfigOptionMode mode, std::function<void()> throw_if_canceled);
     void        clear();
@@ -128,9 +133,8 @@ public:
     void        sys_color_changed();
     void        refresh();
 	Field*		get_field(const t_config_option_key& opt_key, int opt_index = -1) const;
-	Line*		get_line(const t_config_option_key& opt_key);
 	bool		set_value(const t_config_option_key& opt_key, const boost::any& value);
-	ConfigOptionsGroupShp	new_optgroup(const wxString& title, int noncommon_label_width = -1);
+	ConfigOptionsGroupShp	new_optgroup(const wxString& title, bool no_title = false, bool is_tab_opt = true);
 	const ConfigOptionsGroupShp	get_optgroup(const wxString& title) const;
 
 	bool		set_item_colour(const wxColour *clr) {
@@ -168,14 +172,13 @@ protected:
 	ScalableButton*		m_search_btn;
 	ScalableButton*		m_btn_compare_preset;
 	ScalableButton*		m_btn_save_preset;
-	ScalableButton*		m_btn_rename_preset;
 	ScalableButton*		m_btn_delete_preset;
 	ScalableButton*		m_btn_edit_ph_printer {nullptr};
 	ScalableButton*		m_btn_hide_incompatible_presets;
 	wxBoxSizer*			m_hsizer;
-	wxBoxSizer*			m_h_buttons_sizer;
 	wxBoxSizer*			m_left_sizer;
 	wxTreeCtrl*			m_treectrl;
+	wxImageList*		m_icons;
 
 	wxScrolledWindow*	m_page_view {nullptr};
 	wxBoxSizer*			m_page_sizer {nullptr};
@@ -204,6 +207,10 @@ protected:
 	ScalableButton*			m_undo_to_sys_btn;
 	ScalableButton*			m_question_btn;
 
+	// Cached bitmaps.
+	// A "flag" icon to be displayned next to the preset name in the Tab's combo box.
+	ScalableBitmap			m_bmp_show_incompatible_presets;
+	ScalableBitmap			m_bmp_hide_incompatible_presets;
 	// Bitmaps to be shown on the "Revert to system" aka "Lock to system" button next to each input field.
 	ScalableBitmap 			m_bmp_value_lock;
 	ScalableBitmap 			m_bmp_value_unlock;
@@ -220,7 +227,8 @@ protected:
 	// Colors for ui "decoration"
 	wxColour			m_sys_label_clr;
 	wxColour			m_modified_label_clr;
-	wxColour			m_default_text_clr;
+	wxColour			m_default_label_clr;
+	wxColour			m_phony_label_clr;
 
 	// Tooltip text for reset buttons (for whole options group)
 	wxString			m_ttg_value_lock;
@@ -240,6 +248,13 @@ protected:
 	// Tooltip text to be shown on the "Undo user changes" button next to each input field.
 	wxString			m_tt_white_bullet;
 	wxString			m_tt_value_revert;
+	// Tooltip for script reset icon/button
+	wxString			m_tt_value_lock_script;
+	wxString			m_tt_value_unlock_script;
+	wxString			m_tt_white_bullet_script;
+	wxString			m_tt_value_revert_script;
+	wxString			*m_tt_non_system_script;
+
 
 	int					m_icon_count;
 	std::map<std::string, size_t>	m_icon_index;		// Map from an icon file name to its index
@@ -249,25 +264,47 @@ protected:
 	bool				m_disable_tree_sel_changed_event {false};
 	bool				m_show_incompatible_presets;
 
+    ScriptContainer     m_script_exec;
+	std::unordered_map<std::string, std::vector<std::string>> deps_id_2_script_ids;
+
     std::vector<Preset::Type>	m_dependent_tabs;
-	enum OptStatus { osSystemValue = 1, osInitValue = 2 };
+	enum OptStatus {
+		osSystemValue = 1,
+		osInitValue = 2,
+		osSystemPhony = 4,
+		osInitPhony = 8,
+		osCurrentPhony = 16,
+	};
 	std::map<std::string, int>	m_options_list;
+	std::map<std::string, int>	m_options_script;
+    std::vector<std::string>    m_options_dirty;
 	int							m_opt_status_value = 0;
 
-	std::vector<GUI_Descriptions::ButtonEntry>	m_icon_descriptions = {};
+	std::vector<ButtonsDescription::Entry>	m_icon_descriptions = {};
 
 	bool				m_is_modified_values{ false };
 	bool				m_is_nonsys_values{ true };
 	bool				m_postpone_update_ui {false};
-
-    void                set_type();
 
     int                 m_em_unit;
     // To avoid actions with no-completed Tab
     bool                m_completed { false };
     ConfigOptionMode    m_mode = comExpert; // to correct first Tab update_visibility() set mode to Expert
 
-	HighlighterForWx	m_highlighter;
+	struct Highlighter
+	{
+		void set_timer_owner(wxEvtHandler* owner, int timerid = wxID_ANY);
+		void init(std::pair<OG_CustomCtrl*, bool*>);
+		void blink();
+		void invalidate();
+
+	private:
+		OG_CustomCtrl*	m_custom_ctrl	{nullptr};
+		bool*			m_show_blink_ptr{nullptr};
+		int				m_blink_counter	{0};
+	    wxTimer         m_timer;
+	} 
+    m_highlighter;
 
 	DynamicPrintConfig 	m_cache_config;
 
@@ -278,10 +315,14 @@ protected:
 public:
 	PresetBundle*		m_preset_bundle;
 	bool				m_show_btn_incompatible_presets = false;
-	PresetCollection*	m_presets;
+	PresetCollection*	m_presets = nullptr;
 	DynamicPrintConfig*	m_config;
 	ogStaticText*		m_parent_preset_description_line = nullptr;
 	ScalableButton*		m_detach_preset_btn	= nullptr;
+
+	// map of option name -> wxColour (color of the colored label, associated with option) 
+    // Used for options which don't have corresponded field
+	std::map<std::string, wxColour>	m_colored_Label_colors;
 
     // Counter for the updating (because of an update() function can have a recursive behavior):
     // 1. increase value from the very beginning of an update() function
@@ -295,11 +336,13 @@ public:
 
 	wxWindow*	parent() const { return m_parent; }
 	wxString	title()	 const { return m_title; }
+	virtual std::string icon_name(int icon_size, PrinterTechnology tech) const = 0;
 	std::string	name()	 const { return m_presets->name(); }
-    Preset::Type type()  const { return m_type; }
+	Preset::Type type()  const { return m_type; }
     // The tab is already constructed.
     bool 		completed() const { return m_completed; }
-	virtual bool supports_printer_technology(const PrinterTechnology tech) const = 0;
+	bool		supports_printer_technology(const PrinterTechnology tech) const { return 0 != (get_printer_technology() & tech); }
+	virtual PrinterTechnology get_printer_technology() const = 0;
 
 	void		create_preset_tab();
     void        add_scaled_button(wxWindow* parent, ScalableButton** btn, const std::string& icon_name, 
@@ -311,7 +354,7 @@ public:
 	void        rebuild_page_tree();
     void		update_btns_enabling();
     void		update_preset_choice();
-    // Select a new preset, possibly delete the current one.
+	// Select a new preset, possibly delete the current one.
 	void		select_preset(std::string preset_name = "", bool delete_current = false, const std::string& last_selected_ph_printer_name = "");
 	bool		may_discard_current_dirty_preset(PresetCollection* presets = nullptr, const std::string& new_printer_name = "");
 
@@ -323,9 +366,7 @@ public:
 	void		OnKeyDown(wxKeyEvent& event);
 
 	void		compare_preset();
-	void		transfer_options(const std::string&name_from, const std::string&name_to, std::vector<std::string> options);
 	void		save_preset(std::string name = std::string(), bool detach = false);
-	void		rename_preset();
 	void		delete_preset();
 	void		toggle_show_hide_incompatible();
 	void		update_show_hide_incompatible_button();
@@ -339,7 +380,7 @@ public:
 
 	void		on_roll_back_value(const bool to_sys = false);
 
-    PageShp		add_options_page(const wxString& title, const std::string& icon, bool is_extruder_pages = false);
+	PageShp         create_options_page(const wxString& title, const std::string& icon);
 	static wxString translate_category(const wxString& title, Preset::Type preset_type);
 
 	virtual void	OnActivate();
@@ -348,22 +389,22 @@ public:
 	virtual void	update() = 0;
 	virtual void	toggle_options() = 0;
 	virtual void	init_options_list();
-	void			emplace_option(const std::string &opt_key, bool respect_vec_values = false);
 	void			load_initial_data();
+    void            add_dirty_setting(const std::string& opt_key);
 	void			update_dirty();
 	void			update_tab_ui();
 	void			load_config(const DynamicPrintConfig& config);
 	virtual void	reload_config();
     void            update_mode();
-    void            update_mode_markers();
     void            update_visibility();
     virtual void    msw_rescale();
     virtual void	sys_color_changed();
+	size_t          get_page_count() { return m_pages.size(); }
+	PageShp         get_page(size_t idx) { return m_pages[idx]; }
 	Field*			get_field(const t_config_option_key& opt_key, int opt_index = -1) const;
-	Line*			get_line(const t_config_option_key& opt_key);
 	std::pair<OG_CustomCtrl*, bool*> get_custom_ctrl_with_blinking_ptr(const t_config_option_key& opt_key, int opt_index = -1);
 
-    Field*          get_field(const t_config_option_key &opt_key, Page** selected_page, int opt_index = -1);
+    Field*          get_field(Page*& selected_page, const t_config_option_key &opt_key, int opt_index = -1);
 	void			toggle_option(const std::string& opt_key, bool toggle, int opt_index = -1);
 	wxSizer*		description_line_widget(wxWindow* parent, ogStaticText** StaticText, wxString text = wxEmptyString);
 	bool			current_preset_is_dirty() const;
@@ -374,19 +415,21 @@ public:
 	PresetCollection*	get_presets() { return m_presets; }
 	const PresetCollection* get_presets() const { return m_presets; }
 
+    bool            set_value(const t_config_option_key& opt_key, const boost::any& value);
 	void			on_value_change(const std::string& opt_key, const boost::any& value);
 
     void            update_wiping_button_visibility();
 	void			activate_option(const std::string& opt_key, const wxString& category);
-	void			cache_config_diff(const std::vector<std::string>& selected_options, const DynamicPrintConfig* config = nullptr);
+	void			cache_config_diff(const std::vector<std::string>& selected_options);
 	void			apply_config_from_cache();
 
 	const std::map<wxString, std::string>& get_category_icon_map() { return m_category_icon; }
 
 	static bool validate_custom_gcode(const wxString& title, const std::string& gcode);
-	bool        validate_custom_gcodes();
     bool        validate_custom_gcodes_was_shown{ false };
 
+	std::vector<PageShp> create_pages(std::string setting_type_name, int idx = -1);
+	static t_change set_or_add(t_change previous, t_change toadd);
 protected:
 	void			create_line_with_widget(ConfigOptionsGroup* optgroup, const std::string& opt_key, const std::string& path, widget_t widget);
 	wxSizer*		compatible_widget_create(wxWindow* parent, PresetDependencies &deps);
@@ -399,6 +442,7 @@ protected:
 	void			build_preset_description_line(ConfigOptionsGroup* optgroup);
 	void			update_preset_description_line();
 	void			update_frequently_changed_parameters();
+	void			update_script_presets();
 	void			fill_icon_descriptions();
 	void			set_tooltips_text();
 
@@ -410,20 +454,23 @@ class TabPrint : public Tab
 {
 public:
 	TabPrint(wxBookCtrlBase* parent) :
-        Tab(parent, _(L("Print Settings")), Slic3r::Preset::TYPE_PRINT) {}
+        Tab(parent, _(L("Print Settings")), Slic3r::Preset::TYPE_FFF_PRINT) {}
 	~TabPrint() {}
 
+	std::string icon_name(int icon_size, PrinterTechnology tech) const override { return "cog"; }
+	
 	void		build() override;
+	void		reload_config() override;
 	void		update_description_lines() override;
 	void		toggle_options() override;
 	void		update() override;
 	void		clear_pages() override;
-	bool 		supports_printer_technology(const PrinterTechnology tech) const override { return tech == ptFFF; }
+	PrinterTechnology get_printer_technology() const override { return ptFFF; }
 	wxSizer*	create_manage_substitution_widget(wxWindow* parent);
 	wxSizer*	create_substitutions_widget(wxWindow* parent);
 
-private:
 	ogStaticText*	m_recommended_thin_wall_thickness_description_line = nullptr;
+	ogStaticText*	m_recommended_extrusion_width_description_line = nullptr; 
 	ogStaticText*	m_top_bottom_shell_thickness_explanation = nullptr;
 	ogStaticText*	m_post_process_explanation = nullptr;
 	ScalableButton* m_del_all_substitutions_btn{nullptr};
@@ -432,55 +479,74 @@ private:
 
 class TabFilament : public Tab
 {
-private:
+public:
 	ogStaticText*	m_volumetric_speed_description_line {nullptr};
 	ogStaticText*	m_cooling_description_line {nullptr};
-
-    void            create_line_with_near_label_widget(ConfigOptionsGroupShp optgroup, const std::string &opt_key, int opt_index = 0);
-    void            update_line_with_near_label_widget(ConfigOptionsGroupShp optgroup, const std::string &opt_key, int opt_index = 0, bool is_checked = true);
-    void            add_filament_overrides_page();
+	ogStaticText*	m_machine_limits_descr {nullptr};
+	PageShp         create_filament_overrides_page();
+protected:
     void            update_filament_overrides_page();
 	void 			update_volumetric_flow_preset_hints();
 
     std::map<std::string, wxCheckBox*> m_overrides_options;
 public:
 	TabFilament(wxBookCtrlBase* parent) :
-		Tab(parent, _(L("Filament Settings")), Slic3r::Preset::TYPE_FILAMENT) {}
+		Tab(parent, _(L("Filament Settings")), Slic3r::Preset::TYPE_FFF_FILAMENT) {}
 	~TabFilament() {}
 
+	std::string icon_name(int icon_size, PrinterTechnology tech) const override { return (icon_size < 16) ? "spool" : "spool_cog"; }
+
 	void		build() override;
+	void		reload_config() override;
 	void		update_description_lines() override;
 	void		toggle_options() override;
 	void		update() override;
 	void		clear_pages() override;
-	void        msw_rescale() override;
-	bool 		supports_printer_technology(const PrinterTechnology tech) const override { return tech == ptFFF; }
+	PrinterTechnology get_printer_technology() const override { return ptFFF; }
 };
 
 class TabPrinter : public Tab
 {
-private:
-	bool		m_has_single_extruder_MM_page = false;
-	bool		m_use_silent_mode = false;
-    bool        m_supports_travel_acceleration = false;
-	bool        m_supports_min_feedrates = false;
-	void		append_option_line(ConfigOptionsGroupShp optgroup, const std::string opt_key);
-	bool		m_rebuild_kinematics_page = false;
+	std::string icon_name(int icon_size, PrinterTechnology tech) const override {
+		return (tech & ptFFF) != 0 ?
+			(icon_size < 16) ? "printer" : "printer_cog" :
+			(icon_size < 16) ? "sla_printer" : "sla_printer_cog";
+	}
+
 	ogStaticText* m_machine_limits_description_line {nullptr};
 	void 		update_machine_limits_description(const MachineLimitsUsage usage);
 
-	ogStaticText*	m_fff_print_host_upload_description_line {nullptr};
-	ogStaticText*	m_sla_print_host_upload_description_line {nullptr};
 
     std::vector<PageShp>			m_pages_fff;
     std::vector<PageShp>			m_pages_sla;
 
 public:
-	size_t		m_extruders_count;
+	ogStaticText* m_fff_print_host_upload_description_line{ nullptr };
+	ogStaticText* m_sla_print_host_upload_description_line{ nullptr };
+//    void build_printhost(ConfigOptionsGroup *optgroup);
+
+    bool        m_has_single_extruder_MM_page = false;
+    uint8_t     m_last_gcode_flavor = uint8_t(255);
+    bool        m_use_silent_mode = false;
+    bool        m_supports_travel_acceleration = false;
+	bool        m_supports_min_feedrates = false;
+    void        append_option_line_kinematics(ConfigOptionsGroupShp optgroup, const std::string opt_key, const std::string override_units = "");
+    bool        m_rebuild_kinematics_page = false;
+
+	ScalableButton*	m_reset_to_filament_color = nullptr;
+
+	int16_t		m_unregular_page_pos = -1;
+	size_t		m_extruders_count = 0;
 	size_t		m_extruders_count_old = 0;
-	size_t		m_initial_extruders_count;
-	size_t		m_sys_extruders_count;
+	size_t		m_initial_extruders_count = 0;
+	size_t		m_sys_extruders_count = 0;
+
 	size_t		m_cache_extruder_count = 0;
+	size_t		m_milling_count = 0;
+	size_t		m_milling_count_old = 0;
+	size_t		m_initial_milling_count;
+	size_t		m_sys_milling_count = 0;
+	size_t		m_cache_milling_count = 0;
 
     PrinterTechnology               m_printer_technology = ptFFF;
 
@@ -489,7 +555,6 @@ public:
 	~TabPrinter() {}
 
 	void		build() override;
-	void		build_print_host_upload_group(Page* page);
     void		build_fff();
     void		build_sla();
 	void		reload_config() override;
@@ -500,16 +565,18 @@ public:
     void		update_fff();
     void		update_sla();
     void        update_pages(); // update m_pages according to printer technology
+    void        update_printers();
 	void		extruders_count_changed(size_t extruders_count);
+	void		milling_count_changed(size_t extruders_count);
 	PageShp		build_kinematics_page();
-	void		build_extruder_pages(size_t n_before_extruders);
 	void		build_unregular_pages(bool from_initial_build = false);
 	void		on_preset_loaded() override;
 	void		init_options_list() override;
-	bool 		supports_printer_technology(const PrinterTechnology /* tech */) const override { return true; }
+	void		msw_rescale() override;
+	PrinterTechnology get_printer_technology() const override { return ptFFF | ptSLA; }
 
 	wxSizer*	create_bed_shape_widget(wxWindow* parent);
-	void		cache_extruder_cnt(const DynamicPrintConfig* config = nullptr);
+	void		cache_extruder_cnt();
 	bool		apply_extruder_cnt_from_cache();
 };
 
@@ -520,33 +587,34 @@ public:
 		Tab(parent, _(L("Material Settings")), Slic3r::Preset::TYPE_SLA_MATERIAL) {}
     ~TabSLAMaterial() {}
 
+	std::string icon_name(int icon_size, PrinterTechnology tech) const override { return (icon_size < 16) ? "resin" : "resin_cog"; }
+
 	void		build() override;
+	void		reload_config() override;
 	void		toggle_options() override;
 	void		update() override;
-	bool 		supports_printer_technology(const PrinterTechnology tech) const override { return tech == ptSLA; }
+    void		init_options_list() override;
+	PrinterTechnology get_printer_technology() const override { return ptSLA; }
 };
 
 class TabSLAPrint : public Tab
 {
-    // Methods are a vector of method prefix -> method label pairs
-    // method prefix is the prefix whith which all the config values are prefixed
-    // for a particular method. The label is the friendly name for the method
-    void build_sla_support_params(const std::vector<SamePair<std::string>> &methods,
-                                  const Slic3r::GUI::PageShp &page);
-
 public:
     TabSLAPrint(wxBookCtrlBase* parent) :
         Tab(parent, _(L("Print Settings")), Slic3r::Preset::TYPE_SLA_PRINT) {}
     ~TabSLAPrint() {}
 
+	std::string icon_name(int icon_size, PrinterTechnology tech) const override { return "cog"; }
+
 	ogStaticText* m_support_object_elevation_description_line = nullptr;
 
     void		build() override;
+	void		reload_config() override;
 	void		update_description_lines() override;
 	void		toggle_options() override;
     void		update() override;
 	void		clear_pages() override;
-	bool 		supports_printer_technology(const PrinterTechnology tech) const override { return tech == ptSLA; }
+	PrinterTechnology get_printer_technology() const override { return ptSLA; }
 };
 
 } // GUI

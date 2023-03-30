@@ -13,9 +13,7 @@ template<size_t N>
 long num_iter(const std::array<size_t, N> &idx, size_t gridsz)
 {
     long ret = 0;
-    for (size_t i = 0; i < N; ++i)
-        ret += idx[i] * std::pow(gridsz, i);
-
+    for (size_t i = 0; i < N; ++i) ret += idx[i] * std::pow(gridsz, i);
     return ret;
 }
 

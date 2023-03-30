@@ -25,9 +25,9 @@ public:
     CoolingBuffer(GCode &gcodegen);
     void        reset(const Vec3d &position);
     void        set_current_extruder(unsigned int extruder_id) { m_current_extruder = extruder_id; }
-    std::string process_layer(std::string &&gcode, size_t layer_id, bool flush);
-    std::string process_layer(const std::string &gcode, size_t layer_id, bool flush)
-        { return this->process_layer(std::string(gcode), layer_id, flush); }
+    /// process the layer: check the time and apply fan / speed change
+    /// append_time_only: if the layer is only support, then you can put this at true to not process the layer but just append its time to the next one.
+    std::string process_layer(std::string &&gcode, size_t layer_id, bool flush, bool append_time_only = false);
 
 private:
 	CoolingBuffer& operator=(const CoolingBuffer&) = delete;
@@ -49,12 +49,17 @@ private:
     // Printing extruder IDs, zero based.
     std::vector<unsigned int>   m_extruder_ids;
     // Highest of m_extruder_ids plus 1.
-    unsigned int                m_num_extruders { 0 };
+    uint16_t                    m_num_extruders { 0 };
     const std::string           m_toolchange_prefix;
     // Referencs GCode::m_config, which is FullPrintConfig. While the PrintObjectConfig slice of FullPrintConfig is being modified,
     // the PrintConfig slice of FullPrintConfig is constant, thus no thread synchronization is required.
     const PrintConfig          &m_config;
-    unsigned int                m_current_extruder;
+    uint16_t                    m_current_extruder;
+
+    //saved previous unslowed layer 
+    std::map<size_t, float> saved_layer_time_support;
+    std::map<size_t, float> saved_layer_time_object;
+
 
     // Old logic: proportional.
     bool                        m_cooling_logic_proportional = false;

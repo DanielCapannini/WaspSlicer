@@ -43,8 +43,9 @@ public:
      * This generator will pre-compute things in preparation of generating
      * Lightning Infill for the infill areas in that mesh. The infill areas must
      * already be calculated at this point.
+     * \param mesh The mesh to generate infill for.
      */
-    explicit Generator(const PrintObject &print_object, const coordf_t fill_density, const std::function<void()> &throw_on_cancel_callback);
+    Generator(const PrintObject &print_object);
 
     /*!
      * Get a tree of paths generated for a certain layer of the mesh.
@@ -68,12 +69,12 @@ protected:
      * only when support is generated. For this pattern, we also need to
      * generate overhang areas for the inside of the model.
      */
-    void generateInitialInternalOverhangs(const PrintObject &print_object, const std::function<void()> &throw_on_cancel_callback);
+    void generateInitialInternalOverhangs(const PrintObject &print_object);
 
     /*!
      * Calculate the tree structure of all layers.
      */
-    void generateTrees(const PrintObject &print_object, const std::function<void()> &throw_on_cancel_callback);
+    void generateTrees(const PrintObject &print_object);
 
     float m_infill_extrusion_width;
 
