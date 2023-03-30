@@ -26,7 +26,7 @@ c:\src>cd c:\src\WaspSlicer
 c:\src\WaspSlicer>build_win.bat -d=..\WaspSlicer-deps -r=console
 ```
 
-## BIG IMPORTANT 
+### BIG IMPORTANT 
 visual studio must be in english otherwise it will be impossible to bildate the expat.h library and pay attention to the tiff library that if by mistake you have to change the hash of the zip in its cmake
 
 The build script will run for a while (over an hour, depending on your machine) and automatically perform the following steps:
