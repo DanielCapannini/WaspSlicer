@@ -1687,7 +1687,7 @@ static inline std::pair<SupportGeneratorLayer*, SupportGeneratorLayer*> new_cont
         assert(slicing_params.has_raft());
         print_z  = slicing_params.raft_contact_top_z;
         bottom_z = slicing_params.raft_interface_top_z;
-        height   = slicing_params.interface_raft_layer_height;
+        height   = slicing_params.contact_raft_layer_height;
     } else if (slicing_params.soluble_interface) {
         // Align the contact surface height with a layer immediately below the supported layer.
         // Interface layer will be synchronized with the object.
@@ -1713,7 +1713,7 @@ static inline std::pair<SupportGeneratorLayer*, SupportGeneratorLayer*> new_cont
             // With raft active, any contact layer below the raft_contact_top_z will be brought to raft_contact_top_z to extend the raft area.
             print_z  = min_print_z;
             bottom_z = has_raft ? slicing_params.raft_interface_top_z : 0;
-            height   = has_raft ? slicing_params.interface_raft_layer_height : min_print_z;
+            height   = has_raft ? slicing_params.contact_raft_layer_height : min_print_z;
         } else {
             // Don't know the height of the top contact layer yet. The top contact layer is printed with a normal flow and 
             // its height will be set adaptively later on.
