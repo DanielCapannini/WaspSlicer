@@ -3406,7 +3406,7 @@ void GUI_App::on_version_read(wxCommandEvent& evt)
     */
     // updater 
     // read triggered_by_user that was set when calling  GUI_App::app_version_check
-    app_updater(m_app_updater->get_triggered_by_user());
+    //app_updater(m_app_updater->get_triggered_by_user());
 }
 
 void GUI_App::app_updater(bool from_user)
