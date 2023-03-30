@@ -3005,7 +3005,7 @@ SupportGeneratorLayersPtr generate_raft_base(
         // Do not add the raft contact layer, only add the raft layers below the contact layer.
         // Insert the 1st layer.
         {
-            SupportGeneratorLayer &new_layer = layer_allocate(layer_storage, (slicing_params.base_raft_layers > 0) ? SupporLayerType::RaftBase : SupporLayerType::RaftBase);
+            SupportGeneratorLayer &new_layer = layer_allocate(layer_storage, (slicing_params.base_raft_layers > 0) ? SupporLayerType::RaftBase : SupporLayerType::RaftInterface);
             raft_layers.push_back(&new_layer);
             new_layer.print_z = slicing_params.first_print_layer_height;
             new_layer.height  = slicing_params.first_print_layer_height;
