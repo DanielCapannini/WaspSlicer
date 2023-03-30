@@ -1685,7 +1685,7 @@ static inline std::pair<SupportGeneratorLayer*, SupportGeneratorLayer*> new_cont
     if (layer_id == 0) {
         // This is a raft contact layer sitting directly on the print bed.
         assert(slicing_params.has_raft());
-        print_z  = slicing_params.raft_contact_top_z;
+        print_z  = slicing_params.raft_interface_top_z;
         bottom_z = slicing_params.raft_interface_top_z;
         height   = slicing_params.contact_raft_layer_height;
     } else if (slicing_params.soluble_interface) {
