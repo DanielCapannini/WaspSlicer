@@ -10,6 +10,7 @@
 
 #include "LocalesUtils.hpp"
 
+#include <Shiny/Shiny.h>
 #include <fast_float/fast_float.h>
 
 namespace Slic3r {
@@ -36,11 +37,14 @@ void GCodeReader::apply_config(const DynamicPrintConfig &config)
 
 const char* GCodeReader::parse_line_internal(const char *ptr, const char *end, GCodeLine &gline, std::pair<const char*, const char*> &command)
 {
+    PROFILE_FUNC();
+
     assert(is_decimal_separator_point());
     
     // command and args
     const char *c = ptr;
     {
+        PROFILE_BLOCK(command_and_args);
         // Skip the whitespaces.
         command.first = skip_whitespaces(c);
         // Skip the command.
@@ -70,7 +74,7 @@ const char* GCodeReader::parse_line_internal(const char *ptr, const char *end, G
             if (axis != NUM_AXES_WITH_UNKNOWN) {
                 // Try to parse the numeric value.
                 double v;
-                c = skip_whitespaces(++ c);
+                c = skip_whitespaces(++c);
                 auto [pend, ec] = fast_float::from_chars(c, end, v);
                 if (pend != c && is_end_of_word(*pend)) {
                     // The axis value has been parsed correctly.
@@ -94,8 +98,10 @@ const char* GCodeReader::parse_line_internal(const char *ptr, const char *end, G
     for (; ! is_end_of_line(*c); ++ c);
 
     // Copy the raw string including the comment, without the trailing newlines.
-    if (c > ptr)
+    if (c > ptr) {
+        PROFILE_BLOCK(copy_raw_string);
         gline.m_raw.assign(ptr, c);
+    }
 
     // Skip the trailing newlines.
 	if (*c == '\r')
@@ -111,6 +117,7 @@ const char* GCodeReader::parse_line_internal(const char *ptr, const char *end, G
 
 void GCodeReader::update_coordinates(GCodeLine &gline, std::pair<const char*, const char*> &command)
 {
+    PROFILE_FUNC();
     if (*command.first == 'G') {
         int cmd_len = int(command.second - command.first);
         if ((cmd_len == 2 && (command.first[1] == '0' || command.first[1] == '1')) ||
@@ -208,9 +215,9 @@ bool GCodeReader::parse_file_raw(const std::string &filename, raw_line_callback_
         [](size_t){});
 }
 
-const char* GCodeReader::axis_pos(const char *raw_str, char axis)
+bool GCodeReader::GCodeLine::has(char axis) const
 {
-    const char *c = raw_str;
+    const char *c = m_raw.c_str();
     // Skip the whitespaces.
     c = skip_whitespaces(c);
     // Skip the command.
@@ -223,48 +230,40 @@ const char* GCodeReader::axis_pos(const char *raw_str, char axis)
             break;
         // Check the name of the axis.
         if (*c == axis)
-            return c;
+            return true;
         // Skip the rest of the word.
         c = skip_word(c);
     }
-    return nullptr;
-}
-
-bool GCodeReader::GCodeLine::has(char axis) const
-{
-    const char *c = axis_pos(m_raw.c_str(), axis);
-    return c != nullptr;
+    return false;
 }
 
 bool GCodeReader::GCodeLine::has_value(char axis, float &value) const
 {
     assert(is_decimal_separator_point());
-    const char *c = axis_pos(m_raw.c_str(), axis);
-    if (c == nullptr)
-        return false;
-    // Try to parse the numeric value.
-    char   *pend = nullptr;
-    double  v = strtod(++ c, &pend);
-    if (pend != nullptr && is_end_of_word(*pend)) {
-        // The axis value has been parsed correctly.
-        value = float(v);
-        return true;
-    }
-    return false;
-}
-
-bool GCodeReader::GCodeLine::has_value(char axis, int &value) const
-{
-    const char *c = axis_pos(m_raw.c_str(), axis);
-    if (c == nullptr)
-        return false;
-    // Try to parse the numeric value.
-    char   *pend = nullptr;
-    long    v = strtol(++ c, &pend, 10);
-    if (pend != nullptr && is_end_of_word(*pend)) {
-        // The axis value has been parsed correctly.
-        value = int(v);
-        return true;
+    const char *c = m_raw.c_str();
+    // Skip the whitespaces.
+    c = skip_whitespaces(c);
+    // Skip the command.
+    c = skip_word(c);
+    // Up to the end of line or comment.
+    while (! is_end_of_gcode_line(*c)) {
+        // Skip whitespaces.
+        c = skip_whitespaces(c);
+        if (is_end_of_gcode_line(*c))
+            break;
+        // Check the name of the axis.
+        if (*c == axis) {
+            // Try to parse the numeric value.
+            char   *pend = nullptr;
+            double  v = strtod(++ c, &pend);
+            if (pend != nullptr && is_end_of_word(*pend)) {
+                // The axis value has been parsed correctly.
+                value = float(v);
+                return true;
+            }
+        }
+        // Skip the rest of the word.
+        c = skip_word(c);
     }
     return false;
 }

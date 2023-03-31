@@ -26,34 +26,26 @@ namespace cgal {
 
 struct CGALMesh;
 struct CGALMeshDeleter { void operator()(CGALMesh *ptr); };
-using CGALMeshPtr = std::unique_ptr<CGALMesh, CGALMeshDeleter>;
 
-CGALMeshPtr clone(const CGALMesh &m);
+std::unique_ptr<CGALMesh, CGALMeshDeleter>
+triangle_mesh_to_cgal(const std::vector<stl_vertex> &V,
+                      const std::vector<stl_triangle_vertex_indices> &F);
 
-CGALMeshPtr triangle_mesh_to_cgal(
-    const std::vector<stl_vertex> &V,
-    const std::vector<stl_triangle_vertex_indices> &F);
-
-inline CGALMeshPtr triangle_mesh_to_cgal(const indexed_triangle_set &M)
+inline std::unique_ptr<CGALMesh, CGALMeshDeleter> triangle_mesh_to_cgal(const indexed_triangle_set &M)
 {
     return triangle_mesh_to_cgal(M.vertices, M.indices);
 }
-inline CGALMeshPtr triangle_mesh_to_cgal(const TriangleMesh &M)
+inline std::unique_ptr<CGALMesh, CGALMeshDeleter> triangle_mesh_to_cgal(const TriangleMesh &M)
 {
     return triangle_mesh_to_cgal(M.its);
 }
 
 TriangleMesh cgal_to_triangle_mesh(const CGALMesh &cgalmesh);
-indexed_triangle_set cgal_to_indexed_triangle_set(const CGALMesh &cgalmesh);
-
+    
 // Do boolean mesh difference with CGAL bypassing igl.
 void minus(TriangleMesh &A, const TriangleMesh &B);
 void plus(TriangleMesh &A, const TriangleMesh &B);
 void intersect(TriangleMesh &A, const TriangleMesh &B);
-
-void minus(indexed_triangle_set &A, const indexed_triangle_set &B);
-void plus(indexed_triangle_set &A, const indexed_triangle_set &B);
-void intersect(indexed_triangle_set &A, const indexed_triangle_set &B);
 
 void minus(CGALMesh &A, CGALMesh &B);
 void plus(CGALMesh &A, CGALMesh &B);

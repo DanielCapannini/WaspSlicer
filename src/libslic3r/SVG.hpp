@@ -53,8 +53,10 @@ public:
     void draw_outline(const Surface &surface, std::string stroke_outer = "black", std::string stroke_holes = "blue", coordf_t stroke_width = 0);
     void draw(const Surfaces &surfaces, std::string fill = "grey", const float fill_opacity=1.f);
     void draw_outline(const Surfaces &surfaces, std::string stroke_outer = "black", std::string stroke_holes = "blue", coordf_t stroke_width = 0);
-    void draw(const SurfacesPtr &surfaces, std::string fill = "grey", const float fill_opacity=1.f);
-    void draw_outline(const SurfacesPtr &surfaces, std::string stroke_outer = "black", std::string stroke_holes = "blue", coordf_t stroke_width = 0);
+    void draw(const SurfacesPtr& surfaces, std::string fill = "grey", const float fill_opacity = 1.f);
+    void draw_outline(const SurfacesPtr& surfaces, std::string stroke_outer = "black", std::string stroke_holes = "blue", coordf_t stroke_width = 0);
+    void draw(const SurfacesConstPtr& surfaces, std::string fill = "grey", const float fill_opacity = 1.f);
+    void draw_outline(const SurfacesConstPtr& surfaces, std::string stroke_outer = "black", std::string stroke_holes = "blue", coordf_t stroke_width = 0);
  
     void draw(const Polygon &polygon, std::string fill = "grey");
     void draw_outline(const Polygon &polygon, std::string stroke = "black", coordf_t stroke_width = 0);
@@ -63,7 +65,8 @@ public:
     void draw(const Polyline &polyline, std::string stroke = "black", coordf_t stroke_width = 0);
     void draw(const Polylines &polylines, std::string stroke = "black", coordf_t stroke_width = 0);
     void draw(const ThickLines &thicklines, const std::string &fill = "lime", const std::string &stroke = "black", coordf_t stroke_width = 0);
-    void draw(const ThickPolylines &polylines, const std::string &stroke = "black", coordf_t stroke_width = 0);
+    void draw(const ThickPolylines &thickpolylines, const std::string &stroke = "black");
+    void draw(const ThickPolylines &polylines, const std::string &stroke, coordf_t stroke_width);
     void draw(const ThickPolylines &thickpolylines, const std::string &fill, const std::string &stroke, coordf_t stroke_width);
     void draw(const Point &point, std::string fill = "black", coord_t radius = 0);
     void draw(const Points &points, std::string fill = "black", coord_t radius = 0);
@@ -72,8 +75,8 @@ public:
     void draw(const ClipperLib::Path  &polygon, double scale, std::string fill = "grey", coordf_t stroke_width = 0);
     void draw(const ClipperLib::Paths &polygons, double scale, std::string fill = "grey", coordf_t stroke_width = 0);
 
-    void draw_text(const Point &pt, const char *text, const char *color, coordf_t font_size = 20.f);
-    void draw_legend(const Point &pt, const char *text, const char *color, coordf_t font_size = 10.f);
+    void draw_text(const Point &pt, const char *text, const char *color);
+    void draw_legend(const Point &pt, const char *text, const char *color);
 
     void Close();
     
@@ -167,9 +170,9 @@ public:
         { export_expolygons(path.c_str(), expolygons_with_attributes); }
 
 private:
-    static float to_svg_coord(float x) throw();
-    static float to_svg_x(float x) throw() { return to_svg_coord(x); }
-           float to_svg_y(float x) const throw() { return flipY ? this->height - to_svg_coord(x) : to_svg_coord(x); }
+    static float    to_svg_coord(float x) throw() { return unscale<float>(x) * 10.f; }
+    static float    to_svg_x(float x) throw() { return to_svg_coord(x); }
+    float           to_svg_y(float x) const throw() { return flipY ? this->height - to_svg_coord(x) : to_svg_coord(x); }
 };
 
 }

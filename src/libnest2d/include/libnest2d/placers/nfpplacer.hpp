@@ -509,24 +509,28 @@ public:
         return diff;
     }
 
+    template<class Range = ConstItemRange<typename Base::DefaultIter>>
+    PackResult trypack(Item& item,
+                        const Range& remaining = Range()) {
+        auto result = _trypack(item, remaining);
+
+        // Experimental
+        // if(!result) repack(item, result);
+
+        return result;
+    }
+
     ~_NofitPolyPlacer() {
         clearItems();
     }
 
     inline void clearItems() {
         finalAlign(bin_);
-        merged_pile_ = {};
         Base::clearItems();
     }
 
     void preload(const ItemGroup& packeditems) {
         Base::preload(packeditems);
-
-        for (const Item& itm : packeditems)
-            merged_pile_.emplace_back(itm.transformedShape());
-
-        nfp::merge(merged_pile_);
-
         if (config_.on_preload)
             config_.on_preload(packeditems, config_);
     }
@@ -602,9 +606,8 @@ private:
 
     using Edges = EdgeCache<RawShape>;
 
-public:
     template<class Range = ConstItemRange<typename Base::DefaultIter>>
-    PackResult trypack(
+    PackResult _trypack(
             Item& item,
             const Range& remaining = Range()) {
 
@@ -894,7 +897,6 @@ public:
         return ret;
     }
 
-private:
     inline void finalAlign(const RawShape& pbin) {
         auto bbin = sl::boundingBox(pbin);
         finalAlign(bbin);

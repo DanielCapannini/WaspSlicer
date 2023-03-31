@@ -2,8 +2,6 @@
 #define _libslic3r_h_
 
 #include "libslic3r_version.h"
-#define GCODEVIEWER_APP_NAME "WaspSlicer G-code Viewer"
-#define GCODEVIEWER_APP_KEY  "WaspSlicerGcodeViewer"
 
 // this needs to be included early for MSVC (listing it in Build.PL is not enough)
 #include <memory>
@@ -18,57 +16,51 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <vector>
+#include <set>
 #include <cassert>
 #include <cmath>
 #include <type_traits>
-#include <optional>
-
-#ifdef _WIN32
-// On MSVC, std::deque degenerates to a list of pointers, which defeats its purpose of reducing allocator load and memory fragmentation.
-// https://github.com/microsoft/STL/issues/147#issuecomment-1090148740
-// Thus it is recommended to use boost::container::deque instead.
-#include <boost/container/deque.hpp>
-#endif // _WIN32
 
 #include "Technologies.hpp"
 #include "Semver.hpp"
 
-using coord_t = 
-#if 1
-// Saves around 32% RAM after slicing step, 6.7% after G-code export (tested on WaspSlicer 2.2.0 final).
-    int32_t;
+#if 0
+// Saves around 32% RAM after slicing step, 6.7% after G-code export (tested on PrusaSlicer 2.2.0 final).
+using coord_t = int32_t;
 #else
-    //FIXME At least FillRectilinear2 and std::boost Voronoi require coord_t to be 32bit.
-    int64_t;
+//FIXME At least FillRectilinear2 and std::boost Voronoi require coord_t to be 32bit.
+using coord_t = int64_t;
 #endif
 
 using coordf_t = double;
 
-//FIXME This epsilon value is used for many non-related purposes:
-// For a threshold of a squared Euclidean distance,
-// for a trheshold in a difference of radians,
-// for a threshold of a cross product of two non-normalized vectors etc.
-static constexpr double EPSILON = 1e-4;
 // Scaling factor for a conversion from coord_t to coordf_t: 10e-6
 // This scaling generates a following fixed point representation with for a 32bit integer:
 // 0..4294mm with 1nm resolution
 // int32_t fits an interval of (-2147.48mm, +2147.48mm)
 // with int64_t we don't have to worry anymore about the size of the int.
 static constexpr double SCALING_FACTOR = 0.000001;
-static constexpr double PI = 3.141592653589793238;
+static constexpr double UNSCALING_FACTOR = 1000000; // 1 / SCALING_FACTOR; <- linux has some problem compiling this constexpr
+
+//FIXME This epsilon value is used for many non-related purposes:
+// For a threshold of a squared Euclidean distance,
+// for a trheshold in a difference of radians,
+// for a threshold of a cross product of two non-normalized vectors etc.
+static constexpr double EPSILON = 1e-4;
+static constexpr coord_t SCALED_EPSILON = 100; // coord_t(EPSILON/ SCALING_FACTOR); <- linux has some problem compiling this constexpr
+
+//for creating circles (for brim_ear)
+#define POLY_SIDES 24
+#define PI 3.141592653589793238
 // When extruding a closed loop, the loop is interrupted and shortened a bit to reduce the seam.
-static constexpr double LOOP_CLIPPING_LENGTH_OVER_NOZZLE_DIAMETER = 0.15;
+//static constexpr double LOOP_CLIPPING_LENGTH_OVER_NOZZLE_DIAMETER = 0.15; now seam_gap
 // Maximum perimeter length for the loop to apply the small perimeter speed. 
-#define                 SMALL_PERIMETER_LENGTH  ((6.5 / SCALING_FACTOR) * 2 * PI)
+//#define                 SMALL_PERIMETER_LENGTH  ((6.5 / SCALING_FACTOR) * 2 * PI)
 static constexpr double INSET_OVERLAP_TOLERANCE = 0.4;
-// 3mm ring around the top / bottom / bridging areas.
-//FIXME This is quite a lot.
-static constexpr double EXTERNAL_INFILL_MARGIN = 3.;
 //FIXME Better to use an inline function with an explicit return type.
 //inline coord_t scale_(coordf_t v) { return coord_t(floor(v / SCALING_FACTOR + 0.5f)); }
-#define scale_(val) ((val) / SCALING_FACTOR)
+#define scale_(val) (coord_t)((val) / SCALING_FACTOR)
 
-#define SCALED_EPSILON scale_(EPSILON)
 
 #ifndef UNUSED
 #define UNUSED(x) (void)(x)
@@ -81,18 +73,13 @@ namespace Slic3r {
 
 extern Semver SEMVER;
 
-// On MSVC, std::deque degenerates to a list of pointers, which defeats its purpose of reducing allocator load and memory fragmentation.
-template<class T, class Allocator = std::allocator<T>>
-using deque = 
-#ifdef _WIN32
-    // Use boost implementation, which allocates blocks of 512 bytes instead of blocks of 8 bytes.
-    boost::container::deque<T, Allocator>;
-#else // _WIN32
-    std::deque<T, Allocator>;
-#endif // _WIN32
-
 template<typename T, typename Q>
 inline T unscale(Q v) { return T(v) * T(SCALING_FACTOR); }
+
+inline double unscaled(coord_t v) { return double(v) * SCALING_FACTOR; }
+inline double unscaled(coordf_t v) { return v * SCALING_FACTOR; }
+inline coord_t scale_t(double v) { return coord_t(v * UNSCALING_FACTOR); }
+inline coordf_t scale_d(double v) { return coordf_t(v * UNSCALING_FACTOR); }
 
 enum Axis { 
 	X=0,
@@ -105,14 +92,22 @@ enum Axis {
 	UNKNOWN_AXIS = NUM_AXES,
 	NUM_AXES_WITH_UNKNOWN,
 };
-
 template <typename T>
 inline void append(std::vector<T>& dest, const std::vector<T>& src)
 {
     if (dest.empty())
-        dest = src; // copy
+        dest = src;
     else
         dest.insert(dest.end(), src.begin(), src.end());
+}
+
+template <typename T>
+inline void append(std::set<T>& dest, const std::set<T>& src)
+{
+    if (dest.empty())
+        dest = src;
+    else
+        dest.insert(src.begin(), src.end());
 }
 
 template <typename T>
@@ -121,30 +116,19 @@ inline void append(std::vector<T>& dest, std::vector<T>&& src)
     if (dest.empty())
         dest = std::move(src);
     else {
-        dest.insert(dest.end(),
-            std::make_move_iterator(src.begin()),
-            std::make_move_iterator(src.end()));
-        // Release memory of the source contour now.
-        src.clear();
-        src.shrink_to_fit();
+        dest.reserve(dest.size() + src.size());
+        std::move(std::begin(src), std::end(src), std::back_inserter(dest));
     }
-}
-
-template<class T, class... Args> // Arbitrary allocator can be used
-void clear_and_shrink(std::vector<T, Args...>& vec)
-{
-    // shrink_to_fit does not garantee the release of memory nor does it clear()
-    std::vector<T, Args...> tmp;
-    vec.swap(tmp);
-    assert(vec.capacity() == 0);
+    src.clear();
+    src.shrink_to_fit();
 }
 
 // Append the source in reverse.
 template <typename T>
 inline void append_reversed(std::vector<T>& dest, const std::vector<T>& src)
 {
-    if (dest.empty()) 
-        dest = {src.rbegin(), src.rend()};
+    if (dest.empty())
+        dest = src;
     else
         dest.insert(dest.end(), src.rbegin(), src.rend());
 }
@@ -154,13 +138,11 @@ template <typename T>
 inline void append_reversed(std::vector<T>& dest, std::vector<T>&& src)
 {
     if (dest.empty())
-        dest = {std::make_move_iterator(src.rbegin),
-                std::make_move_iterator(src.rend)};
-    else
-        dest.insert(dest.end(), 
-            std::make_move_iterator(src.rbegin()),
-            std::make_move_iterator(src.rend()));
-    // Release memory of the source contour now.
+        dest = std::move(src);
+    else {
+        dest.reserve(dest.size() + src.size());
+        std::move(std::rbegin(src), std::rend(src), std::back_inserter(dest));
+    }
     src.clear();
     src.shrink_to_fit();
 }
@@ -268,17 +250,9 @@ constexpr inline T lerp(const T& a, const T& b, Number t)
 }
 
 template <typename Number>
-constexpr inline bool is_approx(Number value, Number test_value, Number precision = EPSILON)
+constexpr inline bool is_approx(Number value, Number test_value)
 {
-    return std::fabs(double(value) - double(test_value)) < double(precision);
-}
-
-template<typename Number>
-constexpr inline bool is_approx(const std::optional<Number> &value,
-                                const std::optional<Number> &test_value)
-{
-    return (!value.has_value() && !test_value.has_value()) ||
-        (value.has_value() && test_value.has_value() && is_approx<Number>(*value, *test_value));
+    return std::fabs(double(value) - double(test_value)) < double(EPSILON);
 }
 
 // A meta-predicate which is true for integers wider than or equal to coord_t
@@ -349,42 +323,37 @@ public:
     Range(It b, It e) : from(std::move(b)), to(std::move(e)) {}
 
     // Some useful container-like methods...
-    inline size_t size() const { return std::distance(from, to); }
-    inline bool   empty() const { return from == to; }
+    inline size_t size() const { return end() - begin(); }
+    inline bool   empty() const { return size() == 0; }
 };
 
-template<class Cont> auto range(Cont &&cont)
-{
-    return Range{std::begin(cont), std::end(cont)};
-}
 
-template<class T, class = FloatingOnly<T>>
-constexpr T NaN = std::numeric_limits<T>::quiet_NaN();
-
-constexpr float NaNf = NaN<float>;
-constexpr double NaNd = NaN<double>;
-
-// Rounding up.
-// 1.5 is rounded to 2
-// 1.49 is rounded to 1
-// 0.5 is rounded to 1,
-// 0.49 is rounded to 0
-// -0.5 is rounded to 0,
-// -0.51 is rounded to -1,
-// -1.5 is rounded to -1.
-// -1.51 is rounded to -2.
-// If input is not a valid float (it is infinity NaN or if it does not fit)
-// the float to int conversion produces a max int on Intel and +-max int on ARM.
-template<typename I>
-inline IntegerOnly<I, I> fast_round_up(double a)
-{
-    // Why does Java Math.round(0.49999999999999994) return 1?
-    // https://stackoverflow.com/questions/9902968/why-does-math-round0-49999999999999994-return-1
-    return a == 0.49999999999999994 ? I(0) : I(floor(a + 0.5));
-}
-
-template<class T> using SamePair = std::pair<T, T>;
+// to check when & how an object is created/copied/deleted
+class Intrumentation {
+public:
+    //SlicingParameters() = default;
+    Intrumentation() {
+        std::cout << "create" << "\n";
+    }
+    Intrumentation(const Intrumentation& sp) {
+        std::cout << "copy" << "\n";
+    }
+    virtual ~Intrumentation() {
+        std::cout << "destroy" << "\n";
+    }
+    Intrumentation& operator=(const Intrumentation& sp) {
+        std::cout << "assign" << "\n";
+        return *this;
+    }
+    Intrumentation(Intrumentation&& sp) {
+        std::cout << "move-copy" << "\n";
+    }
+    Intrumentation& operator=(Intrumentation&& sp) {
+        std::cout << "move-assign" << "\n";
+        return *this;
+    }
+};
 
 } // namespace Slic3r
 
-#endif // _libslic3r_h_
+#endif

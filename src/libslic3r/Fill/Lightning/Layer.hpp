@@ -41,11 +41,9 @@ public:
     (
         const Polygons& current_overhang,
         const Polygons& current_outlines,
-        const BoundingBox& current_outlines_bbox,
         const EdgeGrid::Grid& outline_locator,
-        coord_t supporting_radius,
-        coord_t wall_supporting_radius,
-        const std::function<void()> &throw_on_cancel_callback
+        const coord_t supporting_radius,
+        const coord_t wall_supporting_radius
     );
 
     /*! Determine & connect to connection point in tree/outline.
@@ -55,10 +53,9 @@ public:
     (
         const Point& unsupported_location,
         const Polygons& current_outlines,
-        const BoundingBox& current_outlines_bbox,
         const EdgeGrid::Grid& outline_locator,
-        coord_t supporting_radius,
-        coord_t wall_supporting_radius,
+        const coord_t supporting_radius,
+        const coord_t wall_supporting_radius,
         const SparseNodeGrid& tree_node_locator,
         const NodeSPtr& exclude_tree = nullptr
     );
@@ -74,17 +71,16 @@ public:
     (
         std::vector<NodeSPtr>& to_be_reconnected_tree_roots,
         const Polygons& current_outlines,
-        const BoundingBox& current_outlines_bbox,
         const EdgeGrid::Grid& outline_locator,
-        coord_t supporting_radius,
-        coord_t wall_supporting_radius
+        const coord_t supporting_radius,
+        const coord_t wall_supporting_radius
     );
 
-    Polylines convertToLines(const Polygons& limit_to_outline, coord_t line_overlap) const;
+    Polylines convertToLines(const Polygons& limit_to_outline, const coord_t line_width) const;
 
     coord_t getWeightedDistance(const Point& boundary_loc, const Point& unsupported_location);
 
-    void fillLocator(SparseNodeGrid& tree_node_locator, const BoundingBox& current_outlines_bbox);
+    void fillLocator(SparseNodeGrid& tree_node_locator);
 };
 
 } // namespace Slic3r::FillLightning

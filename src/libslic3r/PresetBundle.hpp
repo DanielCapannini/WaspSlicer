@@ -7,7 +7,6 @@
 
 #include <memory>
 #include <unordered_map>
-#include <array>
 #include <boost/filesystem/path.hpp>
 
 namespace Slic3r {
@@ -43,10 +42,12 @@ public:
     // Export selections (current print, current filaments, current printer) into config.ini
     void            export_selections(AppConfig &config);
 
-    PresetCollection            prints;
+    PresetCollection            fff_prints;
     PresetCollection            sla_prints;
     PresetCollection            filaments;
     PresetCollection            sla_materials;
+	PresetCollection& 			prints(PrinterTechnology pt)       { return pt == ptFFF ? this->fff_prints : this->sla_prints; }
+	const PresetCollection& 	prints(PrinterTechnology pt) const { return pt == ptFFF ? this->fff_prints : this->sla_prints; }
 	PresetCollection& 			materials(PrinterTechnology pt)       { return pt == ptFFF ? this->filaments : this->sla_materials; }
 	const PresetCollection& 	materials(PrinterTechnology pt) const { return pt == ptFFF ? this->filaments : this->sla_materials; }
     PrinterPresetCollection     printers;
@@ -54,8 +55,6 @@ public:
     // Filament preset names for a multi-extruder or multi-material print.
     // extruders.size() should be the same as printers.get_edited_preset().config.nozzle_diameter.size()
     std::vector<std::string>    filament_presets;
-
-    PresetCollection&           get_presets(Preset::Type preset_type);
 
     // The project configuration values are kept separated from the print/filament/printer preset,
     // they are being serialized / deserialized from / to the .amf, .3mf, .config, .gcode, 
@@ -67,7 +66,7 @@ public:
     VendorMap                   vendors;
 
     struct ObsoletePresets {
-        std::vector<std::string> prints;
+        std::vector<std::string> fff_prints;
         std::vector<std::string> sla_prints;
         std::vector<std::string> filaments;
         std::vector<std::string> sla_materials;
@@ -76,7 +75,7 @@ public:
     ObsoletePresets             obsolete_presets;
 
     bool                        has_defauls_only() const 
-        { return prints.has_defaults_only() && filaments.has_defaults_only() && printers.has_defaults_only(); }
+        { return fff_prints.has_defaults_only() && filaments.has_defaults_only() && printers.has_defaults_only(); }
 
     DynamicPrintConfig          full_config() const;
     // full_config() with the "printhost_apikey" and "printhost_cafile" removed.
@@ -96,7 +95,7 @@ public:
     // Instead of a config file, a G-code may be loaded containing the full set of parameters.
     // In the future the configuration will likely be read from an AMF file as well.
     // If the file is loaded successfully, its print / filament / printer profiles will be activated.
-    ConfigSubstitutions         load_config_file(const std::string &path, ForwardCompatibilitySubstitutionRule compatibility_rule);
+    ConfigSubstitutions         load_config_file(const std::string &path, ForwardCompatibilitySubstitutionRule compatibility_rule, bool from_prusa = false);
 
     // Load a config bundle file, into presets and store the loaded presets into separate files
     // of the local configuration directory.
@@ -111,6 +110,8 @@ public:
         // Load a system config bundle.
         LoadSystem,
         LoadVendorOnly,
+        //apply import rule from prusa
+        ConvertFromPrusa,
     };
     using LoadConfigBundleAttributes = enum_bitmask<LoadConfigBundleAttribute>;
     // Load the config bundle based on the flags.
@@ -145,23 +146,11 @@ public:
     // If the "vendor" section is missing, enable all models and variants of the particular vendor.
     void                        load_installed_printers(const AppConfig &config);
 
-    const std::string&          get_preset_name_by_alias(const Preset::Type& preset_type, const std::string& alias);
+    const std::string&          get_preset_name_by_alias(const Preset::Type& preset_type, const std::string& alias) const;
 
     // Save current preset of a provided type under a new name. If the name is different from the old one,
     // Unselected option would be reverted to the beginning values
     void                        save_changes_for_preset(const std::string& new_name, Preset::Type type, const std::vector<std::string>& unselected_options);
-    // Transfer options form preset_from_name preset to preset_to_name preset and save preset_to_name preset as new new_name preset
-    // Return false, if new preset wasn't saved
-    bool                        transfer_and_save(Preset::Type type, const std::string& preset_from_name, const std::string& preset_to_name,
-                                                  const std::string& new_name, const std::vector<std::string>& options);
-
-    static const char *PRUSA_BUNDLE;
-
-    static std::array<Preset::Type, 3>  types_list(PrinterTechnology pt) {
-        if (pt == ptFFF)
-            return  { Preset::TYPE_PRINTER, Preset::TYPE_PRINT, Preset::TYPE_FILAMENT };
-        return      { Preset::TYPE_PRINTER, Preset::TYPE_SLA_PRINT, Preset::TYPE_SLA_MATERIAL };
-    }
 
 private:
     std::pair<PresetsConfigSubstitutions, std::string> load_system_presets(ForwardCompatibilitySubstitutionRule compatibility_rule);
@@ -183,18 +172,14 @@ private:
     // and the external config is just referenced, not stored into user profile directory.
     // If it is not an external config, then the config will be stored into the user profile directory.
     void                        load_config_file_config(const std::string &name_or_path, bool is_external, DynamicPrintConfig &&config);
-    ConfigSubstitutions         load_config_file_config_bundle(
-        const std::string &path, const boost::property_tree::ptree &tree, ForwardCompatibilitySubstitutionRule compatibility_rule);
+    ConfigSubstitutions         load_config_file_config_bundle_dont_save(
+        const std::string &path, const boost::property_tree::ptree &tree, ForwardCompatibilitySubstitutionRule compatibility_rule, bool from_prusa = false);
 
     DynamicPrintConfig          full_fff_config() const;
     DynamicPrintConfig          full_sla_config() const;
 };
 
 ENABLE_ENUM_BITMASK_OPERATORS(PresetBundle::LoadConfigBundleAttribute)
-
-// Copies bed texture and model files to 'data_dir()\printer' folder, if needed
-// and updates the config accordingly
-extern void copy_bed_model_and_texture_if_needed(DynamicPrintConfig& config);
 
 } // namespace Slic3r
 
