@@ -1,13 +1,11 @@
 #include "BoundingBox.hpp"
 #include "ClipperUtils.hpp"
-#include "Point.hpp"
 #include "EdgeGrid.hpp"
 #include "Layer.hpp"
 #include "Print.hpp"
 #include "Geometry/VoronoiVisualUtils.hpp"
 #include "MutablePolygon.hpp"
 #include "format.hpp"
-#include "TriangleSelector.hpp"
 
 #include <utility>
 #include <cfloat>
@@ -99,7 +97,6 @@ struct PaintedLineVisitor
         const Vec2d  v1                     = line_to_test.vector().cast<double>();
         const double v1_sqr_norm            = v1.squaredNorm();
         const double heuristic_thr_part     = line_to_test.length() + append_threshold;
-        double min_res = std::max(Slic3r::sqr(resolution), append_threshold_sqr);
         for (auto it_contour_and_segment = cell_data_range.first; it_contour_and_segment != cell_data_range.second; ++it_contour_and_segment) {
             Line        grid_line         = grid.line(*it_contour_and_segment);
             const Vec2d v2                = grid_line.vector().cast<double>();
@@ -112,14 +109,15 @@ struct PaintedLineVisitor
                 (grid_line.a - line_to_test.b).cast<double>().squaredNorm() > heuristic_thr_sqr ||
                 (grid_line.b - line_to_test.b).cast<double>().squaredNorm() > heuristic_thr_sqr)
                 continue;
+
             // When lines have too different length, it is necessary to normalize them
             if (Slic3r::sqr(v1.dot(v2)) > cos_threshold2 * v1_sqr_norm * v2.squaredNorm()) {
                 // The two vectors are nearly collinear (their mutual angle is lower than 30 degrees)
                 if (painted_lines_set.find(*it_contour_and_segment) == painted_lines_set.end()) {
-                    if (grid_line.distance_to_squared(line_to_test.a) < min_res ||
-                        grid_line.distance_to_squared(line_to_test.b) < min_res ||
-                        line_to_test.distance_to_squared(grid_line.a) < min_res ||
-                        line_to_test.distance_to_squared(grid_line.b) < min_res) {
+                    if (grid_line.distance_to_squared(line_to_test.a) < append_threshold2 ||
+                        grid_line.distance_to_squared(line_to_test.b) < append_threshold2 ||
+                        line_to_test.distance_to_squared(grid_line.a) < append_threshold2 ||
+                        line_to_test.distance_to_squared(grid_line.b) < append_threshold2) {
                         Line line_to_test_projected;
                         project_line_on_line(grid_line, line_to_test, &line_to_test_projected);
 
@@ -145,11 +143,10 @@ struct PaintedLineVisitor
     Line                                                                                  line_to_test;
     std::unordered_set<std::pair<size_t, size_t>, boost::hash<std::pair<size_t, size_t>>> painted_lines_set;
     int                                                                                   color             = -1;
-    double                                                                                resolution = 50 * SCALED_EPSILON;
 
     static inline const double                                                            cos_threshold2    = Slic3r::sqr(cos(M_PI * 30. / 180.));
     static inline const double                                                            append_threshold  = 50 * SCALED_EPSILON;
-    static inline const double                                                            append_threshold_sqr = Slic3r::sqr(append_threshold);
+    static inline const double                                                            append_threshold2 = Slic3r::sqr(append_threshold);
 };
 
 static Polygon colored_points_to_polygon(const std::vector<ColoredLine> &lines)
@@ -716,13 +713,13 @@ struct MMU_Graph
 
             [[nodiscard]] const Vec2d &point_double() const { return m_point_double; }
             [[nodiscard]] const Point &point() const { return m_point; }
-            bool operator==(const CPoint &rhs) const { return this->m_point_double == rhs.m_point_double && this->m_contour_idx == rhs.m_contour_idx && this->m_point_idx == rhs.m_point_idx; }
+            bool operator==(const CPoint &rhs) const { return m_point_double == rhs.m_point_double && m_contour_idx == rhs.m_contour_idx && m_point_idx == rhs.m_point_idx; }
         };
         struct CPointAccessor { const Point* operator()(const CPoint &pt) const { return &pt.point(); }};
         typedef ClosestPointInRadiusLookup<CPoint, CPointAccessor> CPointLookupType;
 
-        CPointLookupType closest_voronoi_point{ coord_t(SCALED_EPSILON) };
-        CPointLookupType closest_contour_point{ 3 * coord_t(SCALED_EPSILON) };
+        CPointLookupType closest_voronoi_point(coord_t(SCALED_EPSILON));
+        CPointLookupType closest_contour_point(3 * coord_t(SCALED_EPSILON));
         for (const Polygon &polygon : color_poly_tmp)
             for (const Point &pt : polygon.points)
                 closest_contour_point.insert(CPoint(Vec2d(pt.x(), pt.y()), &polygon - &color_poly_tmp.front(), &pt - &polygon.points.front()));
@@ -1308,7 +1305,7 @@ static inline std::vector<std::vector<ExPolygons>> mmu_segmentation_top_and_bott
 {
     const size_t num_extruders = print_object.print()->config().nozzle_diameter.size() + 1;
     const size_t num_layers    = input_expolygons.size();
-    const ConstLayerPtrsAdaptor layers = print_object.layers();
+    const SpanOfConstPtrs<Layer> layers = print_object.layers();
 
     // Maximum number of top / bottom layers accounts for maximum overlap of one thread group into a neighbor thread group.
     int max_top_layers = 0;
@@ -1430,9 +1427,9 @@ static inline std::vector<std::vector<ExPolygons>> mmu_segmentation_top_and_bott
         // Number of regions for a queried color.
         int     num_regions             { 0 };
         // Maximum perimeter extrusion width for a queried color.
-        coordf_t extrusion_width         { 0.f };
+        float   extrusion_width         { 0.f };
         // Minimum radius of a region to be printable. Used to filter regions by morphological opening.
-        coordf_t small_region_threshold  { 0.f };
+        float   small_region_threshold  { 0.f };
         // Maximum number of top layers for a queried color.
         int     top_solid_layers        { 0 };
         // Maximum number of bottom layers for a queried color.
@@ -1446,20 +1443,19 @@ static inline std::vector<std::vector<ExPolygons>> mmu_segmentation_top_and_bott
                 // color_idx == 0 means "don't know" extruder aka the underlying extruder.
                 // As this region may split existing regions, we collect statistics over all regions for color_idx == 0.
                 color_idx == 0 || config.perimeter_extruder == int(color_idx)) {
-                double perimeter_extrusion_width = config.get_computed_value("perimeter_extrusion_width");
-                out.extrusion_width     = std::max<double>(out.extrusion_width, perimeter_extrusion_width);
+                out.extrusion_width     = std::max<float>(out.extrusion_width, float(config.perimeter_extrusion_width));
                 out.top_solid_layers    = std::max<int>(out.top_solid_layers, config.top_solid_layers);
                 out.bottom_solid_layers = std::max<int>(out.bottom_solid_layers, config.bottom_solid_layers);
-                out.small_region_threshold = config.gap_fill_enabled.value ?
+                out.small_region_threshold = config.gap_fill_enabled.value && config.gap_fill_speed.value > 0 ?
                                              // Gap fill enabled. Enable a single line of 1/2 extrusion width.
-                                             0.5f * (perimeter_extrusion_width) :
+                                             0.5f * float(config.perimeter_extrusion_width) :
                                              // Gap fill disabled. Enable two lines slightly overlapping.
-                                             (perimeter_extrusion_width) + 0.7f * Flow::rounded_rectangle_extrusion_spacing(perimeter_extrusion_width, float(layer.height));
-                out.small_region_threshold = scale_d(out.small_region_threshold * 0.5f);
+                                             float(config.perimeter_extrusion_width) + 0.7f * Flow::rounded_rectangle_extrusion_spacing(float(config.perimeter_extrusion_width), float(layer.height));
+                out.small_region_threshold = scaled<float>(out.small_region_threshold * 0.5f);
                 ++ out.num_regions;
             }
         assert(out.num_regions > 0);
-        out.extrusion_width = scale_d(out.extrusion_width);
+        out.extrusion_width = scaled<float>(out.extrusion_width);
         return out;
     };
 
@@ -1627,7 +1623,7 @@ void export_processed_input_expolygons_to_svg(const std::string &path, const Lay
     ::Slic3r::SVG svg(path.c_str(), bbox);
 
     for (LayerRegion *region : regions)
-        svg.draw_outline(region->slices().surfaces, "blue", "cyan", stroke_width);
+        svg.draw_outline(region->slices.surfaces, "blue", "cyan", stroke_width);
 
     svg.draw_outline(processed_input_expolygons, "red", "pink", stroke_width);
 }
@@ -1689,9 +1685,8 @@ std::vector<std::vector<ExPolygons>> multi_material_segmentation_by_painting(con
     std::vector<std::vector<PaintedLine>> painted_lines(num_layers);
     std::array<std::mutex, 64>            painted_lines_mutex;
     std::vector<EdgeGrid::Grid>           edge_grids(num_layers);
-    const ConstLayerPtrsAdaptor           layers = print_object.layers();
+    const SpanOfConstPtrs<Layer>          layers = print_object.layers();
     std::vector<ExPolygons>               input_expolygons(num_layers);
-    coord_t                               resolution = scale_t(print_object.config().option("resolution")->getFloat());
 
     throw_on_cancel_callback();
 
@@ -1702,7 +1697,7 @@ std::vector<std::vector<ExPolygons>> multi_material_segmentation_by_painting(con
             throw_on_cancel_callback();
             ExPolygons ex_polygons;
             for (LayerRegion *region : layers[layer_idx]->regions())
-                for (const Surface &surface : region->slices().surfaces)
+                for (const Surface &surface : region->slices())
                     Slic3r::append(ex_polygons, offset_ex(surface.expolygon, float(10 * SCALED_EPSILON)));
             // All expolygons are expanded by SCALED_EPSILON, merged, and then shrunk again by SCALED_EPSILON
             // to ensure that very close polygons will be merged.
@@ -1751,18 +1746,15 @@ std::vector<std::vector<ExPolygons>> multi_material_segmentation_by_painting(con
 
     BOOST_LOG_TRIVIAL(debug) << "MMU segmentation - projection of painted triangles - begin";
     for (const ModelVolume *mv : print_object.model_object()->volumes) {
-        //can reuse the TriangleSelector for each extruder_idx
-        TriangleSelector tri_selector(mv->mesh());
-        mv->mmu_segmentation_facets.set_facets_selector(tri_selector);
-        tbb::parallel_for(tbb::blocked_range<size_t>(1, num_extruders + 1), [&mv, &print_object, &layers, &edge_grids, &painted_lines, &painted_lines_mutex, &input_expolygons, &resolution, &tri_selector , &throw_on_cancel_callback](const tbb::blocked_range<size_t> &range) {
+        tbb::parallel_for(tbb::blocked_range<size_t>(1, num_extruders + 1), [&mv, &print_object, &layers, &edge_grids, &painted_lines, &painted_lines_mutex, &input_expolygons, &throw_on_cancel_callback](const tbb::blocked_range<size_t> &range) {
             for (size_t extruder_idx = range.begin(); extruder_idx < range.end(); ++extruder_idx) {
                 throw_on_cancel_callback();
-                const indexed_triangle_set custom_facets = tri_selector.get_facets(EnforcerBlockerType(extruder_idx));
+                const indexed_triangle_set custom_facets = mv->mmu_segmentation_facets.get_facets(*mv, EnforcerBlockerType(extruder_idx));
                 if (!mv->is_model_part() || custom_facets.indices.empty())
                     continue;
 
                 const Transform3f tr = print_object.trafo().cast<float>() * mv->get_matrix().cast<float>();
-                tbb::parallel_for(tbb::blocked_range<size_t>(0, custom_facets.indices.size()), [&tr, &custom_facets, &print_object, &layers, &edge_grids, &input_expolygons, &painted_lines, &painted_lines_mutex, &extruder_idx, &resolution](const tbb::blocked_range<size_t> &range) {
+                tbb::parallel_for(tbb::blocked_range<size_t>(0, custom_facets.indices.size()), [&tr, &custom_facets, &print_object, &layers, &edge_grids, &input_expolygons, &painted_lines, &painted_lines_mutex, &extruder_idx](const tbb::blocked_range<size_t> &range) {
                     for (size_t facet_idx = range.begin(); facet_idx < range.end(); ++facet_idx) {
                         float min_z = std::numeric_limits<float>::max();
                         float max_z = std::numeric_limits<float>::lowest();

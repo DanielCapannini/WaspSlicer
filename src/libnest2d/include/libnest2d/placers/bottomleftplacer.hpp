@@ -91,12 +91,12 @@ protected:
 
         while(can_move) {
             if(left) { // write previous down move and go down
-                item.translate({ 0, -d + eps });
+                item.translate({0, -d+eps});
                 d = availableSpaceLeft(item);
                 can_move = d > eps;
                 left = false;
             } else { // write previous left move and go down
-                item.translate({ -d + eps, 0 });
+                item.translate({-d+eps, 0});
                 d = availableSpaceDown(item);
                 can_move = d > eps;
                 left = true;
@@ -375,7 +375,7 @@ protected:
                 sl::addVertex(rsh, item.vertex(static_cast<unsigned long>(i)));
         };
 
-        auto addOthers = [&addOthers_, &reverseAddOthers_]() {
+        auto addOthers = [&]() {
             if constexpr (!is_clockwise<RawShape>())
                 addOthers_();
             else
@@ -415,7 +415,6 @@ protected:
 
 };
 
-}
-}
+}} // namespace libnest2d::placers
 
 #endif //BOTTOMLEFT_HPP

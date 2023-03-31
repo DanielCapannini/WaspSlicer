@@ -4,6 +4,9 @@
 #else
 	// any posix system
 	#include <pthread.h>
+	#ifdef __APPLE__
+		#include <pthread/qos.h>
+	#endif // __APPLE__
 #endif
 
 #include <atomic>
@@ -15,6 +18,7 @@
 
 #include "Thread.hpp"
 #include "Utils.hpp"
+#include "LocalesUtils.hpp"
 
 namespace Slic3r {
 
@@ -187,6 +191,26 @@ std::optional<std::string> get_current_thread_name()
 
 #endif // _WIN32
 
+// To be called at the start of the application to save the current thread ID as the main (UI) thread ID.
+static boost::thread::id g_main_thread_id;
+
+void save_main_thread_id()
+{
+	g_main_thread_id = boost::this_thread::get_id();
+}
+
+// Retrieve the cached main (UI) thread ID.
+boost::thread::id get_main_thread_id()
+{
+	return g_main_thread_id;
+}
+
+// Checks whether the main (UI) thread is active.
+bool is_main_thread_active()
+{
+	return get_main_thread_id() == boost::this_thread::get_id();
+}
+
 // Spawn (n - 1) worker threads on Intel TBB thread pool and name them by an index and a system thread ID.
 // Also it sets locale of the worker threads to "C" for the G-code generator to produce "." as a decimal separator.
 void name_tbb_thread_pool_threads_set_locale()
@@ -196,13 +220,13 @@ void name_tbb_thread_pool_threads_set_locale()
 		return;
 	initialized = true;
 
-	// see GH issue #5661 PrusaSlicer hangs on Linux when run with non standard task affinity
+	// see GH issue #5661 WaspSlicer hangs on Linux when run with non standard task affinity
 	// TBB will respect the task affinity mask on Linux and spawn less threads than std::thread::hardware_concurrency().
 //	const size_t nthreads_hw = std::thread::hardware_concurrency();
 	const size_t nthreads_hw = tbb::this_task_arena::max_concurrency();
 	size_t       nthreads    = nthreads_hw;
 
-#ifdef SLIC3R_PROFILE
+#if 0
 	// Shiny profiler is not thread safe, thus disable parallelization.
 	disable_multi_threading();
 	nthreads = 1;
@@ -212,10 +236,9 @@ void name_tbb_thread_pool_threads_set_locale()
 	std::condition_variable cv;
 	std::mutex				cv_m;
 	auto					master_thread_id = std::this_thread::get_id();
-	auto					now = std::chrono::system_clock::now();
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, nthreads, 1),
-        [&nthreads_running, nthreads, &master_thread_id, &cv, &cv_m, &now](const tbb::blocked_range<size_t> &range) {
+        [&nthreads_running, nthreads, &master_thread_id, &cv, &cv_m](const tbb::blocked_range<size_t> &range) {
         	assert(range.begin() + 1 == range.end());
 			if (std::unique_lock<std::mutex> lk(cv_m);  ++nthreads_running == nthreads) {
 				lk.unlock();
@@ -224,35 +247,44 @@ void name_tbb_thread_pool_threads_set_locale()
     			cv.notify_all();
         	} else {
         		// Wait for the last thread to wake the others.
-                // here can be deadlock with the main that creates me.
-               cv.wait_until(lk, now + std::chrono::milliseconds(50), [&nthreads_running, nthreads]{return nthreads_running == nthreads;});
+			    cv.wait(lk, [&nthreads_running, nthreads]{return nthreads_running == nthreads;});
         	}
         	auto thread_id = std::this_thread::get_id();
 			if (thread_id == master_thread_id) {
 				// The calling thread runs the 0'th task.
-                //assert(range.begin() == 0);
+				assert(range.begin() == 0);
 			} else {
-                //assert(range.begin() > 0);
+				assert(range.begin() > 0);
 				std::ostringstream name;
 		        name << "slic3r_tbb_" << range.begin();
 		        set_current_thread_name(name.str().c_str());
-		        // Set locales of the worker thread to "C".
-#ifdef _WIN32
-			    _configthreadlocale(_ENABLE_PER_THREAD_LOCALE);
-			    std::setlocale(LC_ALL, "C");
-#else
-				// We are leaking some memory here, because the newlocale() produced memory will never be released.
-				// This is not a problem though, as there will be a maximum one worker thread created per physical thread.
-				uselocale(newlocale(
-#ifdef __APPLE__
-					LC_ALL_MASK
-#else // some Unix / Linux / BSD
-					LC_ALL
-#endif
-					, "C", nullptr));
-#endif
+                // Set locales of the worker thread to "C".
+                set_c_locales();
     		}
         });
+}
+
+void set_current_thread_qos()
+{
+#ifdef __APPLE__
+	// OSX specific: Set Quality of Service to "user initiated", so that the threads will be scheduled to high performance
+	// cores if available.
+	// With QOS_CLASS_USER_INITIATED the worker threads drop priority once slicer loses user focus.
+	pthread_set_qos_class_self_np(QOS_CLASS_USER_INTERACTIVE, 0);
+#endif // __APPLE__
+}
+
+void TBBLocalesSetter::on_scheduler_entry(bool is_worker)
+{
+//    static std::atomic<int> cnt = 0;
+//    std::cout << "TBBLocalesSetter Entering " << cnt ++ << " ID " << std::this_thread::get_id() << "\n";
+    if (bool& is_locales_sets = m_is_locales_sets.local(); !is_locales_sets) {
+        // Set locales of the worker thread to "C".
+        set_c_locales();
+        // OSX specific: Elevate QOS on Apple Silicon.
+        set_current_thread_qos();
+        is_locales_sets = true;
+    }
 }
 
 }

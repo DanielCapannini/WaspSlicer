@@ -163,40 +163,6 @@ semver_parse (const char *str, semver_t *ver) {
 }
 
 /**
- * count he numbezr of int
- */
-int
-semver_count_version(const char* str) {
-    size_t len;
-    int index, value;
-    char* slice, * next, * endptr;
-    slice = (char*)str;
-    index = 0;
-
-    while (slice != NULL && index++ < 4) {
-        next = strchr(slice, DELIMITER[0]);
-        if (next == NULL)
-            len = strlen(slice);
-        else
-            len = next - slice;
-        if (len > SLICE_SIZE) return -1;
-
-        /* Cast to integer and store */
-        value = strtol(slice, &endptr, 10);
-        if (endptr != next && *endptr != '\0') return -1;
-
-        /* Continue with the next slice */
-        if (next == NULL)
-            slice = NULL;
-        else
-            slice = next + 1;
-    }
-
-    // Major and minor versions are mandatory, patch version is not mandatory.
-    return index;
-}
-
-/**
  * Parses a given string as semver expression.
  *
  * Returns:
@@ -212,37 +178,37 @@ semver_parse_version (const char *str, semver_t *ver) {
   char *slice, *next, *endptr;
   slice = (char *) str;
   index = 0;
-  if (ver->counters) {
-      free(ver->counters);
-      ver->counters = NULL;
+
+  // non mandatory
+  ver->patch = 0;
+
+  while (slice != NULL && index++ < 4) {
+    next = strchr(slice, DELIMITER[0]);
+    if (next == NULL)
+      len = strlen(slice);
+    else
+      len = next - slice;
+    if (len > SLICE_SIZE) return -1;
+
+    /* Cast to integer and store */
+    value = strtol(slice, &endptr, 10);
+    if (endptr != next && *endptr != '\0') return -1;
+
+    switch (index) {
+      case 1: ver->major = value; break;
+      case 2: ver->minor = value; break;
+      case 3: ver->patch = value; break;
+    }
+
+    /* Continue with the next slice */
+    if (next == NULL)
+      slice = NULL;
+    else
+      slice = next + 1;
   }
-  ver->counter_size = semver_count_version(str);
-  if (ver->counter_size != 0) {
-      ver->counters = malloc(ver->counter_size * sizeof(int));
 
-      while (slice != NULL && index++ < 4) {
-          next = strchr(slice, DELIMITER[0]);
-          if (next == NULL)
-              len = strlen(slice);
-          else
-              len = next - slice;
-          if (len > SLICE_SIZE) return -1;
-
-          /* Cast to integer and store */
-          value = strtol(slice, &endptr, 10);
-          if (endptr != next && *endptr != '\0') return -1;
-
-          ver->counters[index - 1] = value;
-
-          /* Continue with the next slice */
-          if (next == NULL)
-              slice = NULL;
-          else
-              slice = next + 1;
-      }
-  }
   // Major and minor versions are mandatory, patch version is not mandatory.
-  return (index >= 2) ? 0 : -1;
+  return (index == 2 || index == 3) ? 0 : -1;
 }
 
 static int
@@ -314,11 +280,12 @@ semver_compare_prerelease (semver_t x, semver_t y) {
 
 int
 semver_compare_version (semver_t x, semver_t y) {
-  int res = binary_comparison(x.counter_size, y.counter_size);
+  int res;
 
-  for (int i = 0; i < x.counter_size && i < y.counter_size; i++) {
-      if ((res = binary_comparison(x.counters[i], y.counters[i])) != 0)
-          return res;
+  if ((res = binary_comparison(x.major, y.major)) == 0) {
+    if ((res = binary_comparison(x.minor, y.minor)) == 0) {
+      return binary_comparison(x.patch, y.patch);
+    }
   }
 
   return res;
@@ -412,9 +379,9 @@ semver_lte (semver_t x, semver_t y) {
 
 int
 semver_satisfies_caret (semver_t x, semver_t y) {
-  if (x.counter_size > 0 && y.counter_size > 0 && x.counters[0] == y.counters[0]) {
-    if (x.counters[0] == 0) {
-      return x.counter_size > 1 && y.counter_size > 1 && x.counters[1] >= y.counters[1];
+  if (x.major == y.major) {
+    if (x.major == 0) {
+      return x.minor >= y.minor;
     }
     return 1;
   }
@@ -435,8 +402,8 @@ semver_satisfies_caret (semver_t x, semver_t y) {
 
 int
 semver_satisfies_patch (semver_t x, semver_t y) {
-  return x.counter_size > 1 && y.counter_size > 1 && x.counters[0] == y.counters[0]
-      && x.counters[1] == y.counters[1];
+  return x.major == y.major
+      && x.minor == y.minor;
 }
 
 /**
@@ -513,11 +480,6 @@ semver_free (semver_t *x) {
     free(x->prerelease);
     x->prerelease = NULL;
   }
-  if (x->counters) {
-      x->counter_size = 0;
-      free(x->counters);
-      x->counters = NULL;
-  }
 }
 
 /**
@@ -545,9 +507,9 @@ concat_char (char * str, char * x, char * sep) {
 
 void
 semver_render (semver_t *x, char *dest) {
-  for (int i = 0; i < x->counter_size; ++i) {
-      concat_num(dest, x->counters[i], i==0 ? NULL : DELIMITER);
-  }
+  if (x->major) concat_num(dest, x->major, NULL);
+  if (x->minor) concat_num(dest, x->minor, DELIMITER);
+  if (x->patch) concat_num(dest, x->patch, DELIMITER);
   if (x->prerelease) concat_char(dest, x->prerelease, PR_DELIMITER);
   if (x->metadata) concat_char(dest, x->metadata, MT_DELIMITER);
 }
@@ -557,21 +519,18 @@ semver_render (semver_t *x, char *dest) {
  */
 
 void
-semver_bump_major (semver_t *x) {
-  if(x->counter_size > 0)
-    x->counters[0]++;
+semver_bump (semver_t *x) {
+  x->major++;
 }
 
 void
 semver_bump_minor (semver_t *x) {
-    if (x->counter_size > 1)
-        x->counters[1]++;
+  x->minor++;
 }
 
 void
-semver_bump (semver_t *x, int idx) {
-    if (x->counter_size > idx)
-        x->counters[idx]++;
+semver_bump_patch (semver_t *x) {
+  x->patch++;
 }
 
 /**
@@ -653,9 +612,9 @@ semver_numeric (semver_t *x) {
   char buf[SLICE_SIZE * 3];
   memset(&buf, 0, SLICE_SIZE * 3);
 
-  for (int i = 0; i < x->counter_size; ++i) {
-      concat_num(buf, x->counters[i], NULL);
-  }
+  if (x->major) concat_num(buf, x->major, NULL);
+  if (x->minor) concat_num(buf, x->minor, NULL);
+  if (x->patch) concat_num(buf, x->patch, NULL);
 
   num = parse_int(buf);
   if(num == -1) return -1;
@@ -666,17 +625,11 @@ semver_numeric (semver_t *x) {
   return num;
 }
 
-char* semver_strdup(const char* src) {
-    if (src == NULL) return NULL;
-    size_t len = strlen(src) + 1;
-    char* res = malloc(len);
-    return res != NULL ? (char*)memcpy(res, src, len) : NULL;
-}
-
-int* semver_intdup(const int* src, int len) {
-    if (src == NULL) return NULL;
-    int* res = malloc(len * sizeof(int));
-    return res != NULL ? (int*)memcpy(res, src, len * sizeof(int)) : NULL;
+char *semver_strdup(const char *src) {
+  if (src == NULL) return NULL;
+  size_t len = strlen(src) + 1;
+  char *res = malloc(len);
+  return res != NULL ? (char *) memcpy(res, src, len) : NULL;
 }
 
 semver_t
@@ -686,10 +639,7 @@ semver_copy(const semver_t *ver) {
     res.metadata = strdup(ver->metadata);
   }
   if (ver->prerelease != NULL) {
-      res.prerelease = strdup(ver->prerelease);
-  }
-  if (ver->counters) {
-      res.counters = semver_intdup(ver->counters, ver->counter_size);
+    res.prerelease = strdup(ver->prerelease);
   }
   return res;
 }

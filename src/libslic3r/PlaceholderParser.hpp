@@ -5,6 +5,7 @@
 #include <map>
 #include <random>
 #include <string>
+#include <string_view>
 #include <vector>
 #include "PrintConfig.hpp"
 
@@ -38,6 +39,8 @@ public:
 
     // Add new ConfigOption values to m_config.
     void set(const std::string &key, const std::string &value)  { this->set(key, new ConfigOptionString(value)); }
+    void set(const std::string &key, std::string_view value)    { this->set(key, new ConfigOptionString(std::string(value))); }
+    void set(const std::string &key, const char *value)         { this->set(key, new ConfigOptionString(value)); }
     void set(const std::string &key, int value)                 { this->set(key, new ConfigOptionInt(value)); }
     void set(const std::string &key, unsigned int value)        { this->set(key, int(value)); }
     void set(const std::string &key, bool value)                { this->set(key, new ConfigOptionBool(value)); }
@@ -63,16 +66,7 @@ public:
     // Update timestamp, year, month, day, hour, minute, second variables at m_config.
     void update_timestamp() { update_timestamp(m_config); }
 
-    // set custom variables
-    void parse_custom_variables(const ConfigOptionString& custom_variables);
-    void parse_custom_variables(const ConfigOptionStrings& filament_custom_variables);
-
-    //remove custom vars and stored config
-    void reset();
-
 private:
-    void append_custom_variables(std::map<std::string, std::vector<std::string>> name2var_array, uint16_t nb_extruders);
-
 	// config has a higher priority than external_config when looking up a symbol.
     DynamicConfig 			 m_config;
     const DynamicConfig 	*m_external_config;

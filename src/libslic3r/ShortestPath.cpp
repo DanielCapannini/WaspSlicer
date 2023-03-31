@@ -20,47 +20,31 @@ namespace Slic3r {
 template<typename EndPointType, typename KDTreeType, typename CouldReverseFunc>
 std::vector<std::pair<size_t, bool>> chain_segments_closest_point(std::vector<EndPointType> &end_points, KDTreeType &kdtree, CouldReverseFunc &could_reverse_func, EndPointType &first_point)
 {
-	//check pair
 	assert((end_points.size() & 1) == 0);
     size_t num_segments = end_points.size() / 2;
 	assert(num_segments >= 2);
-	//set all points to "ungrabbed"
 	for (EndPointType &ep : end_points)
 		ep.chain_id = 0;
-	//create output struct idx_seg, reversed
 	std::vector<std::pair<size_t, bool>> out;
 	out.reserve(num_segments);
-	//put first point (idx/2 = segment_id ; first_point_idx & 1 => 0 if seg_start, !0 if seg_end)
 	size_t first_point_idx = &first_point - end_points.data();
 	out.emplace_back(first_point_idx / 2, (first_point_idx & 1) != 0);
-	//set the fisrt point as taken
 	first_point.chain_id = 1;
-	//now switch to the other end of the segment
 	size_t this_idx = first_point_idx ^ 1;
-	//add all other segments
 	for (int iter = (int)num_segments - 2; iter >= 0; -- iter) {
 		EndPointType &this_point = end_points[this_idx];
-		//set the current point as taken
-		this_point.chain_id = 1;
-		// Find the closest point to this end_point, which lies on a different extrusion path (filtered by the lambda).
-		// Ignore the starting point as the starting point is considered to be occupied, no end point coud connect to it.
+    	this_point.chain_id = 1;
+    	// Find the closest point to this end_point, which lies on a different extrusion path (filtered by the lambda).
+    	// Ignore the starting point as the starting point is considered to be occupied, no end point coud connect to it.
 		size_t next_idx = find_closest_point(kdtree, this_point.pos,
 			[this_idx, &end_points, &could_reverse_func](size_t idx) {
-            return
-                // ????
-                (idx ^ this_idx) > 1 &&
-                // only consider untaken points
-                end_points[idx].chain_id == 0
-                // only consider seg_start if can't be reversed
-                && ((idx & 1) == 0 || could_reverse_func(idx >> 1));
+				return (idx ^ this_idx) > 1 && end_points[idx].chain_id == 0 && ((idx & 1) == 0 || could_reverse_func(idx >> 1));
 		});
 		assert(next_idx < end_points.size());
 		EndPointType &end_point = end_points[next_idx];
-		//set the new entry point as taken
 		end_point.chain_id = 1;
 		assert((next_idx & 1) == 0 || could_reverse_func(next_idx >> 1));
 		out.emplace_back(next_idx / 2, (next_idx & 1) != 0);
-		//now switch to the other end of the segment
 		this_idx = next_idx ^ 1;
 	}
 #ifndef NDEBUG
@@ -183,8 +167,8 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 		size_t    first_point_idx = std::numeric_limits<size_t>::max();
 		if (start_near != nullptr) {
             size_t idx = find_closest_point(kdtree, start_near->template cast<double>(),
-                // Don't start with a reverse segment, if flipping of the segment is not allowed.
-                [&could_reverse_func](size_t idx) { return idx != size_t(-1) && ( (idx & 1) == 0 || could_reverse_func(idx >> 1) ); });
+				// Don't start with a reverse segment, if flipping of the segment is not allowed.
+				[&could_reverse_func](size_t idx) { return (idx & 1) == 0 || could_reverse_func(idx >> 1); });
 			assert(idx < end_points.size());
 			first_point = &end_points[idx];
 			first_point->distance_out = 0.;
@@ -192,7 +176,6 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 			first_point_idx = idx;
 		}
 		EndPoint *initial_point = first_point;
-#if 0
 		EndPoint *last_point = nullptr;
 
 		// Assign the closest point and distance to the end points.
@@ -203,7 +186,7 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 		    	// Find the closest point to this end_point, which lies on a different extrusion path (filtered by the lambda).
 		    	// Ignore the starting point as the starting point is considered to be occupied, no end point coud connect to it.
 				size_t next_idx = find_closest_point(kdtree, end_point.pos, 
-					[this_idx, first_point_idx, &could_reverse_func](size_t idx){ return idx != first_point_idx /*&& (idx ^ this_idx) > 1*/ && idx != size_t(-1) && ((idx & 1) == 0 || could_reverse_func(idx >> 1)); });
+					[this_idx, first_point_idx](size_t idx){ return idx != first_point_idx && (idx ^ this_idx) > 1; });
 				assert(next_idx < end_points.size());
 				EndPoint &end_point2 = end_points[next_idx];
 				end_point.edge_out = &end_point2;
@@ -212,7 +195,15 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 		}
 
 	    // Initialize a heap of end points sorted by the lowest distance to the next valid point of a path.
-	    auto queue = make_mutable_priority_queue<EndPoint*, false>(
+	    auto queue = make_mutable_priority_queue<EndPoint*, 
+#ifndef NDEBUG
+			// In debug mode, reset indices when removing an item from the queue for debugging purposes.
+			true
+#else // NDEBUG
+			// In release mode, don't reset indices when removing an item from the queue.
+			false
+#endif // NDEBUG
+			>(
 			[](EndPoint *ep, size_t idx){ ep->heap_idx = idx; }, 
 	    	[](EndPoint *l, EndPoint *r){ return l->distance_out < r->distance_out; });
 		queue.reserve(end_points.size() * 2 - 1);
@@ -230,7 +221,7 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 					assert(ep.chain_id == 0);
 				} else {
 					// End point is NOT on the heap, therefore it is part of the output path.
-					assert(ep.heap_idx == std::numeric_limits<size_t>::max());
+                    assert(ep.heap_idx == queue.invalid_id());
 					assert(ep.chain_id != 0);
 					if (&ep == first_point) {
 						assert(ep.edge_out == nullptr);
@@ -239,7 +230,7 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 						// Detect loops.
 						for (EndPoint *pt = &ep; pt != nullptr;) {
 							// Out of queue. It is a final point.
-							assert(pt->heap_idx == std::numeric_limits<size_t>::max());
+							assert(pt->heap_idx == queue.invalid_id());
 							EndPoint *pt_other = &end_points[(pt - &end_points.front()) ^ 1];
 							if (pt_other->heap_idx < queue.size())
 								// The other side of this segment is undecided yet.
@@ -404,10 +395,8 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 		} else {
 			assert(! failed);
 		}
-#else
-            out = chain_segments_closest_point<EndPoint, decltype(kdtree), CouldReverseFunc>(end_points, kdtree, could_reverse_func, (initial_point != nullptr) ? *initial_point : end_points.front());
-#endif
 	}
+
 	assert(out.size() == num_segments);
 	return out;
 }
@@ -680,8 +669,7 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 		EndPoint *first_point = nullptr;
 		size_t    first_point_idx = std::numeric_limits<size_t>::max();
 		if (start_near != nullptr) {
-            size_t idx = find_closest_point(kdtree, start_near->template cast<double>(),
-                [&end_points, &could_reverse_func](size_t idx) { return idx != size_t(-1) && ((idx & 1) == 0 || could_reverse_func(idx >> 1)); });
+            size_t idx = find_closest_point(kdtree, start_near->template cast<double>());
 			assert(idx < end_points.size());
 			first_point = &end_points[idx];
 			first_point->distance_out = 0.;
@@ -701,8 +689,8 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy_constrained_reversals
 		    	size_t this_idx = end_point.index(end_points);
 		    	// Find the closest point to this end_point, which lies on a different extrusion path (filtered by the lambda).
 		    	// Ignore the starting point as the starting point is considered to be occupied, no end point coud connect to it.
-                size_t next_idx = find_closest_point(kdtree, end_point.pos,
-                    [this_idx, first_point_idx, &could_reverse_func](size_t idx) { return idx != first_point_idx && (idx ^ this_idx) > 1 && idx != size_t(-1) && ((idx & 1) == 0 || could_reverse_func(idx >> 1));  });
+				size_t next_idx = find_closest_point(kdtree, end_point.pos, 
+					[this_idx, first_point_idx](size_t idx){ return idx != first_point_idx && (idx ^ this_idx) > 1; });
 				assert(next_idx < end_points.size());
 				EndPoint &end_point2 = end_points[next_idx];
 				end_point.edge_candidate = &end_point2;
@@ -1086,6 +1074,15 @@ std::vector<size_t> chain_points(const Points &points, Point *start_near)
 	for (auto &segment_and_reversal : ordered)
 		out.emplace_back(segment_and_reversal.first);
 	return out;
+}
+
+std::vector<size_t> chain_expolygons(const ExPolygons &expolygons, Point *start_near)
+{
+    Points ordering_points;
+    ordering_points.reserve(expolygons.size());
+    for (const ExPolygon &ex : expolygons)
+        ordering_points.push_back(ex.contour.first_point());
+    return chain_points(ordering_points);
 }
 
 #ifndef NDEBUG
@@ -1979,7 +1976,7 @@ template<class T> static inline T chain_path_items(const Points &points, const T
 	return out;
 }
 
-std::vector<ClipperLib::PolyNode*> chain_clipper_polynodes(const Points &points, const std::vector<ClipperLib::PolyNode*> &items)
+ClipperLib::PolyNodes chain_clipper_polynodes(const Points &points, const ClipperLib::PolyNodes &items)
 {
 	return chain_path_items(points, items);
 }

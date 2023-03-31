@@ -30,11 +30,14 @@ public:
         float value(Axis axis) const { return m_axis[axis]; }
         bool  has(char axis) const;
         bool  has_value(char axis, float &value) const;
+        bool  has_value(char axis, int &value) const;
         float new_X(const GCodeReader &reader) const { return this->has(X) ? this->x() : reader.x(); }
         float new_Y(const GCodeReader &reader) const { return this->has(Y) ? this->y() : reader.y(); }
         float new_Z(const GCodeReader &reader) const { return this->has(Z) ? this->z() : reader.z(); }
         float new_E(const GCodeReader &reader) const { return this->has(E) ? this->e() : reader.e(); }
         float new_F(const GCodeReader &reader) const { return this->has(F) ? this->f() : reader.f(); }
+        Point new_XY_scaled(const GCodeReader &reader) const 
+            { return Point::new_scale(this->new_X(reader), this->new_Y(reader)); }
         float dist_X(const GCodeReader &reader) const { return this->has(X) ? (this->x() - reader.x()) : 0; }
         float dist_Y(const GCodeReader &reader) const { return this->has(Y) ? (this->y() - reader.y()) : 0; }
         float dist_Z(const GCodeReader &reader) const { return this->has(Z) ? (this->z() - reader.z()) : 0; }
@@ -73,14 +76,6 @@ public:
         float            m_axis[NUM_AXES];
         uint32_t         m_mask;
         friend class GCodeReader;
-    };
-    class FakeGCodeLine : public GCodeLine {
-    public:
-        void set_x(float x) { m_axis[X] = x; m_mask = (m_mask | (1 << int(X))); }
-        void set_y(float y) { m_axis[Y] = y; m_mask = (m_mask | (1 << int(Y))); }
-        void set_z(float z) { m_axis[Z] = z; m_mask = (m_mask | (1 << int(Z))); }
-        void set_e(float e) { m_axis[E] = e; m_mask = (m_mask | (1 << int(E))); }
-        void set_f(float f) { m_axis[F] = f; m_mask = (m_mask | (1 << int(F))); }
     };
 
     typedef std::function<void(GCodeReader&, const GCodeLine&)> callback_t;
@@ -142,6 +137,8 @@ public:
     float  e() const { return m_position[E]; }
     float& f()       { return m_position[F]; }
     float  f() const { return m_position[F]; }
+    Point  xy_scaled() const { return Point::new_scale(this->x(), this->y()); }
+
 
     // Returns 0 for gcfNoExtrusion.
     char   extrusion_axis() const { return m_extrusion_axis; }
@@ -170,6 +167,7 @@ private:
             ; // silence -Wempty-body
         return c;
     }
+    static const char*  axis_pos(const char *raw_str, char axis);
 
     GCodeConfig m_config;
     char        m_extrusion_axis;

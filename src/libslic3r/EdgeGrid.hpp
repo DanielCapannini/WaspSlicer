@@ -7,7 +7,6 @@
 #include "Point.hpp"
 #include "BoundingBox.hpp"
 #include "ExPolygon.hpp"
-#include "ExPolygonCollection.hpp"
 
 namespace Slic3r {
 namespace EdgeGrid {
@@ -112,7 +111,6 @@ public:
 	void create(const std::vector<Points> &polygons, coord_t resolution) { this->create(polygons, resolution, false); }
 	void create(const ExPolygon &expoly, coord_t resolution);
 	void create(const ExPolygons &expolygons, coord_t resolution);
-	void create(const ExPolygonCollection &expolygons, coord_t resolution);
 
 	const std::vector<Contour>& contours() const { return m_contours; }
 
@@ -123,7 +121,6 @@ public:
 	bool intersect(const Polygons &polygons) { for (size_t i = 0; i < polygons.size(); ++ i) if (intersect(polygons[i])) return true; return false; }
 	bool intersect(const ExPolygon &expoly) { if (intersect(expoly.contour)) return true; for (size_t i = 0; i < expoly.holes.size(); ++ i) if (intersect(expoly.holes[i])) return true; return false; }
 	bool intersect(const ExPolygons &expolygons) { for (size_t i = 0; i < expolygons.size(); ++ i) if (intersect(expolygons[i])) return true; return false; }
-	bool intersect(const ExPolygonCollection &expolygons) { return intersect(expolygons.expolygons); }
 
 	// Test, whether a point is inside a contour.
 	bool inside(const Point &pt);
@@ -179,15 +176,10 @@ public:
 		assert(m_bbox.contains(p2));
 		p1 -= m_bbox.min;
 		p2 -= m_bbox.min;
-		assert(std::abs(p1.x()) < coord_t(int32_t(0x7FFFFFFF)));
-		assert(std::abs(p1.y()) < coord_t(int32_t(0x7FFFFFFF)));
-		assert(std::abs(p2.x()) < coord_t(int32_t(0x7FFFFFFF)));
-		assert(std::abs(p2.y()) < coord_t(int32_t(0x7FFFFFFF)));
-		assert(p1.x() >= 0 && p1.x() < coord_t(m_cols) * m_resolution);
-		assert(p1.x() >= 0 && p1.x() < coord_t(m_cols) * m_resolution);
-		assert(p1.y() >= 0 && p1.y() < coord_t(m_rows) * m_resolution);
-		assert(p2.x() >= 0 && p2.x() < coord_t(m_cols) * m_resolution);
-		assert(p2.y() >= 0 && p2.y() < coord_t(m_rows) * m_resolution);
+        assert(p1.x() >= 0 && size_t(p1.x()) < m_cols * m_resolution);
+        assert(p1.y() >= 0 && size_t(p1.y()) < m_rows * m_resolution);
+        assert(p2.x() >= 0 && size_t(p2.x()) < m_cols * m_resolution);
+        assert(p2.y() >= 0 && size_t(p2.y()) < m_rows * m_resolution);
 		// Get the cells of the end points.
 		coord_t ix = p1(0) / m_resolution;
 		coord_t iy = p1(1) / m_resolution;
@@ -396,7 +388,7 @@ protected:
 
 	// Referencing the source contours.
 	// This format allows one to work with any Slic3r fixed point contour format
-	// (Polygon, ExPolygon, ExPolygonCollection etc).
+	// (Polygon, ExPolygon, ExPolygons etc).
 	std::vector<Contour>						m_contours;
 
 	// Referencing a contour and a line segment of m_contours.

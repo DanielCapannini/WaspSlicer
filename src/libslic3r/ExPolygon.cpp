@@ -1,6 +1,5 @@
 #include "BoundingBox.hpp"
 #include "ExPolygon.hpp"
-
 #include "Exception.hpp"
 #include "Geometry/MedialAxis.hpp"
 #include "Polygon.hpp"
@@ -13,32 +12,18 @@
 
 namespace Slic3r {
 
-ExPolygon::operator Points() const
-{
-    Points points;
-    Polygons pp = *this;
-    for (Polygons::const_iterator poly = pp.begin(); poly != pp.end(); ++poly) {
-        for (Points::const_iterator point = poly->points.begin(); point != poly->points.end(); ++point)
-            points.push_back(*point);
-    }
-    return points;
-}
-
-ExPolygon::operator Polygons() const
-{
-    return to_polygons(*this);
-}
-
-ExPolygon::operator Polylines() const
-{
-    return to_polylines(*this);
-}
-
 void ExPolygon::scale(double factor)
 {
     contour.scale(factor);
     for (Polygon &hole : holes)
         hole.scale(factor);
+}
+
+void ExPolygon::scale(double factor_x, double factor_y)
+{
+    contour.scale(factor_x, factor_y);
+    for (Polygon &hole : holes)
+        hole.scale(factor_x, factor_y);
 }
 
 void ExPolygon::translate(const Point &p)
@@ -113,34 +98,53 @@ bool ExPolygon::contains(const Polylines &polylines) const
     return pl_out.empty();
 }
 
-bool ExPolygon::contains(const Point &point) const
+bool ExPolygon::contains(const Point &point, bool border_result /* = true */) const
 {
-    if (! this->contour.contains(point))
+    if (! Slic3r::contains(contour, point, border_result))
+        // Outside the outer contour, not on the contour boundary.
         return false;
     for (const Polygon &hole : this->holes)
-        if (hole.contains(point))
+        if (Slic3r::contains(hole, point, ! border_result))
+            // Inside a hole, not on the hole boundary.
             return false;
     return true;
 }
 
-// inclusive version of contains() that also checks whether point is on boundaries
-bool ExPolygon::contains_b(const Point &point) const
+bool ExPolygon::on_boundary(const Point &point, double eps) const
 {
-    return this->contains(point) || this->has_boundary_point(point);
+    if (this->contour.on_boundary(point, eps))
+        return true;
+    for (const Polygon &hole : this->holes)
+        if (hole.on_boundary(point, eps))
+            return true;
+    return false;
 }
 
-bool
-ExPolygon::has_boundary_point(const Point &point) const
+// Projection of a point onto the polygon.
+Point ExPolygon::point_projection(const Point &point) const
 {
-    if (this->contour.has_boundary_point(point)) return true;
-    for (Polygons::const_iterator h = this->holes.begin(); h != this->holes.end(); ++h) {
-        if (h->has_boundary_point(point)) return true;
+    if (this->holes.empty()) {
+        return this->contour.point_projection(point);
+    } else {
+        double dist_min2 = std::numeric_limits<double>::max();
+        Point  closest_pt_min;
+        for (size_t i = 0; i < this->num_contours(); ++ i) {
+            Point closest_pt = this->contour_or_hole(i).point_projection(point);
+            double d2 = (closest_pt - point).cast<double>().squaredNorm();
+            if (d2 < dist_min2) {
+                dist_min2      = d2;
+                closest_pt_min = closest_pt;
+            }
+        }
+        return closest_pt_min;
     }
-    return false;
 }
 
 bool ExPolygon::overlaps(const ExPolygon &other) const
 {
+    if (this->empty() || other.empty())
+        return false;
+
     #if 0
     BoundingBox bbox = get_extents(other);
     bbox.merge(get_extents(*this));
@@ -150,25 +154,27 @@ bool ExPolygon::overlaps(const ExPolygon &other) const
     svg.draw_outline(*this);
     svg.draw_outline(other, "blue");
     #endif
-    Polylines pl_out = intersection_pl((Polylines)other, *this);
+
+    Polylines pl_out = intersection_pl(to_polylines(other), *this);
+
     #if 0
     svg.draw(pl_out, "red");
     #endif
-    if (! pl_out.empty())
-        return true; 
-    //FIXME ExPolygon::overlaps() shall be commutative, it is not!
-    return ! other.contour.points.empty() && this->contains_b(other.contour.points.front());
+
+    // See unit test SCENARIO("Clipper diff with polyline", "[Clipper]")
+    // for in which case the intersection_pl produces any intersection.
+    return ! pl_out.empty() ||
+           // If *this is completely inside other, then pl_out is empty, but the expolygons overlap. Test for that situation.
+           other.contains(this->contour.points.front());
 }
 
-void
-ExPolygon::simplify_p(double tolerance, Polygons* polygons) const
+void ExPolygon::simplify_p(double tolerance, Polygons* polygons) const
 {
     Polygons pp = this->simplify_p(tolerance);
     polygons->insert(polygons->end(), pp.begin(), pp.end());
 }
 
-Polygons
-ExPolygon::simplify_p(double tolerance) const
+Polygons ExPolygon::simplify_p(double tolerance) const
 {
     Polygons pp;
     pp.reserve(this->holes.size() + 1);
@@ -190,49 +196,133 @@ ExPolygon::simplify_p(double tolerance) const
     return simplify_polygons(pp);
 }
 
-ExPolygons
-ExPolygon::simplify(double tolerance) const
+ExPolygons ExPolygon::simplify(double tolerance) const
 {
     return union_ex(this->simplify_p(tolerance));
 }
 
-void
-ExPolygon::simplify(double tolerance, ExPolygons* expolygons) const
+void ExPolygon::simplify(double tolerance, ExPolygons* expolygons) const
 {
     append(*expolygons, this->simplify(tolerance));
 }
 
-/// remove point that are at SCALED_EPSILON * 2 distance.
-//simplier than simplify
-void
-ExPolygon::remove_point_too_near(const coord_t tolerance) {
-    const double tolerance_sq = tolerance * (double)tolerance;
-    size_t id = 1;
-    while (id < this->contour.points.size() - 1) {
-        coord_t newdist = (coord_t)std::min(this->contour.points[id].distance_to_square(this->contour.points[id - 1])
-            , this->contour.points[id].distance_to_square(this->contour.points[id + 1]));
-        if (newdist < tolerance_sq) {
-            this->contour.points.erase(this->contour.points.begin() + id);
-            newdist = (coord_t)this->contour.points[id].distance_to_square(this->contour.points[id - 1]);
+void ExPolygon::medial_axis(double min_width, double max_width, ThickPolylines* polylines) const
+{
+    // init helper object
+    Slic3r::Geometry::MedialAxis ma(min_width, max_width, *this);
+    
+    // compute the Voronoi diagram and extract medial axis polylines
+    ThickPolylines pp;
+    ma.build(&pp);
+    
+    /*
+    SVG svg("medial_axis.svg");
+    svg.draw(*this);
+    svg.draw(pp);
+    svg.Close();
+    */
+    
+    /* Find the maximum width returned; we're going to use this for validating and 
+       filtering the output segments. */
+    double max_w = 0;
+    for (ThickPolylines::const_iterator it = pp.begin(); it != pp.end(); ++it)
+        max_w = fmaxf(max_w, *std::max_element(it->width.begin(), it->width.end()));
+    
+    /* Loop through all returned polylines in order to extend their endpoints to the 
+       expolygon boundaries */
+    bool removed = false;
+    for (size_t i = 0; i < pp.size(); ++i) {
+        ThickPolyline& polyline = pp[i];
+        
+        // extend initial and final segments of each polyline if they're actual endpoints
+        /* We assign new endpoints to temporary variables because in case of a single-line
+           polyline, after we extend the start point it will be caught by the intersection()
+           call, so we keep the inner point until we perform the second intersection() as well */
+        Point new_front = polyline.points.front();
+        Point new_back  = polyline.points.back();
+        if (polyline.endpoints.first && !this->on_boundary(new_front, SCALED_EPSILON)) {
+            Vec2d p1 = polyline.points.front().cast<double>();
+            Vec2d p2 = polyline.points[1].cast<double>();
+            // prevent the line from touching on the other side, otherwise intersection() might return that solution
+            if (polyline.points.size() == 2)
+                p2 = (p1 + p2) * 0.5;
+            // Extend the start of the segment.
+            p1 -= (p2 - p1).normalized() * max_width;
+            this->contour.intersection(Line(p1.cast<coord_t>(), p2.cast<coord_t>()), &new_front);
         }
-        //go to next one
-        //if you removed a point, it check if the next one isn't too near from the previous one.
-        // if not, it byepass it.
-        if (newdist >= tolerance_sq) {
-            ++id;
+        if (polyline.endpoints.second && !this->on_boundary(new_back, SCALED_EPSILON)) {
+            Vec2d p1 = (polyline.points.end() - 2)->cast<double>();
+            Vec2d p2 = polyline.points.back().cast<double>();
+            // prevent the line from touching on the other side, otherwise intersection() might return that solution
+            if (polyline.points.size() == 2)
+                p1 = (p1 + p2) * 0.5;
+            // Extend the start of the segment.
+            p2 += (p2 - p1).normalized() * max_width;
+            this->contour.intersection(Line(p1.cast<coord_t>(), p2.cast<coord_t>()), &new_back);
+        }
+        polyline.points.front() = new_front;
+        polyline.points.back()  = new_back;
+        
+        /*  remove too short polylines
+            (we can't do this check before endpoints extension and clipping because we don't
+            know how long will the endpoints be extended since it depends on polygon thickness
+            which is variable - extension will be <= max_width/2 on each side)  */
+        if ((polyline.endpoints.first || polyline.endpoints.second)
+            && polyline.length() < max_w*2) {
+            pp.erase(pp.begin() + i);
+            --i;
+            removed = true;
+            continue;
         }
     }
-    if (this->contour.points.front().distance_to_square(this->contour.points.back()) < tolerance_sq) {
-        this->contour.points.erase(this->contour.points.end() -1);
+    
+    /*  If we removed any short polylines we now try to connect consecutive polylines
+        in order to allow loop detection. Note that this algorithm is greedier than 
+        MedialAxis::process_edge_neighbors() as it will connect random pairs of 
+        polylines even when more than two start from the same point. This has no 
+        drawbacks since we optimize later using nearest-neighbor which would do the 
+        same, but should we use a more sophisticated optimization algorithm we should
+        not connect polylines when more than two meet.  */
+    if (removed) {
+        for (size_t i = 0; i < pp.size(); ++i) {
+            ThickPolyline& polyline = pp[i];
+            if (polyline.endpoints.first && polyline.endpoints.second) continue; // optimization
+            
+            // find another polyline starting here
+            for (size_t j = i+1; j < pp.size(); ++j) {
+                ThickPolyline& other = pp[j];
+                if (polyline.last_point() == other.last_point()) {
+                    other.reverse();
+                } else if (polyline.first_point() == other.last_point()) {
+                    polyline.reverse();
+                    other.reverse();
+                } else if (polyline.first_point() == other.first_point()) {
+                    polyline.reverse();
+                } else if (polyline.last_point() != other.first_point()) {
+                    continue;
+                }
+                
+                polyline.points.insert(polyline.points.end(), other.points.begin() + 1, other.points.end());
+                polyline.width.insert(polyline.width.end(), other.width.begin(), other.width.end());
+                polyline.endpoints.second = other.endpoints.second;
+                assert(polyline.width.size() == polyline.points.size()*2 - 2);
+                
+                pp.erase(pp.begin() + j);
+                j = i;  // restart search from i+1
+            }
+        }
     }
+    
+    polylines->insert(polylines->end(), pp.begin(), pp.end());
 }
 
-void
-ExPolygon::medial_axis(double max_width, double min_width, Polylines* polylines) const
+void ExPolygon::medial_axis(double min_width, double max_width, Polylines* polylines) const
 {
     ThickPolylines tp;
-    Geometry::MedialAxis{ *this, coord_t(max_width), coord_t(min_width), coord_t(max_width / 2.0) }.build(tp);
-    polylines->insert(polylines->end(), tp.begin(), tp.end());
+    this->medial_axis(min_width, max_width, &tp);
+    polylines->reserve(polylines->size() + tp.size());
+    for (auto &pl : tp)
+        polylines->emplace_back(pl.points);
 }
 
 Lines ExPolygon::lines() const
@@ -243,6 +333,18 @@ Lines ExPolygon::lines() const
         lines.insert(lines.end(), hole_lines.begin(), hole_lines.end());
     }
     return lines;
+}
+
+// Do expolygons match? If they match, they must have the same topology,
+// however their contours may be rotated.
+bool expolygons_match(const ExPolygon &l, const ExPolygon &r)
+{
+    if (l.holes.size() != r.holes.size() || ! polygons_match(l.contour, r.contour))
+        return false;
+    for (size_t hole_idx = 0; hole_idx < l.holes.size(); ++ hole_idx)
+        if (! polygons_match(l.holes[hole_idx], r.holes[hole_idx]))
+            return false;
+    return true;
 }
 
 BoundingBox get_extents(const ExPolygon &expolygon)

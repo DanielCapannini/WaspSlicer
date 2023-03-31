@@ -13,6 +13,9 @@ public:
     FillGyroid() {}
     Fill* clone() const override { return new FillGyroid(*this); }
 
+    // require bridge flow since most of this pattern hangs in air
+    bool use_bridge_flow() const override { return false; }
+
     // Correction applied to regular infill angle to maximize printing
     // speed in default configuration (degrees)
     static constexpr float CorrectionAngle = -45.;
@@ -29,8 +32,8 @@ protected:
         const FillParams                &params, 
         unsigned int                     thickness_layers,
         const std::pair<float, Point>   &direction, 
-        ExPolygon                        expolygon, 
-        Polylines                       &polylines_out) const override;
+        ExPolygon                        expolygon,
+        Polylines                       &polylines_out) override;
 };
 
 } // namespace Slic3r
