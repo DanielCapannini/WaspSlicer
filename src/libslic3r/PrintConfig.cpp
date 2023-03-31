@@ -2215,7 +2215,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionPercents { 0. });
 
     def = this->add("filament_retract_before_wipe_mm_w", coFloats);
-    def->label = L("Retract amount before wipe mm Width");
+    def->label = L("Retract amount before wipe Width");
     def->tooltip = L("With bowden extruders, it may be wise to do some amount of quick retract "
                    "before doing the wipe movement.");
     def->sidetext = L("mm (zero to disable)");
