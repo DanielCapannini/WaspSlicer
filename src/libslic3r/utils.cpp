@@ -26,10 +26,10 @@
         #include <mach/mach.h>
     #endif
     #ifdef __linux__
-        #include <sys/stat.h>
-        #include <fcntl.h>
-        #include <sys/sendfile.h>
-    #endif
+       	#include <sys/stat.h>
+       	#include <fcntl.h>
+		#include <sys/sendfile.h>
+	#endif
 #endif
 
 #include <boost/log/core.hpp>
@@ -125,23 +125,13 @@ static struct RunOnInit {
     }
 } g_RunOnInit;
 
-void trace(unsigned int level, const std::string& message)
-{
-	trace(level, message.c_str());
-}
-void trace(unsigned int level, const char *message)
-{
-    boost::log::trivial::severity_level severity = level_to_boost(level);
-
-    BOOST_LOG_STREAM_WITH_PARAMS(::boost::log::trivial::logger::get(),\
-        (::boost::log::keywords::severity = severity)) << message;
-}
-
 void disable_multi_threading()
 {
-    // Disable parallelization so the Shiny profiler works
+    // Disable parallelization to simplify debugging.
 #ifdef TBB_HAS_GLOBAL_CONTROL
-    tbb::global_control(tbb::global_control::max_allowed_parallelism, 1);
+	{
+		static tbb::global_control gc(tbb::global_control::max_allowed_parallelism, 1);
+	}
 #else // TBB_HAS_GLOBAL_CONTROL
     static tbb::task_scheduler_init *tbb_init = new tbb::task_scheduler_init(1);
     UNUSED(tbb_init);
@@ -209,9 +199,7 @@ static std::string g_data_dir;
 
 void set_data_dir(const std::string &dir)
 {
-	// make sure the path is well formed for the os.
-	boost::filesystem::path fixpath(dir);
-	g_data_dir = fixpath.make_preferred().string();
+    g_data_dir = dir;
 }
 
 const std::string& data_dir()
@@ -682,11 +670,6 @@ CopyFileResult copy_file_inner(const std::string& from, const std::string& to, s
 {
 	const boost::filesystem::path source(from);
 	const boost::filesystem::path target(to);
-	return copy_file_inner(source, target, error_message);
-}
-
-CopyFileResult copy_file_inner(const boost::filesystem::path& source, const boost::filesystem::path& target, std::string& error_message)
-{
 	static const auto perms = boost::filesystem::owner_read | boost::filesystem::owner_write | boost::filesystem::group_read | boost::filesystem::others_read;   // aka 644
 
 	// Make sure the file has correct permission both before and after we copy over it.
@@ -767,11 +750,11 @@ CopyFileResult check_copy(const std::string &origin, const std::string &copy)
     } while (f1.good() && f2.good());
 
     // All data has been read and compared equal.
-    return (f1.eof() && f2.eof() && size_t(fsize) == 0) ? SUCCESS : FAIL_FILES_DIFFERENT;
+    return (f1.eof() && f2.eof() && fsize == 0) ? SUCCESS : FAIL_FILES_DIFFERENT;
 }
 
 // Ignore system and hidden files, which may be created by the DropBox synchronisation process.
-// https://github.com/prusa3d/PrusaSlicer/issues/1298
+// https://github.com/wasp3d/WaspSlicer/issues/1298
 bool is_plain_file(const boost::filesystem::directory_entry &dir_entry)
 {
     if (! boost::filesystem::is_regular_file(dir_entry.status()))
@@ -830,49 +813,6 @@ bool is_shapes_dir(const std::string& dir)
 #endif /* WIN32 */
 
 namespace Slic3r {
-
-// Encode an UTF-8 string to the local code page.
-std::string encode_path(const char *src)
-{    
-#ifdef WIN32
-    // Convert the source utf8 encoded string to a wide string.
-    std::wstring wstr_src = boost::nowide::widen(src);
-    if (wstr_src.length() == 0)
-        return std::string();
-    // Convert a wide string to a local code page.
-    int size_needed = ::WideCharToMultiByte(0, 0, wstr_src.data(), (int)wstr_src.size(), nullptr, 0, nullptr, nullptr);
-    std::string str_dst(size_needed, 0);
-    ::WideCharToMultiByte(0, 0, wstr_src.data(), (int)wstr_src.size(), str_dst.data(), size_needed, nullptr, nullptr);
-    return str_dst;
-#else /* WIN32 */
-    return src;
-#endif /* WIN32 */
-}
-
-// Encode an 8-bit string from a local code page to UTF-8.
-// Multibyte to utf8
-std::string decode_path(const char *src)
-{  
-#ifdef WIN32
-    int len = int(strlen(src));
-    if (len == 0)
-        return std::string();
-    // Convert the string encoded using the local code page to a wide string.
-    int size_needed = ::MultiByteToWideChar(0, 0, src, len, nullptr, 0);
-    std::wstring wstr_dst(size_needed, 0);
-    ::MultiByteToWideChar(0, 0, src, len, wstr_dst.data(), size_needed);
-    // Convert a wide string to utf8.
-    return boost::nowide::narrow(wstr_dst.c_str());
-#else /* WIN32 */
-    return src;
-#endif /* WIN32 */
-}
-
-std::string normalize_utf8_nfc(const char *src)
-{
-    static std::locale locale_utf8(boost::locale::generator().generate(""));
-    return boost::locale::normalize(src, boost::locale::norm_nfc, locale_utf8);
-}
 
 size_t get_utf8_sequence_length(const std::string& text, size_t pos)
 {
@@ -944,18 +884,6 @@ size_t get_utf8_sequence_length(const char *seq, size_t size)
 	return length;
 }
 
-namespace PerlUtils {
-    // Get a file name including the extension.
-    std::string path_to_filename(const char *src)       { return boost::filesystem::path(src).filename().string(); }
-    // Get a file name without the extension.
-    std::string path_to_stem(const char *src)           { return boost::filesystem::path(src).stem().string(); }
-    // Get just the extension.
-    std::string path_to_extension(const char *src)      { return boost::filesystem::path(src).extension().string(); }
-    // Get a directory without the trailing slash.
-    std::string path_to_parent_path(const char *src)    { return boost::filesystem::path(src).parent_path().string(); }
-};
-
-
 std::string string_printf(const char *format, ...)
 {
     va_list args1;
@@ -972,34 +900,22 @@ std::string string_printf(const char *format, ...)
         buffer.resize(size_t(bufflen) + 1);
         ::vsnprintf(buffer.data(), buffer.size(), format, args2);
     }
+
+    va_end(args1);
+    va_end(args2);
     
     buffer.resize(bufflen);
-    
     return buffer;
-}
-
-
-bool config_file_header_with_date = true;
-
-void set_header_generate_with_date(bool with_date)
-{
-	config_file_header_with_date = with_date;
 }
 
 std::string header_slic3r_generated()
 {
-	if (config_file_header_with_date)
-		return std::string("generated by " SLIC3R_APP_KEY " " SLIC3R_VERSION " on ") + Utils::utc_timestamp();
-	else
-		return std::string("generated by " SLIC3R_APP_KEY " " SLIC3R_VERSION " on");
+	return std::string("generated by WaspSlicer " SLIC3R_VERSION " on " ) + Utils::utc_timestamp();
 }
 
 std::string header_gcodeviewer_generated()
 {
-	if (config_file_header_with_date)
-		return std::string("generated by " GCODEVIEWER_APP_KEY " " SLIC3R_VERSION " on ") + Utils::utc_timestamp();
-	else
-		return std::string("generated by " GCODEVIEWER_APP_KEY " " SLIC3R_VERSION " on");
+	return std::string("generated by " GCODEVIEWER_APP_NAME " " SLIC3R_VERSION " on ") + Utils::utc_timestamp();
 }
 
 unsigned get_current_pid()
@@ -1028,7 +944,35 @@ std::string xml_escape(std::string text, bool is_marked/* = false*/)
         case '\'': replacement = "&apos;"; break;
         case '&':  replacement = "&amp;";  break;
         case '<':  replacement = is_marked ? "<" :"&lt;"; break;
-        case '>':  replacement = is_marked ? ">" :"&gt;"; break;
+        case '>': replacement = is_marked ? ">" : "&gt;"; break;
+        default: break;
+        }
+
+        text.replace(pos, 1, replacement);
+        pos += replacement.size();
+    }
+
+    return text;
+}
+
+// Definition of escape symbols https://www.w3.org/TR/REC-xml/#AVNormalize
+// During the read of xml attribute normalization of white spaces is applied
+// Soo for not lose white space character it is escaped before store
+std::string xml_escape_double_quotes_attribute_value(std::string text)
+{
+    std::string::size_type pos = 0;
+    for (;;) {
+        pos = text.find_first_of("\"&<\r\n\t", pos);
+        if (pos == std::string::npos) break;
+
+        std::string replacement;
+        switch (text[pos]) {
+        case '\"': replacement = "&quot;"; break;
+        case '&': replacement = "&amp;"; break;
+        case '<': replacement = "&lt;"; break;
+        case '\r': replacement = "&#xD;"; break;
+        case '\n': replacement = "&#xA;"; break;
+        case '\t': replacement = "&#x9;"; break;
         default: break;
         }
 

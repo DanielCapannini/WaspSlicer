@@ -4,8 +4,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <regex>
-
 #include "I18N.hpp"
 
 //! macro used to mark string used at localization, 
@@ -15,7 +13,7 @@
 namespace Slic3r
 {
 
-void PrintTryCancel::operator()()
+void PrintTryCancel::operator()() const
 {
     m_print->throw_if_canceled();
 }
@@ -76,55 +74,12 @@ std::string PrintBase::output_filename(const std::string &format, const std::str
 		cfg.set_key_value("input_filename_base", new ConfigOptionString(filename_base));
     }
     try {
-        uint16_t extruder_initial = config_override->option("initial_extruder") != nullptr && config_override->option("initial_extruder")->type() == coInt ? config_override->option("initial_extruder")->getInt() : 0;
-        boost::filesystem::path filepath = format.empty() ?
-            cfg.opt_string("input_filename_base") + default_ext :
-            this->placeholder_parser().process(format, extruder_initial, &cfg);
-        //remove unwanted characters
-        std::string forbidden_base;
-        if (const ConfigOptionString* opt = this->placeholder_parser().external_config()->option<ConfigOptionString>("gcode_filename_illegal_char")) {
-            forbidden_base = opt->value;
-        }
-        if (!forbidden_base.empty()) {
-            const std::string filename_init = filepath.stem().string();
-            std::string filename = filename_init;
-            std::string extension = filepath.extension().string();
-            //remove {print_time} and things like that that may be computed after, and re-put them inside it after the replace.
-            std::regex placehoder = std::regex("\\{[a-z_]+\\}");
-            std::smatch matches;
-            std::string::const_iterator searchStart(filename_init.cbegin());
-            while (std::regex_search(searchStart, filename_init.cend(), matches, placehoder)) {
-                for (size_t i = 0; i < matches.size(); i++) {
-                    filename.replace(matches.position(i), matches.length(i), matches.length(i), '_');
-                }
-                searchStart = matches.suffix().first;
-            }
-            //remove unwanted characters from the cleaned string
-            bool regexp_used = false;
-            if (forbidden_base.front() == '(' || forbidden_base.front() == '[') {
-                try {
-                    filename = std::regex_replace(filename, std::regex(forbidden_base), "_");
-                    regexp_used = true;
-                }catch(std::exception){}
-            }
-            if (!regexp_used) {
-                for(size_t i = 0; i < forbidden_base.size(); i++)
-                    std::replace(filename.begin(), filename.end(), forbidden_base.at(i), '_');
-            }
-            //re-put {print_time} and things like that
-            searchStart = (filename_init.cbegin());
-            while (std::regex_search(searchStart, filename_init.cend(), matches, placehoder)) {
-                for (size_t i = 0; i < matches.size(); i++) {
-                    filename.replace(matches.position(i), matches.length(i), matches.str());
-                }
-                searchStart = matches.suffix().first;
-            }
-            // set the path var
-            filepath = filename + extension;
-        }
-        if (filepath.extension().empty())
-            filepath = boost::filesystem::change_extension(filepath, default_ext);
-        return filepath.string();
+		boost::filesystem::path filename = format.empty() ?
+			cfg.opt_string("input_filename_base") + default_ext :
+			this->placeholder_parser().process(format, 0, &cfg);
+        if (filename.extension().empty())
+            filename = boost::filesystem::change_extension(filename, default_ext);
+        return filename.string();
     } catch (std::runtime_error &err) {
         throw Slic3r::PlaceholderParserError(L("Failed processing of the output_filename_format template.") + "\n" + err.what());
     }
@@ -148,7 +103,7 @@ std::string PrintBase::output_filepath(const std::string &path, const std::strin
 
 void PrintBase::status_update_warnings(int step, PrintStateBase::WarningLevel /* warning_level */, const std::string &message, const PrintObjectBase* print_object)
 {
-    if (this->m_status_callback) {
+    if (m_status_callback) {
         auto status = print_object ? SlicingStatus(*print_object, step) : SlicingStatus(*this, step);
         m_status_callback(status);
     }

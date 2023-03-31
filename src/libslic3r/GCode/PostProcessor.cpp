@@ -153,7 +153,7 @@ static int run_script(const std::string &script, const std::string &gcode, std::
 {
     // Try to obtain user's default shell
     const char *shell = ::getenv("SHELL");
-    if (shell == nullptr) { shell = "sh"; }
+    if (shell == nullptr) { shell = "/bin/sh"; }
 
     // Quote and escape the gcode path argument
     std::string command { script };
@@ -194,11 +194,11 @@ namespace Slic3r {
 // Returns true if a post-processing script was executed.
 // Returns false if no post-processing script was defined.
 // Throws an exception on error.
-// host is one of "File", "PrusaLink", "Repetier", "SL1Host", "OctoPrint", "FlashAir", "Duet", "AstroBox" ...
+// host is one of "File", "WaspLink", "Repetier", "SL1Host", "OctoPrint", "FlashAir", "Duet", "AstroBox" ...
 // For a "File" target, a temp file will be created for src_path by adding a ".pp" suffix and src_path will be updated.
 // In that case the caller is responsible to delete the temp file created.
-// output_name is the final name of the G-code on SD card or when uploaded to PrusaLink or OctoPrint.
-// If uploading to PrusaLink or OctoPrint, then the file will be renamed to output_name first on the target host.
+// output_name is the final name of the G-code on SD card or when uploaded to WaspLink or OctoPrint.
+// If uploading to WaspLink or OctoPrint, then the file will be renamed to output_name first on the target host.
 // The post-processing script may change the output_name.
 bool run_post_process_scripts(std::string &src_path, bool make_copy, const std::string &host, std::string &output_name, const DynamicPrintConfig &config)
 {
@@ -246,10 +246,10 @@ bool run_post_process_scripts(std::string &src_path, bool make_copy, const std::
 
     // Store print configuration into environment variables.
     config.setenv_();
-    // Let the post-processing script know the target host ("File", "PrusaLink", "Repetier", "SL1Host", "OctoPrint", "FlashAir", "Duet", "AstroBox" ...)
+    // Let the post-processing script know the target host ("File", "WaspLink", "Repetier", "SL1Host", "OctoPrint", "FlashAir", "Duet", "AstroBox" ...)
     boost::nowide::setenv("SLIC3R_PP_HOST", host.c_str(), 1);
     // Let the post-processing script know the final file name. For "File" host, it is a full path of the target file name and its location, for example pointing to an SD card.
-    // For "PrusaLink" or "OctoPrint", it is a file name optionally with a directory on the target host.
+    // For "WaspLink" or "OctoPrint", it is a file name optionally with a directory on the target host.
     boost::nowide::setenv("SLIC3R_PP_OUTPUT_NAME", output_name.c_str(), 1);
 
     // Path to an optional file that the post-processing script may create and populate it with a single line containing the output_name replacement.
