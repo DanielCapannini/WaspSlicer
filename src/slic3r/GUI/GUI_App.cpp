@@ -818,7 +818,7 @@ void GUI_App::post_init()
             return;
         CallAfter([this] {
             // preset_updater->sync downloads profile updates on background so it must begin after config wizard finished.
-            //bool cw_showed = this->config_wizard_startup();
+            bool cw_showed = this->config_wizard_startup();
             //this->preset_updater->sync(preset_bundle);
             //if (! cw_showed) {
                 // The CallAfter is needed as well, without it, GL extensions did not show.
