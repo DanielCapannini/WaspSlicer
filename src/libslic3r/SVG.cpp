@@ -19,7 +19,7 @@ bool SVG::open(const char* afilename)
         "      <polyline fill=\"darkblue\" points=\"0,0 10,5 0,10 1,5\" />\n"
         "   </marker>\n"
         );
-    fprintf(this->f, "<rect fill='white' stroke='none' x='0' y='0' width='%f' height='%f'/>\n", 2000.f, 2000.f);
+    //fprintf(this->f, "<rect fill='white' stroke='none' x='0' y='0' width='%f' height='%f'/>\n", 2000.f, 2000.f);
     return true;
 }
 
@@ -42,7 +42,7 @@ bool SVG::open(const char* afilename, const BoundingBox &bbox, const coord_t bbo
         "      <polyline fill=\"darkblue\" points=\"0,0 10,5 0,10 1,5\" />\n"
         "   </marker>\n",
         h, w);
-    fprintf(this->f, "<rect fill='white' stroke='none' x='0' y='0' width='%f' height='%f'/>\n", w, h);
+    //fprintf(this->f, "<rect fill='white' stroke='none' x='0' y='0' width='%f' height='%f'/>\n", w, h);
     return true;
 }
 
@@ -88,8 +88,10 @@ void SVG::draw(const ExPolygon &expolygon, std::string fill, const float fill_op
     this->fill = fill;
     
     std::string d;
-    for (const Polygon &p : to_polygons(expolygon))
-        d += this->get_path_d(p, true) + " ";
+    Polygons pp = expolygon;
+    for (Polygons::const_iterator p = pp.begin(); p != pp.end(); ++p) {
+        d += this->get_path_d(*p, true) + " ";
+    }
     this->path(d, true, 0, fill_opacity);
 }
 
@@ -143,11 +145,26 @@ void SVG::draw(const SurfacesPtr &surfaces, std::string fill, const float fill_o
 
 void SVG::draw_outline(const SurfacesPtr &surfaces, std::string stroke_outer, std::string stroke_holes, coordf_t stroke_width)
 {
-    for (SurfacesPtr::const_iterator it = surfaces.begin(); it != surfaces.end(); ++ it)
+    for (SurfacesPtr::const_iterator it = surfaces.begin(); it != surfaces.end(); ++it)
         draw_outline(*(*it), stroke_outer, stroke_holes, stroke_width);
 }
 
-void SVG::draw(const Polygon &polygon, std::string fill)
+void
+SVG::draw(const SurfacesConstPtr& surfaces, std::string fill, const float fill_opacity)
+{
+    for (SurfacesConstPtr::const_iterator it = surfaces.begin(); it != surfaces.end(); ++it)
+        this->draw(*(*it), fill, fill_opacity);
+}
+
+void
+SVG::draw_outline(const SurfacesConstPtr& surfaces, std::string stroke_outer, std::string stroke_holes, coordf_t stroke_width)
+{
+    for (SurfacesConstPtr::const_iterator it = surfaces.begin(); it != surfaces.end(); ++it)
+        draw_outline(*(*it), stroke_outer, stroke_holes, stroke_width);
+}
+
+void
+SVG::draw(const Polygon &polygon, std::string fill)
 {
     this->fill = fill;
     this->path(this->get_path_d(polygon, true), !fill.empty(), 0, 1.f);
@@ -177,10 +194,25 @@ void SVG::draw(const ThickLines &thicklines, const std::string &fill, const std:
         this->draw(*it, fill, stroke, stroke_width);
 }
 
+void SVG::draw(const ThickPolylines &polylines, const std::string &stroke)
+{
+    for (const ThickPolyline& poly : polylines) {
+        if (poly.points.size() < 2) continue;
+        Line l{ poly.points.front(), poly.points[1] };
+        this->draw(Line{ poly.points.front(), l.midpoint() }, stroke, poly.width.front() / 10);
+        for (int i = 1; i < poly.points.size()-1; ++i) {
+            Point first_point = l.midpoint();
+            l=Line{ poly.points[i], poly.points[i+1] };
+            this->draw(Line{ first_point, l.midpoint() }, stroke, poly.width[i]/10);
+        }
+        this->draw(Line{ l.midpoint(), poly.points.back() }, stroke, poly.width.back() / 10);
+    }
+}
+
 void SVG::draw(const ThickPolylines &polylines, const std::string &stroke, coordf_t stroke_width)
 {
-    for (const ThickPolyline &pl : polylines)
-        this->draw(Polyline(pl.points), stroke, stroke_width);
+    for (ThickPolylines::const_iterator it = polylines.begin(); it != polylines.end(); ++it)
+        this->draw((Polyline)*it, stroke, stroke_width);
 }
 
 void SVG::draw(const ThickPolylines &thickpolylines, const std::string &fill, const std::string &stroke, coordf_t stroke_width)
@@ -272,29 +304,26 @@ std::string SVG::get_path_d(const ClipperLib::Path &path, double scale, bool clo
     return d.str();
 }
 
-void SVG::draw_text(const Point &pt, const char *text, const char *color, const coordf_t font_size)
+void SVG::draw_text(const Point &pt, const char *text, const char *color)
 {
     fprintf(this->f,
-        R"(<text x="%f" y="%f" font-family="sans-serif" font-size="%fpx" fill="%s">%s</text>)",
-        to_svg_x(float(pt.x() - origin.x())),
-        to_svg_y(float(pt.y() - origin.y())),
-        font_size,
+        "<text x=\"%f\" y=\"%f\" font-family=\"sans-serif\" font-size=\"20px\" fill=\"%s\">%s</text>",
+        to_svg_x(pt(0)-origin(0)),
+        to_svg_y(pt(1)-origin(1)),
         color, text);
 }
 
-void SVG::draw_legend(const Point &pt, const char *text, const char *color, const coordf_t font_size)
+void SVG::draw_legend(const Point &pt, const char *text, const char *color)
 {
     fprintf(this->f,
-        R"(<circle cx="%f" cy="%f" r="%f" fill="%s"/>)",
-        to_svg_x(float(pt.x() - origin.x())),
-        to_svg_y(float(pt.y() - origin.y())),
-        font_size,
+        "<circle cx=\"%f\" cy=\"%f\" r=\"10\" fill=\"%s\"/>",
+        to_svg_x(pt(0)-origin(0)),
+        to_svg_y(pt(1)-origin(1)),
         color);
     fprintf(this->f,
-        R"(<text x="%f" y="%f" font-family="sans-serif" font-size="%fpx" fill="%s">%s</text>)",
-        to_svg_x(float(pt.x() - origin.x())) + 20.f,
-        to_svg_y(float(pt.y() - origin.y())),
-        font_size,
+        "<text x=\"%f\" y=\"%f\" font-family=\"sans-serif\" font-size=\"10px\" fill=\"%s\">%s</text>",
+        to_svg_x(pt(0)-origin(0)) + 20.f,
+        to_svg_y(pt(1)-origin(1)),
         "black", text);
 }
 
@@ -331,7 +360,7 @@ void SVG::export_expolygons(const char *path, const std::vector<std::pair<Slic3r
     size_t num_columns = 3;
     // Width of the column.
     coord_t step_x = scale_(20.);
-    Point legend_size(scale_(1.) + num_columns * step_x, scale_(0.4 + 1.3 * (num_legend + num_columns - 1) / num_columns));
+    Point legend_size(coord_t(scale_t(1.) + num_columns * step_x), scale_t(0.4 + 1.3 * (num_legend + num_columns - 1) / num_columns));
 
     BoundingBox bbox = get_extents(expolygons_with_attributes.front().first);
     for (size_t i = 0; i < expolygons_with_attributes.size(); ++ i)
@@ -357,7 +386,7 @@ void SVG::export_expolygons(const char *path, const std::vector<std::pair<Slic3r
     for (const auto &exp_with_attr : expolygons_with_attributes)
     	if (exp_with_attr.second.radius_points > 0)
 			for (const ExPolygon &expoly : exp_with_attr.first)
-    			svg.draw(to_points(expoly), exp_with_attr.second.color_points, exp_with_attr.second.radius_points);
+    			svg.draw((Points)expoly, exp_with_attr.second.color_points, exp_with_attr.second.radius_points);
 
     // Export legend.
     // 1st row
@@ -378,10 +407,4 @@ void SVG::export_expolygons(const char *path, const std::vector<std::pair<Slic3r
     svg.Close();
 }
 
-float SVG::to_svg_coord(float x) throw()
-{
-    // return x;
-    return unscale<float>(x) * 10.f;
 }
-
-} // namespace Slic3r

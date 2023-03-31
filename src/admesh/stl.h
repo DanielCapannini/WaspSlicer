@@ -41,7 +41,7 @@
 
 typedef Eigen::Matrix<float, 3, 1, Eigen::DontAlign> stl_vertex;
 typedef Eigen::Matrix<float, 3, 1, Eigen::DontAlign> stl_normal;
-typedef Eigen::Matrix<int,   3, 1, Eigen::DontAlign> stl_triangle_vertex_indices;
+typedef Eigen::Matrix<int32_t,   3, 1, Eigen::DontAlign> stl_triangle_vertex_indices;
 static_assert(sizeof(stl_vertex) == 12, "size of stl_vertex incorrect");
 static_assert(sizeof(stl_normal) == 12, "size of stl_normal incorrect");
 
@@ -302,17 +302,6 @@ extern void stl_generate_shared_vertices(stl_file *stl, indexed_triangle_set &it
 extern bool its_write_obj(const indexed_triangle_set &its, const char *file);
 extern bool its_write_off(const indexed_triangle_set &its, const char *file);
 extern bool its_write_vrml(const indexed_triangle_set &its, const char *file);
-
-
-typedef Eigen::Matrix<float, 3, 1, Eigen::DontAlign> obj_color; // Vec3f
-/// <summary>
-/// write idexed triangle set into obj file with color
-/// </summary>
-/// <param name="its">input model</param>
-/// <param name="color">color of stored model</param>
-/// <param name="file">define place to store</param>
-/// <returns>True on success otherwise FALSE</returns>
-extern bool its_write_obj(const indexed_triangle_set& its, const std::vector<obj_color> &color, const char* file);
 
 extern bool stl_write_dxf(stl_file *stl, const char *file, char *label);
 inline void stl_calculate_normal(stl_normal &normal, stl_facet *facet) {

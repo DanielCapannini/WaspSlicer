@@ -108,7 +108,7 @@ Circled circle_taubin_newton(const Vec2ds& input, size_t cycles)
     return out;
 }
 
-Circled circle_ransac(const Vec2ds& input, size_t iterations, double* min_error)
+Circled circle_ransac(const Vec2ds& input, size_t iterations)
 {
     if (input.size() < 3)
         return Circled::make_invalid();
@@ -132,8 +132,6 @@ Circled circle_ransac(const Vec2ds& input, size_t iterations, double* min_error)
             circle_best = c;
         }
     }
-    if (min_error)
-        *min_error = err_min;
     return circle_best;
 }
 

@@ -6,17 +6,6 @@
 
 namespace Slic3r {
 
-double Polygon::length() const
-{
-    double l = 0;
-    if (this->points.size() > 1) {
-        l = (this->points.back() - this->points.front()).cast<double>().norm();
-        for (size_t i = 1; i < this->points.size(); ++ i)
-            l += (this->points[i] - this->points[i - 1]).cast<double>().norm();
-    }
-    return l;
-}
-
 Lines Polygon::lines() const
 {
     return to_lines(*this);
@@ -33,7 +22,8 @@ Polyline Polygon::split_at_vertex(const Point &point) const
 }
 
 // Split a closed polygon into an open polyline, with the split point duplicated at both ends.
-Polyline Polygon::split_at_index(int index) const
+Polyline
+Polygon::split_at_index(size_t index) const
 {
     Polyline polyline;
     polyline.points.reserve(this->points.size() + 1);
@@ -99,11 +89,36 @@ void Polygon::douglas_peucker(double tolerance)
     this->points = std::move(p);
 }
 
+// Does an unoriented polygon contain a point?
+// Tested by counting intersections along a horizontal line.
+bool Polygon::contains(const Point &point) const
+{
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    bool result = false;
+    Points::const_iterator i = this->points.begin();
+    Points::const_iterator j = this->points.end() - 1;
+    for (; i != this->points.end(); j = i++) {
+        //FIXME this test is not numerically robust. Particularly, it does not handle horizontal segments at y == point(1) well.
+        // Does the ray with y == point(1) intersect this line segment?
+#if 1
+        if ( (((*i)(1) > point(1)) != ((*j)(1) > point(1)))
+            && ((double)point(0) < (double)((*j)(0) - (*i)(0)) * (double)(point(1) - (*i)(1)) / (double)((*j)(1) - (*i)(1)) + (double)(*i)(0)) )
+            result = !result;
+#else
+        if (((*i)(1) > point(1)) != ((*j)(1) > point(1))) {
+            // Orientation predicated relative to i-th point.
+            double orient = (double)(point(0) - (*i)(0)) * (double)((*j)(1) - (*i)(1)) - (double)(point(1) - (*i)(1)) * (double)((*j)(0) - (*i)(0));
+            if (((*i)(1) > (*j)(1)) ? (orient > 0.) : (orient < 0.))
+                result = !result;
+        }
+#endif
+    }
+    return result;
+}
+
+// this only works on CCW polygons as CW will be ripped out by Clipper's simplify_polygons()
 Polygons Polygon::simplify(double tolerance) const
 {
-    // Works on CCW polygons only, CW contour will be reoriented to CCW by Clipper's simplify_polygons()!
-    assert(this->is_counter_clockwise());
-
     // repeat first point at the end in order to apply Douglas-Peucker
     // on the whole polygon
     Points points = this->points;
@@ -114,6 +129,13 @@ Polygons Polygon::simplify(double tolerance) const
     Polygons pp;
     pp.push_back(p);
     return simplify_polygons(pp);
+}
+
+void Polygon::simplify(double tolerance, Polygons &polygons) const
+{
+    Polygons pp = this->simplify(tolerance);
+    polygons.reserve(polygons.size() + pp.size());
+    polygons.insert(polygons.end(), pp.begin(), pp.end());
 }
 
 // Only call this on convex polygons or it will return invalid results
@@ -150,114 +172,50 @@ Point Polygon::centroid() const
     return Point(Vec2d(c / (3. * area_sum)));
 }
 
-bool Polygon::intersection(const Line &line, Point *intersection) const
+// find all concave vertices (i.e. having an internal angle greater than the supplied angle)
+// (external = right side, thus we consider ccw orientation)
+Points Polygon::concave_points(double angle) const
 {
-    if (this->points.size() < 2)
-        return false;
-    if (Line(this->points.front(), this->points.back()).intersection(line, intersection))
-        return true;
-    for (size_t i = 1; i < this->points.size(); ++ i)
-        if (Line(this->points[i - 1], this->points[i]).intersection(line, intersection))
-            return true;
-    return false;
+    Points points;
+    angle = 2. * PI - angle + EPSILON;
+    
+    // check whether first point forms a concave angle
+    if (this->points.front().ccw_angle(this->points.back(), *(this->points.begin()+1)) <= angle)
+        points.push_back(this->points.front());
+    
+    // check whether points 1..(n-1) form concave angles
+    for (Points::const_iterator p = this->points.begin()+1; p != this->points.end()-1; ++ p)
+        if (p->ccw_angle(*(p-1), *(p+1)) <= angle)
+        	points.push_back(*p);
+    
+    // check whether last point forms a concave angle
+    if (this->points.back().ccw_angle(*(this->points.end()-2), this->points.front()) <= angle)
+        points.push_back(this->points.back());
+    
+    return points;
 }
 
-bool Polygon::first_intersection(const Line& line, Point* intersection) const
+// find all convex vertices (i.e. having an internal angle smaller than the supplied angle)
+// (external = right side, thus we consider ccw orientation)
+Points Polygon::convex_points(double angle) const
 {
-    if (this->points.size() < 2)
-        return false;
-
-    bool   found = false;
-    double dmin  = 0.;
-    Line l(this->points.back(), this->points.front());
-    for (size_t i = 0; i < this->points.size(); ++ i) {
-        l.b = this->points[i];
-        Point ip;
-        if (l.intersection(line, &ip)) {
-            if (! found) {
-                found = true;
-                dmin = (line.a - ip).cast<double>().squaredNorm();
-                *intersection = ip;
-            } else {
-                double d = (line.a - ip).cast<double>().squaredNorm();
-                if (d < dmin) {
-                    dmin = d;
-                    *intersection = ip;
-                }
-            }
-        }
-        l.a = l.b;
-    }
-    return found;
-}
-
-bool Polygon::intersections(const Line &line, Points *intersections) const
-{
-    if (this->points.size() < 2)
-        return false;
-
-    size_t intersections_size = intersections->size();
-    Line l(this->points.back(), this->points.front());
-    for (size_t i = 0; i < this->points.size(); ++ i) {
-        l.b = this->points[i];
-        Point intersection;
-        if (l.intersection(line, &intersection))
-            intersections->emplace_back(std::move(intersection));
-        l.a = l.b;
-    }
-    return intersections->size() > intersections_size;
-}
-
-// Filter points from poly to the output with the help of FilterFn.
-// filter function receives two vectors:
-// v1: this_point - previous_point
-// v2: next_point - this_point
-// and returns true if the point is to be copied to the output.
-template<typename FilterFn>
-Points filter_points_by_vectors(const Points &poly, FilterFn filter)
-{
-    // Last point is the first point visited.
-    Point p1 = poly.back();
-    // Previous vector to p1.
-    Vec2d v1 = (p1 - *(poly.end() - 2)).cast<double>();
-
-    Points out;
-    for (Point p2 : poly) {
-        // p2 is next point to the currently visited point p1.
-        Vec2d v2 = (p2 - p1).cast<double>();
-        if (filter(v1, v2))
-            out.emplace_back(p2);
-        v1 = v2;
-        p1 = p2;
+    Points points;
+    angle = 2*PI - angle - EPSILON;
+    
+    // check whether first point forms a convex angle
+    if (this->points.front().ccw_angle(this->points.back(), *(this->points.begin()+1)) >= angle)
+        points.push_back(this->points.front());
+    
+    // check whether points 1..(n-1) form convex angles
+    for (Points::const_iterator p = this->points.begin()+1; p != this->points.end()-1; ++p) {
+        if (p->ccw_angle(*(p-1), *(p+1)) >= angle) points.push_back(*p);
     }
     
-    return out;
-}
-
-template<typename ConvexConcaveFilterFn>
-Points filter_convex_concave_points_by_angle_threshold(const Points &poly, double angle_threshold, ConvexConcaveFilterFn convex_concave_filter)
-{
-    assert(angle_threshold >= 0.);
-    if (angle_threshold < EPSILON) {
-        double cos_angle  = cos(angle_threshold);
-        return filter_points_by_vectors(poly, [convex_concave_filter, cos_angle](const Vec2d &v1, const Vec2d &v2){
-            return convex_concave_filter(v1, v2) && v1.normalized().dot(v2.normalized()) < cos_angle;
-        });
-    } else {
-        return filter_points_by_vectors(poly, [convex_concave_filter](const Vec2d &v1, const Vec2d &v2){
-            return convex_concave_filter(v1, v2);
-        });
-    }
-}
-
-Points Polygon::convex_points(double angle_threshold) const
-{
-    return filter_convex_concave_points_by_angle_threshold(this->points, angle_threshold, [](const Vec2d &v1, const Vec2d &v2){ return cross2(v1, v2) > 0.; });
-}
-
-Points Polygon::concave_points(double angle_threshold) const
-{
-    return filter_convex_concave_points_by_angle_threshold(this->points, angle_threshold, [](const Vec2d &v1, const Vec2d &v2){ return cross2(v1, v2) < 0.; });
+    // check whether last point forms a convex angle
+    if (this->points.back().ccw_angle(*(this->points.end()-2), this->points.front()) >= angle)
+        points.push_back(this->points.back());
+    
+    return points;
 }
 
 // Projection of a point onto the polygon.
@@ -334,6 +292,74 @@ void Polygon::densify(float min_length, std::vector<float>* lengths_ptr)
         }
     }
     assert(points.size() == lengths.size() - 1);
+}
+
+size_t Polygon::remove_collinear(coord_t max_offset){
+    size_t nb_del = 0;
+    if (points.size() < 3) return 0;
+
+    double min_dist_sq = coordf_t(max_offset) * max_offset;
+    while (points.size() > 2 && Line::distance_to_squared(points[0], points.back(), points[1]) < min_dist_sq){
+        //colinear! delete!
+        points.erase(points.begin());
+        nb_del++;
+    }
+    for (size_t idx = 1; idx < points.size()-1; ) {
+        //if (Line(previous, points[idx + 1]).distance_to(points[idx]) < SCALED_EPSILON){
+        if (Line::distance_to_squared(points[idx], points[idx-1], points[idx + 1]) < min_dist_sq){
+            //colinear! delete!
+            points.erase(points.begin() + idx);
+            nb_del++;
+        } else {
+            idx++;
+        }
+    }
+    while (points.size() > 2 && Line::distance_to_squared(points.back(), points[points.size()-2], points.front()) < min_dist_sq) {
+        //colinear! delete!
+        points.erase(points.end()-1);
+        nb_del++;
+    }
+
+    return nb_del;
+}
+
+size_t Polygon::remove_collinear_angle(double angle_radian) {
+    size_t nb_del = 0;
+    if (points.size() < 3) return 0;
+    //std::cout << "== remove_collinear_angle \n";
+    double min_dist_sq = std::sin(angle_radian);
+    min_dist_sq = min_dist_sq * min_dist_sq;
+    while (points.size() > 2 && Line::distance_to_squared(points.front(), points.back(), points[1]) < min_dist_sq * std::min(points.back().distance_to_square(points.front()), points.front().distance_to_square(points[1]))) {
+       /* if (Line::distance_to_squared(points.front(), points.back(), points[1]) > SCALED_EPSILON) {
+            std::cout << "Fcolinear angle " << Line::distance_to_squared(points[0], points.back(), points[1]) << " < " << (min_dist_sq * std::min(points.back().distance_to_square(points.front()), points.front().distance_to_square(points[1]))) << " (" << min_dist_sq << " * " << std::min(points.back().distance_to_square(points.front()), points.front().distance_to_square(points[1])) << ")\n";
+            std::cout << "      unscaled= " << unscaled(Line::distance_to(points[0], points.back(), points[1])) << " < " << unscaled(std::sin(angle_radian) * std::min(points.back().distance_to(points.front()), points.front().distance_to(points[1]))) << " (" << std::sin(angle_radian) << " * " << unscaled(std::min(points.back().distance_to(points.front()), points.front().distance_to(points[1]))) << ")\n";
+            std::cout << "      dists: " << unscaled(points.back().distance_to(points.front())) << " => " << unscaled(points.front().distance_to(points[1])) << "\n";
+        }*/
+        //colinear! delete!
+        points.erase(points.begin());
+        nb_del++;
+    }
+    for (size_t idx = 1; idx < points.size() - 1 && points.size() > 2; ) {
+        if (Line::distance_to_squared(points[idx], points[idx - 1], points[idx + 1]) < min_dist_sq * std::min(points[idx - 1].distance_to_square(points[idx]), points[idx].distance_to_square(points[idx + 1]))) {
+            /*if (Line::distance_to_squared(points[idx], points[idx - 1], points[idx + 1]) > SCALED_EPSILON) {
+                std::cout << " colinear angle " << Line::distance_to_squared(points[idx], points[idx - 1], points[idx + 1]) << " < " << (min_dist_sq * std::min(points[idx - 1].distance_to_square(points[idx]), points[idx].distance_to_square(points[idx + 1]))) << " (" << min_dist_sq << " * " << std::min(points[idx - 1].distance_to_square(points[idx]), points[idx].distance_to_square(points[idx + 1])) << ")\n";
+                std::cout << "      unscaled= " << unscaled(Line::distance_to(points[idx], points[idx - 1], points[idx + 1])) << " < " << unscaled(std::sin(angle_radian) * std::min(points[idx - 1].distance_to(points[idx]), points[idx].distance_to(points[idx + 1]))) << " (" << std::sin(angle_radian) << " * " << unscaled(std::min(points[idx - 1].distance_to(points[idx]), points[idx].distance_to(points[idx + 1]))) << ")\n";
+                std::cout << "      dists: " << unscaled(points[idx - 1].distance_to(points[idx])) << " => " << unscaled(points[idx].distance_to(points[idx + 1])) << "\n";
+            }*/
+            //colinear! delete!
+            points.erase(points.begin() + idx);
+            nb_del++;
+        } else {
+            idx++;
+        }
+    }
+    while (points.size() > 2 && Line::distance_to_squared(points.back(), points[points.size() - 2], points.front()) < min_dist_sq * std::min(points.back().distance_to_square(points[points.size() - 2]), points.front().distance_to_square(points.back()))) {
+        //colinear! delete!
+        points.erase(points.end() - 1);
+        nb_del++;
+    }
+
+    return nb_del;
 }
 
 BoundingBox get_extents(const Polygon &poly) 
@@ -516,126 +542,14 @@ bool remove_small(Polygons &polys, double min_area)
     return modified;
 }
 
-void remove_collinear(Polygon &poly)
+void remove_collinear(Polygon &poly, coord_t max_offset)
 {
-    if (poly.points.size() > 2) {
-        // copy points and append both 1 and last point in place to cover the boundaries
-        Points pp;
-        pp.reserve(poly.points.size()+2);
-        pp.push_back(poly.points.back());
-        pp.insert(pp.begin()+1, poly.points.begin(), poly.points.end());
-        pp.push_back(poly.points.front());
-        // delete old points vector. Will be re-filled in the loop
-        poly.points.clear();
-
-        size_t i = 0;
-        size_t k = 0;
-        while (i < pp.size()-2) {
-            k = i+1;
-            const Point &p1 = pp[i];
-            while (k < pp.size()-1) {
-                const Point &p2 = pp[k];
-                const Point &p3 = pp[k+1];
-                Line l(p1, p3);
-                if(l.distance_to(p2) < SCALED_EPSILON) {
-                    k++;
-                } else {
-                    if(i > 0) poly.points.push_back(p1); // implicitly removes the first point we appended above
-                    i = k;
-                    break;
-                }
-            }
-            if(k > pp.size()-2) break; // all remaining points are collinear and can be skipped
-        }
-        poly.points.push_back(pp[i]);
-    }
+    poly.remove_collinear(max_offset);
 }
-
-void remove_collinear(Polygons &polys)
+void remove_collinear(Polygons &polys, coord_t max_offset)
 {
-	for (Polygon &poly : polys)
-		remove_collinear(poly);
-}
-
-Polygons polygons_simplify(const Polygons &source_polygons, double tolerance)
-{
-    Polygons out;
-    out.reserve(source_polygons.size());
-    for (const Polygon &source_polygon : source_polygons) {
-        // Run Douglas / Peucker simplification algorithm on an open polyline (by repeating the first point at the end of the polyline),
-        Points simplified = MultiPoint::_douglas_peucker(to_polyline(source_polygon).points, tolerance);
-        // then remove the last (repeated) point.
-        simplified.pop_back();
-        // Simplify the decimated contour by ClipperLib.
-        bool ccw = ClipperLib::Area(simplified) > 0.;
-        for (Points &path : ClipperLib::SimplifyPolygons(ClipperUtils::SinglePathProvider(simplified), ClipperLib::pftNonZero)) {
-            if (! ccw)
-                // ClipperLib likely reoriented negative area contours to become positive. Reverse holes back to CW.
-                std::reverse(path.begin(), path.end());
-            out.emplace_back(std::move(path));
-        }
-    }
-    return out;
-}
-
-// Do polygons match? If they match, they must have the same topology,
-// however their contours may be rotated.
-bool polygons_match(const Polygon &l, const Polygon &r)
-{
-    if (l.size() != r.size())
-        return false;
-    auto it_l = std::find(l.points.begin(), l.points.end(), r.points.front());
-    if (it_l == l.points.end())
-        return false;
-    auto it_r = r.points.begin();
-    for (; it_l != l.points.end(); ++ it_l, ++ it_r)
-        if (*it_l != *it_r)
-            return false;
-    it_l = l.points.begin();
-    for (; it_r != r.points.end(); ++ it_l, ++ it_r)
-        if (*it_l != *it_r)
-            return false;
-    return true;
-}
-
-bool contains(const Polygon &polygon, const Point &p, bool border_result)
-{
-    if (const int poly_count_inside = ClipperLib::PointInPolygon(p, polygon.points); 
-        poly_count_inside == -1)
-        return border_result;
-    else
-        return (poly_count_inside % 2) == 1;
-}
-
-bool contains(const Polygons &polygons, const Point &p, bool border_result)
-{
-    int poly_count_inside = 0;
-    for (const Polygon &poly : polygons) {
-        const int is_inside_this_poly = ClipperLib::PointInPolygon(p, poly.points);
-        if (is_inside_this_poly == -1)
-            return border_result;
-        poly_count_inside += is_inside_this_poly;
-    }
-    return (poly_count_inside % 2) == 1;
-}
-
-Polygon make_circle(double radius, double error)
-{
-    double angle = 2. * acos(1. - error / radius);
-    size_t num_segments = size_t(ceil(2. * M_PI / angle));
-    return make_circle_num_segments(radius, num_segments);
-}
-
-Polygon make_circle_num_segments(double radius, size_t num_segments)
-{
-    Polygon out;
-    out.points.reserve(num_segments);
-    double angle_inc = 2.0 * M_PI / num_segments;
-    for (size_t i = 0; i < num_segments; ++ i) {
-        const double angle = angle_inc * i;
-        out.points.emplace_back(coord_t(cos(angle) * radius), coord_t(sin(angle) * radius));
-    }
-    return out;
+    for (Polygon &poly : polys)
+        poly.remove_collinear(max_offset);
 }
 
 }

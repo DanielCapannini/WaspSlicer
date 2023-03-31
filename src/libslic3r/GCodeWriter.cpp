@@ -1,44 +1,109 @@
 #include "GCodeWriter.hpp"
 #include "CustomGCode.hpp"
+#include "LocalesUtils.hpp"
+
+#include <boost/lexical_cast.hpp>
+
 #include <algorithm>
+#include <assert.h>
 #include <iomanip>
 #include <iostream>
 #include <map>
-#include <assert.h>
 
 #ifdef __APPLE__
     #include <boost/spirit/include/karma.hpp>
 #endif
 
-#define FLAVOR_IS(val) this->config.gcode_flavor == val
-#define FLAVOR_IS_NOT(val) this->config.gcode_flavor != val
-
+#define FLAVOR_IS(val) this->config.gcode_flavor.value == val
+#define FLAVOR_IS_NOT(val) this->config.gcode_flavor.value != val
+// TODO: switch to gcodeformatter classes
+#define COMMENT(comment) if (this->config.gcode_comments.value && !comment.empty()) gcode << " ; " << comment;
+#define PRECISION(val, precision) to_string_nozero(val, precision)
+#define XYZ_NUM(val) PRECISION(val, this->config.gcode_precision_xyz.value)
+#define FLOAT_PRECISION(val, precision) std::defaultfloat << std::setprecision(precision) << (val)
+#define F_NUM(val) FLOAT_PRECISION(val, 8)
+#define E_NUM(val) PRECISION(val, this->config.gcode_precision_e.value)
 namespace Slic3r {
+
+
+std::string GCodeWriter::PausePrintCode = "M601";
 
 void GCodeWriter::apply_print_config(const PrintConfig &print_config)
 {
     this->config.apply(print_config, true);
     m_extrusion_axis = get_extrusion_axis(this->config);
     m_single_extruder_multi_material = print_config.single_extruder_multi_material.value;
-    bool use_mach_limits = print_config.gcode_flavor.value == gcfMarlinLegacy
-                        || print_config.gcode_flavor.value == gcfMarlinFirmware
-                        || print_config.gcode_flavor.value == gcfRepRapFirmware;
-    m_max_acceleration = static_cast<unsigned int>(std::round((use_mach_limits && print_config.machine_limits_usage.value == MachineLimitsUsage::EmitToGCode) ?
-        print_config.machine_max_acceleration_extruding.values.front() : 0));
 }
 
-void GCodeWriter::set_extruders(std::vector<unsigned int> extruder_ids)
+void GCodeWriter::apply_print_region_config(const PrintRegionConfig& print_region_config)
+{
+    config_region = &print_region_config;
+}
+
+std::vector<uint16_t> GCodeWriter::extruder_ids() const {
+    std::vector<uint16_t> out;
+    out.reserve(m_extruders.size());
+    for (const Extruder& e : m_extruders)
+        out.push_back(e.id());
+    return out;
+}
+
+std::vector<uint16_t> GCodeWriter::mill_ids() const {
+    std::vector<uint16_t> out;
+    out.reserve(m_millers.size());
+    for (const Tool& e : m_millers)
+        out.push_back(e.id());
+    return out;
+}
+
+uint16_t GCodeWriter::first_mill() const {
+    if (m_millers.empty()) {
+        uint16_t max = 0;
+        for (const Extruder& e : m_extruders)
+            max = std::max(max, e.id());
+        max++;
+        return (uint16_t)max;
+    } else return m_millers.front().id();
+}
+bool GCodeWriter::tool_is_extruder() const {
+    return m_tool->id() < first_mill();
+}
+const Tool* GCodeWriter::get_tool(uint16_t id) const{
+    for (const Extruder& e : m_extruders)
+        if (id == e.id())
+            return &e;
+    for (const Tool& e : m_millers)
+        if (id == e.id())
+            return &e;
+    return nullptr;
+}
+
+void GCodeWriter::set_extruders(std::vector<uint16_t> extruder_ids)
 {
     std::sort(extruder_ids.begin(), extruder_ids.end());
     m_extruders.clear();
     m_extruders.reserve(extruder_ids.size());
-    for (unsigned int extruder_id : extruder_ids)
+    for (uint16_t extruder_id : extruder_ids)
         m_extruders.emplace_back(Extruder(extruder_id, &this->config));
-    
+
     /*  we enable support for multiple extruder if any extruder greater than 0 is used
         (even if prints only uses that one) since we need to output Tx commands
         first extruder has index 0 */
-    this->multiple_extruders = (*std::max_element(extruder_ids.begin(), extruder_ids.end())) > 0;
+    if(!extruder_ids.empty() && !this->multiple_extruders)
+        this->multiple_extruders = (*std::max_element(extruder_ids.begin(), extruder_ids.end())) > 0;
+}
+
+void GCodeWriter::set_mills(std::vector<uint16_t> mill_ids)
+{
+    std::sort(mill_ids.begin(), mill_ids.end());
+    m_millers.clear();
+    m_millers.reserve(mill_ids.size());
+    for (uint16_t mill_id : mill_ids) {
+        m_millers.emplace_back(Mill(mill_id, &this->config));
+    }
+
+    /*  we enable support for multiple extruder */
+    this->multiple_extruders = this->multiple_extruders || !mill_ids.empty();
 }
 
 std::string GCodeWriter::preamble()
@@ -49,13 +114,15 @@ std::string GCodeWriter::preamble()
         gcode << "G21 ; set units to millimeters\n";
         gcode << "G90 ; use absolute coordinates\n";
     }
-    if (FLAVOR_IS(gcfRepRapSprinter) ||
-        FLAVOR_IS(gcfRepRapFirmware) ||
+    if (FLAVOR_IS(gcfSprinter) ||
+        FLAVOR_IS(gcfRepRap) ||
         FLAVOR_IS(gcfMarlinLegacy) ||
         FLAVOR_IS(gcfMarlinFirmware) ||
+        FLAVOR_IS(gcfLerdge) ||
         FLAVOR_IS(gcfTeacup) ||
         FLAVOR_IS(gcfRepetier) ||
-        FLAVOR_IS(gcfSmoothie))
+        FLAVOR_IS(gcfSmoothie) ||
+        FLAVOR_IS(gcfKlipper))
     {
         if (this->config.use_relative_e_distances) {
             gcode << "M83 ; use relative distances for extrusion\n";
@@ -76,17 +143,29 @@ std::string GCodeWriter::postamble() const
     return gcode.str();
 }
 
-std::string GCodeWriter::set_temperature(unsigned int temperature, bool wait, int tool) const
+std::string GCodeWriter::set_temperature(const int16_t temperature, bool wait, int tool)
 {
+    //use m_tool if tool isn't set
+    if (tool < 0 && m_tool != nullptr)
+        tool = m_tool->id();
+
+    //add offset
+    int16_t temp_w_offset = temperature;
+    temp_w_offset += int16_t(get_tool(tool)->temp_offset());
+    temp_w_offset = std::max(int16_t(0), std::min(int16_t(2000), temp_w_offset));
+
+    // temp_w_offset has an effective minimum value of 0, so this cast is safe.
+    if (m_last_temperature_with_offset == temp_w_offset && !wait)
+        return "";
     if (wait && (FLAVOR_IS(gcfMakerWare) || FLAVOR_IS(gcfSailfish)))
-        return {};
+        return "";
     
     std::string code, comment;
-    if (wait && FLAVOR_IS_NOT(gcfTeacup) && FLAVOR_IS_NOT(gcfRepRapFirmware)) {
+    if (wait && FLAVOR_IS_NOT(gcfTeacup) && FLAVOR_IS_NOT(gcfRepRap)) {
         code = "M109";
         comment = "set temperature and wait for it to be reached";
     } else {
-        if (FLAVOR_IS(gcfRepRapFirmware)) { // M104 is deprecated on RepRapFirmware
+        if (FLAVOR_IS(gcfRepRap)) { // M104 is deprecated on RepRapFirmware
             code = "G10";
         } else {
             code = "M104";
@@ -98,27 +177,30 @@ std::string GCodeWriter::set_temperature(unsigned int temperature, bool wait, in
     gcode << code << " ";
     if (FLAVOR_IS(gcfMach3) || FLAVOR_IS(gcfMachinekit)) {
         gcode << "P";
+    } else if (FLAVOR_IS(gcfRepRap)) {
+        gcode << "P" << tool << " S";
+    } else if (wait && (FLAVOR_IS(gcfMarlinFirmware) || FLAVOR_IS(gcfMarlinLegacy)) && temp_w_offset < m_last_temperature_with_offset) {
+        gcode << "R"; //marlin doesn't wait with S if it's a cooling change, it needs a R
     } else {
         gcode << "S";
     }
-    gcode << temperature;
+    gcode << temp_w_offset;
     bool multiple_tools = this->multiple_extruders && ! m_single_extruder_multi_material;
-    if (tool != -1 && (multiple_tools || FLAVOR_IS(gcfMakerWare) || FLAVOR_IS(gcfSailfish) || FLAVOR_IS(gcfRepRapFirmware)) ) {
-        if (FLAVOR_IS(gcfRepRapFirmware)) {
-            gcode << " P" << tool;
-        } else {
-            gcode << " T" << tool;
-        }
+    if (tool != -1 && (multiple_tools || FLAVOR_IS(gcfMakerWare) || FLAVOR_IS(gcfSailfish)) && FLAVOR_IS_NOT(gcfRepRap)) {
+        gcode << " T" << tool;
     }
     gcode << " ; " << comment << "\n";
     
-    if ((FLAVOR_IS(gcfTeacup) || FLAVOR_IS(gcfRepRapFirmware)) && wait)
+    if ((FLAVOR_IS(gcfTeacup) || FLAVOR_IS(gcfRepRap)) && wait)
         gcode << "M116 ; wait for temperature to be reached\n";
     
+    m_last_temperature = temperature;
+    m_last_temperature_with_offset = temp_w_offset;
+
     return gcode.str();
 }
 
-std::string GCodeWriter::set_bed_temperature(unsigned int temperature, bool wait)
+std::string GCodeWriter::set_bed_temperature(uint32_t temperature, bool wait)
 {
     if (temperature == m_last_bed_temperature && (! wait || m_last_bed_temperature_reached))
         return std::string();
@@ -154,35 +236,56 @@ std::string GCodeWriter::set_bed_temperature(unsigned int temperature, bool wait
     return gcode.str();
 }
 
-std::string GCodeWriter::set_acceleration(unsigned int acceleration)
-{
-    // Clamp the acceleration to the allowed maximum.
-    if (m_max_acceleration > 0 && acceleration > m_max_acceleration)
-        acceleration = m_max_acceleration;
 
-    if (acceleration == 0 || acceleration == m_last_acceleration)
-        return std::string();
-    
-    m_last_acceleration = acceleration;
-    
+
+void GCodeWriter::set_acceleration(uint32_t acceleration)
+{
+    if (acceleration == 0 || acceleration == m_current_acceleration)
+        return;
+
+    m_current_acceleration = acceleration;
+}
+
+void GCodeWriter::set_travel_acceleration(uint32_t acceleration)
+{
+    //only gcfMarlinFirmware and gcfRepRap can use the travel accel
+    // so for the other, override the current accel
+    if (FLAVOR_IS_NOT(gcfMarlinFirmware) && FLAVOR_IS_NOT(gcfRepRap))
+        set_acceleration(acceleration);
+
+    if (acceleration == m_current_travel_acceleration)
+        return;
+
+    m_current_travel_acceleration = acceleration;
+}
+
+uint32_t GCodeWriter::get_acceleration() const
+{
+    return m_current_acceleration;
+}
+
+std::string GCodeWriter::write_acceleration(){
+    if (m_current_acceleration == m_last_acceleration || m_current_acceleration == 0)
+        return "";
+
+    m_last_acceleration = m_current_acceleration;
+
     std::ostringstream gcode;
+	//try to set only printing acceleration, travel should be untouched if possible
     if (FLAVOR_IS(gcfRepetier)) {
         // M201: Set max printing acceleration
-        gcode << "M201 X" << acceleration << " Y" << acceleration;
-        if (this->config.gcode_comments) gcode << " ; adjust acceleration";
-        gcode << "\n";
-        // M202: Set max travel acceleration
-        gcode << "M202 X" << acceleration << " Y" << acceleration;
-    } else if (FLAVOR_IS(gcfRepRapFirmware)) {
-        // M204: Set default acceleration
-        gcode << "M204 P" << acceleration;
-    } else if (FLAVOR_IS(gcfMarlinFirmware)) {
+        gcode << "M201 X" << m_current_acceleration << " Y" << m_current_acceleration;
+    } else if(FLAVOR_IS(gcfLerdge) || FLAVOR_IS(gcfSprinter)){
+        // M204: Set printing acceleration
         // This is new MarlinFirmware with separated print/retraction/travel acceleration.
         // Use M204 P, we don't want to override travel acc by M204 S (which is deprecated anyway).
-        gcode << "M204 P" << acceleration;
-    } else {
+        gcode << "M204 P" << m_current_acceleration;
+    } else if (FLAVOR_IS(gcfMarlinFirmware) || FLAVOR_IS(gcfRepRap)) {
+        // M204: Set printing & travel acceleration
+        gcode << "M204 P" << m_current_acceleration << " T" << (m_current_travel_acceleration > 0 ? m_current_travel_acceleration : m_current_acceleration);
+    } else { // gcfMarlinLegacy
         // M204: Set default acceleration
-        gcode << "M204 S" << acceleration;
+        gcode << "M204 S" << m_current_acceleration;
     }
     if (this->config.gcode_comments) gcode << " ; adjust acceleration";
     gcode << "\n";
@@ -192,24 +295,38 @@ std::string GCodeWriter::set_acceleration(unsigned int acceleration)
 
 std::string GCodeWriter::reset_e(bool force)
 {
-    return
-        FLAVOR_IS(gcfMach3) || FLAVOR_IS(gcfMakerWare) || FLAVOR_IS(gcfSailfish) || this->config.use_relative_e_distances ||
-        (m_extruder != nullptr && ! m_extruder->reset_E() && ! force) || 
-        m_extrusion_axis.empty() ?
-        std::string{} :
-        std::string("G92 ") + m_extrusion_axis + (this->config.gcode_comments ? "0 ; reset extrusion distance\n" : "0\n");
+    if (FLAVOR_IS(gcfMach3)
+        || FLAVOR_IS(gcfMakerWare)
+        || FLAVOR_IS(gcfSailfish))
+        return "";
+    
+    if (m_tool != nullptr) {
+        if (m_tool->E() == 0. && ! force)
+            return "";
+        m_tool->reset_E();
+    }
+
+    if (! m_extrusion_axis.empty() && ! this->config.use_relative_e_distances) {
+        std::ostringstream gcode;
+        gcode << "G92 " << m_extrusion_axis << "0";
+        if (this->config.gcode_comments) gcode << " ; reset extrusion distance";
+        gcode << "\n";
+        return gcode.str();
+    } else {
+        return "";
+    }
 }
 
-std::string GCodeWriter::update_progress(unsigned int num, unsigned int tot, bool allow_100) const
+std::string GCodeWriter::update_progress(uint32_t num, uint32_t tot, bool allow_100) const
 {
     if (FLAVOR_IS_NOT(gcfMakerWare) && FLAVOR_IS_NOT(gcfSailfish))
-        return {};
+        return "";
     
-    unsigned int percent = (unsigned int)floor(100.0 * num / tot + 0.5);
-    if (!allow_100) percent = std::min(percent, (unsigned int)99);
+    uint8_t percent = (uint32_t)floor(100.0 * num / tot + 0.5);
+    if (!allow_100) percent = std::min(percent, (uint8_t)99);
     
     std::ostringstream gcode;
-    gcode << "M73 P" << percent;
+    gcode << "M73 P" << int(percent);
     if (this->config.gcode_comments) gcode << " ; update progress";
     gcode << "\n";
     return gcode.str();
@@ -218,21 +335,54 @@ std::string GCodeWriter::update_progress(unsigned int num, unsigned int tot, boo
 std::string GCodeWriter::toolchange_prefix() const
 {
     return FLAVOR_IS(gcfMakerWare) ? "M135 T" :
-           FLAVOR_IS(gcfSailfish)  ? "M108 T" : "T";
+           FLAVOR_IS(gcfSailfish) ? "M108 T" :
+           FLAVOR_IS(gcfKlipper) ? "ACTIVATE_EXTRUDER EXTRUDER=" :
+           "T";
 }
 
-std::string GCodeWriter::toolchange(unsigned int extruder_id)
+std::string GCodeWriter::toolchange(uint16_t tool_id)
 {
     // set the new extruder
-	auto it_extruder = Slic3r::lower_bound_by_predicate(m_extruders.begin(), m_extruders.end(), [extruder_id](const Extruder &e) { return e.id() < extruder_id; });
-    assert(it_extruder != m_extruders.end() && it_extruder->id() == extruder_id);
-    m_extruder = &*it_extruder;
+	/*auto it_extruder = Slic3r::lower_bound_by_predicate(m_extruders.begin(), m_extruders.end(), [tool_id](const Extruder &e) { return e.id() < tool_id; });
+    assert(it_extruder != m_extruders.end() && it_extruder->id() == extruder_id);*/
+    //less optimized but it's easier to modify and it's not needed, as it's not called often.
+    bool found = false;
+    for (Extruder& extruder : m_extruders) {
+        if (tool_id == extruder.id()) {
+            m_tool = &extruder;
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        for (Tool& mill : m_millers) {
+            if (tool_id == mill.id()) {
+                m_tool = &mill;
+                found = true;
+                break;
+            }
+        }
+    }
 
     // return the toolchange command
     // if we are running a single-extruder setup, just set the extruder and return nothing
     std::ostringstream gcode;
     if (this->multiple_extruders) {
-        gcode << this->toolchange_prefix() << extruder_id;
+        if (FLAVOR_IS(gcfKlipper)) {
+            //check if we can use the tool_name field or not
+            if (tool_id > 0 && tool_id < this->config.tool_name.values.size() && !this->config.tool_name.values[tool_id].empty()
+                // NOTE: this will probably break if there's more than 10 tools, as it's relying on the
+                // ASCII character table.
+                && this->config.tool_name.values[tool_id][0] != static_cast<char>(('0' + tool_id))) {
+                gcode << this->toolchange_prefix() << this->config.tool_name.values[tool_id];
+            } else {
+                gcode << this->toolchange_prefix() << "extruder";
+                if (tool_id > 0)
+                    gcode << tool_id;
+            }
+        } else {
+            gcode << this->toolchange_prefix() << tool_id;
+        }
         if (this->config.gcode_comments)
             gcode << " ; change extruder";
         gcode << "\n";
@@ -241,31 +391,56 @@ std::string GCodeWriter::toolchange(unsigned int extruder_id)
     return gcode.str();
 }
 
-std::string GCodeWriter::set_speed(double F, const std::string &comment, const std::string &cooling_marker) const
+std::string GCodeWriter::set_speed(const double speed, const std::string &comment, const std::string &cooling_marker)
 {
+    const double F = speed * 60;
+    m_current_speed = speed;
     assert(F > 0.);
     assert(F < 100000.);
-
-    GCodeG1Formatter w;
-    w.emit_f(F);
-    w.emit_comment(this->config.gcode_comments, comment);
-    w.emit_string(cooling_marker);
-    return w.string();
+//    GCodeG1Formatter w;
+//    w.emit_f(F);
+//    w.emit_comment(this->config.gcode_comments, comment);
+//    w.emit_string(cooling_marker);
+//    return w.string();
+    std::ostringstream gcode;
+    gcode << "G1 F" << F_NUM(F);
+    COMMENT(comment);
+    gcode << cooling_marker;
+    gcode << "\n";
+    return gcode.str();
 }
 
-std::string GCodeWriter::travel_to_xy(const Vec2d &point, const std::string &comment)
+double GCodeWriter::get_speed() const
 {
+    return m_current_speed;
+}
+
+std::string GCodeWriter::travel_to_xy(const Vec2d &point, const double speed, const std::string &comment)
+{
+    std::ostringstream gcode;
+    gcode << write_acceleration();
+
+    double travel_speed = this->config.travel_speed.value;
+    if ((speed > 0) & (speed < travel_speed))
+        travel_speed = speed;
+
     m_pos.x() = point.x();
     m_pos.y() = point.y();
     
-    GCodeG1Formatter w;
-    w.emit_xy(point);
-    w.emit_f(this->config.travel_speed.value * 60.0);
-    w.emit_comment(this->config.gcode_comments, comment);
-    return w.string();
+//    GCodeG1Formatter w;
+//    w.emit_xy(point);
+//    w.emit_f(this->config.travel_speed.value * 60.0);
+//    w.emit_comment(this->config.gcode_comments, comment);
+//    return w.string();
+    gcode << "G1 X" << XYZ_NUM(point.x())
+          <<   " Y" << XYZ_NUM(point.y())
+          <<   " F" << F_NUM(travel_speed * 60);
+    COMMENT(comment);
+    gcode << "\n";
+    return gcode.str();
 }
 
-std::string GCodeWriter::travel_to_xyz(const Vec3d &point, const std::string &comment)
+std::string GCodeWriter::travel_to_xyz(const Vec3d &point, const double speed, const std::string &comment)
 {
     // FIXME: This function was not being used when travel_speed_z was separated (bd6badf).
     // Calculation of feedrate was not updated accordingly. If you want to use
@@ -280,22 +455,34 @@ std::string GCodeWriter::travel_to_xyz(const Vec3d &point, const std::string &co
         double nominal_z = m_pos.z() - m_lifted;
         m_lifted -= (point.z() - nominal_z);
         // In case that retract_lift == layer_height we could end up with almost zero in_m_lifted
-        // and a retract could be skipped (https://github.com/wasp3d/WaspSlicer/issues/2154
+        // and a retract could be skipped (https://github.com/prusa3d/PrusaSlicer/issues/2154
         if (std::abs(m_lifted) < EPSILON)
             m_lifted = 0.;
-        return this->travel_to_xy(to_2d(point));
+        return this->travel_to_xy(to_2d(point), speed, comment);
     }
     
     /*  In all the other cases, we perform an actual XYZ move and cancel
         the lift. */
     m_lifted = 0;
     m_pos = point;
-    
-    GCodeG1Formatter w;
-    w.emit_xyz(point);
-    w.emit_f(this->config.travel_speed.value * 60.0);
-    w.emit_comment(this->config.gcode_comments, comment);
-    return w.string();
+
+    double travel_speed = this->config.travel_speed.value;
+    if ((speed > 0) & (speed < travel_speed))
+        travel_speed = speed;
+
+    std::ostringstream gcode;
+    gcode << write_acceleration();
+    gcode << "G1 X" << XYZ_NUM(point.x())
+          << " Y" << XYZ_NUM(point.y());
+    if (config.z_step > SCALING_FACTOR)
+        gcode << " Z" << PRECISION(point.z(), 6);
+    else
+        gcode << " Z" << XYZ_NUM(point.z());
+    gcode <<   " F" << F_NUM(travel_speed * 60);
+
+    COMMENT(comment);
+    gcode << "\n";
+    return gcode.str();
 }
 
 std::string GCodeWriter::travel_to_z(double z, const std::string &comment)
@@ -303,14 +490,14 @@ std::string GCodeWriter::travel_to_z(double z, const std::string &comment)
     /*  If target Z is lower than current Z but higher than nominal Z
         we don't perform the move but we only adjust the nominal Z by
         reducing the lift amount that will be used for unlift. */
-    if (!this->will_move_z(z)) {
+    // note that if we move but it's lower and we are lifted, we can wait a bit for unlifting, to avoid possible dance on layer change.
+    if (!this->will_move_z(z) || z < m_pos.z() && m_lifted > EPSILON) {
         double nominal_z = m_pos.z() - m_lifted;
         m_lifted -= (z - nominal_z);
         if (std::abs(m_lifted) < EPSILON)
             m_lifted = 0.;
-        return {};
+        return "";
     }
-    
     /*  In all the other cases, we perform an actual Z move and cancel
         the lift. */
     m_lifted = 0;
@@ -321,15 +508,18 @@ std::string GCodeWriter::_travel_to_z(double z, const std::string &comment)
 {
     m_pos.z() = z;
 
-    double speed = this->config.travel_speed_z.value;
-    if (speed == 0.)
-        speed = this->config.travel_speed.value;
-    
-    GCodeG1Formatter w;
-    w.emit_z(z);
-    w.emit_f(speed * 60.0);
-    w.emit_comment(this->config.gcode_comments, comment);
-    return w.string();
+    std::ostringstream gcode;
+
+    gcode << write_acceleration();    if (config.z_step > SCALING_FACTOR)
+        gcode << "G1 Z" << PRECISION(z, 6);
+    else
+        gcode << "G1 Z" << XYZ_NUM(z);
+
+    const double speed = this->config.travel_speed_z.value == 0.0 ? this->config.travel_speed.value : this->config.travel_speed_z.value;
+    gcode <<   " F" << F_NUM(speed * 60.0);
+    COMMENT(comment);
+    gcode << "\n";
+    return gcode.str();
 }
 
 bool GCodeWriter::will_move_z(double z) const
@@ -338,7 +528,7 @@ bool GCodeWriter::will_move_z(double z) const
         we don't perform an actual Z move. */
     if (m_lifted > 0) {
         double nominal_z = m_pos.z() - m_lifted;
-        if (z >= nominal_z && z <= m_pos.z())
+        if (z >= nominal_z + EPSILON && z <= m_pos.z() - EPSILON)
             return false;
     }
     return true;
@@ -346,55 +536,84 @@ bool GCodeWriter::will_move_z(double z) const
 
 std::string GCodeWriter::extrude_to_xy(const Vec2d &point, double dE, const std::string &comment)
 {
+    assert(dE == dE);
     m_pos.x() = point.x();
     m_pos.y() = point.y();
+    bool is_extrude = m_tool->extrude(dE) != 0;
 
-    GCodeG1Formatter w;
-    w.emit_xy(point);
-    w.emit_e(m_extrusion_axis, m_extruder->extrude(dE).second);
-    w.emit_comment(this->config.gcode_comments, comment);
-    return w.string();
+    std::ostringstream gcode;
+    gcode << write_acceleration();
+    gcode << "G1 X" << XYZ_NUM(point.x())
+        << " Y" << XYZ_NUM(point.y());
+    if(is_extrude)
+        gcode <<    " " << m_extrusion_axis << E_NUM(m_tool->E());
+    COMMENT(comment);
+    gcode << "\n";
+    return gcode.str();
 }
 
-#if 0
 std::string GCodeWriter::extrude_to_xyz(const Vec3d &point, double dE, const std::string &comment)
 {
-    m_pos = point;
+    assert(dE == dE);
+    m_pos.x() = point.x();
+    m_pos.y() = point.y();
     m_lifted = 0;
-    m_extruder->extrude(dE);
-    
-    GCodeG1Formatter w;
-    w.emit_xyz(point);
-    w.emit_e(m_extrusion_axis, m_extruder->E());
-    w.emit_comment(this->config.gcode_comments, comment);
-    return w.string();
+    bool is_extrude = m_tool->extrude(dE) != 0;
+
+//    GCodeG1Formatter w;
+//    w.emit_xyz(point);
+//    w.emit_e(m_extrusion_axis, m_extruder->E());
+//    w.emit_comment(this->config.gcode_comments, comment);
+//    return w.string();
+    std::ostringstream gcode;
+    gcode << write_acceleration();
+    gcode << "G1 X" << XYZ_NUM(point.x())
+        << " Y" << XYZ_NUM(point.y())
+        << " Z" << XYZ_NUM(point.z() + m_pos.z());
+    if (is_extrude)
+            gcode <<    " " << m_extrusion_axis << E_NUM(m_tool->E());
+    COMMENT(comment);
+    gcode << "\n";
+    return gcode.str();
 }
-#endif
 
 std::string GCodeWriter::retract(bool before_wipe)
 {
-    double factor = before_wipe ? m_extruder->retract_before_wipe() : 1.;
+    double factor = before_wipe ? m_tool->retract_before_wipe() : 1.;
     assert(factor >= 0. && factor <= 1. + EPSILON);
+    //check for override
+    if (config_region && config_region->print_retract_length >= 0) {
+        return this->_retract(
+            factor * config_region->print_retract_length,
+            factor * m_tool->retract_restart_extra(),
+            NAN,
+            "retract"
+        );
+    }
     return this->_retract(
-        factor * m_extruder->retract_length(),
-        factor * m_extruder->retract_restart_extra(),
+        factor * m_tool->retract_length(),
+        factor * m_tool->retract_restart_extra(),
+        NAN,
         "retract"
     );
 }
 
 std::string GCodeWriter::retract_for_toolchange(bool before_wipe)
 {
-    double factor = before_wipe ? m_extruder->retract_before_wipe() : 1.;
+    double factor = before_wipe ? m_tool->retract_before_wipe() : 1.;
     assert(factor >= 0. && factor <= 1. + EPSILON);
     return this->_retract(
-        factor * m_extruder->retract_length_toolchange(),
-        factor * m_extruder->retract_restart_extra_toolchange(),
+        factor * m_tool->retract_length_toolchange(),
+        NAN,
+        factor * m_tool->retract_restart_extra_toolchange(),
         "retract for toolchange"
     );
 }
 
-std::string GCodeWriter::_retract(double length, double restart_extra, const std::string &comment)
+std::string GCodeWriter::_retract(double length, double restart_extra, double restart_extra_toolchange, const std::string &comment)
 {
+    std::ostringstream gcode;
+    
     /*  If firmware retraction is enabled, we use a fake value of 1
         since we ignore the actual configured retract_length which 
         might be 0, in which case the retraction logic gets skipped. */
@@ -403,73 +622,114 @@ std::string GCodeWriter::_retract(double length, double restart_extra, const std
     
     // If we use volumetric E values we turn lengths into volumes */
     if (this->config.use_volumetric_e) {
-        double d = m_extruder->filament_diameter();
+        double d = m_tool->filament_diameter();
         double area = d * d * PI/4;
         length = length * area;
         restart_extra = restart_extra * area;
+        restart_extra_toolchange = restart_extra_toolchange * area;
     }
     
-    std::string gcode;
-    if (auto [dE, emitE] = m_extruder->retract(length, restart_extra);  dE != 0) {
+    double dE = m_tool->retract(length, restart_extra, restart_extra_toolchange);
+    assert(dE >= 0);
+    assert(dE < 10000000);
+    if (dE != 0) {
         if (this->config.use_firmware_retraction) {
-            gcode = FLAVOR_IS(gcfMachinekit) ? "G22 ; retract\n" : "G10 ; retract\n";
+            if (FLAVOR_IS(gcfMachinekit))
+                gcode << "G22 ; retract\n";
+            else
+                gcode << "G10 ; retract\n";
         } else if (! m_extrusion_axis.empty()) {
-            GCodeG1Formatter w;
-            w.emit_e(m_extrusion_axis, emitE);
-            w.emit_f(m_extruder->retract_speed() * 60.);
-            w.emit_comment(this->config.gcode_comments, comment);
-            gcode = w.string();
+//            GCodeG1Formatter w;
+//            w.emit_e(m_extrusion_axis, m_extruder->E());
+//            w.emit_f(m_extruder->retract_speed() * 60.);
+//            w.emit_comment(this->config.gcode_comments, comment);
+//            gcode = w.string();
+            gcode << "G1 " << m_extrusion_axis << E_NUM(m_tool->E())
+                           << " F" << F_NUM(m_tool->retract_speed() * 60.);
+            COMMENT(comment);
+            gcode << "\n";
         }
     }
     
     if (FLAVOR_IS(gcfMakerWare))
-        gcode += "M103 ; extruder off\n";
-
-    return gcode;
+        gcode << "M103 ; extruder off\n";
+    
+    return gcode.str();
 }
 
 std::string GCodeWriter::unretract()
 {
-    std::string gcode;
+    std::ostringstream gcode;
+//    std::string gcode;
     
     if (FLAVOR_IS(gcfMakerWare))
-        gcode = "M101 ; extruder on\n";
+        gcode << "M101 ; extruder on\n";
     
-    if (auto [dE, emitE] = m_extruder->unretract(); dE != 0) {
+    double dE = m_tool->unretract();
+    assert(dE >= 0);
+    assert(dE < 10000000);
+    if (dE != 0) {
         if (this->config.use_firmware_retraction) {
-            gcode += FLAVOR_IS(gcfMachinekit) ? "G23 ; unretract\n" : "G11 ; unretract\n";
-            gcode += this->reset_e();
+            gcode << (FLAVOR_IS(gcfMachinekit) ? "G23 ; unretract\n" : "G11 ; unretract\n");
+            gcode << this->reset_e();
         } else if (! m_extrusion_axis.empty()) {
             // use G1 instead of G0 because G0 will blend the restart with the previous travel move
-            GCodeG1Formatter w;
-            w.emit_e(m_extrusion_axis, emitE);
-            w.emit_f(m_extruder->deretract_speed() * 60.);
-            w.emit_comment(this->config.gcode_comments, " ; unretract");
-            gcode += w.string();
+//            GCodeG1Formatter w;
+//            w.emit_e(m_extrusion_axis, m_tool->E());
+//            w.emit_f(m_tool->deretract_speed() * 60.);
+//            w.emit_comment(this->config.gcode_comments, " ; unretract");
+//            gcode += w.string();
+            gcode << "G1 " << m_extrusion_axis << E_NUM(m_tool->E())
+                           << " F" << F_NUM(m_tool->deretract_speed() * 60.);
+            if (this->config.gcode_comments) gcode << " ; unretract";
+            gcode << "\n";
         }
     }
     
-    return gcode;
+    return gcode.str();
 }
 
 /*  If this method is called more than once before calling unlift(),
     it will not perform subsequent lifts, even if Z was raised manually
     (i.e. with travel_to_z()) and thus _lifted was reduced. */
-std::string GCodeWriter::lift()
+std::string GCodeWriter::lift(int layer_id)
 {
     // check whether the above/below conditions are met
     double target_lift = 0;
-    {
-        double above = this->config.retract_lift_above.get_at(m_extruder->id());
-        double below = this->config.retract_lift_below.get_at(m_extruder->id());
-        if (m_pos.z() >= above && (below == 0 || m_pos.z() <= below))
-            target_lift = this->config.retract_lift.get_at(m_extruder->id());
+    if(this->tool_is_extruder()){
+        bool can_lift = this->config.retract_lift_first_layer.get_at(m_tool->id()) && layer_id == 0;
+        if (!can_lift) {
+            //these two should be in the Tool class methods....
+            double above = this->config.retract_lift_above.get_at(m_tool->id());
+            double below = this->config.retract_lift_below.get_at(m_tool->id());
+            can_lift = (m_pos.z() >= above - EPSILON && (below == 0 || m_pos.z() <= below + EPSILON));
+        }
+        if(can_lift)
+            target_lift = m_tool->retract_lift();
+    } else {
+        target_lift = m_tool->retract_lift();
     }
-    if (m_lifted == 0 && target_lift > 0) {
+
+    // use the override if set
+    if (target_lift > 0 && config_region && config_region->print_retract_lift.value >= 0) {
+        target_lift = config_region->print_retract_lift.value;
+    }
+
+    // one-time extra lift (often for dangerous travels)
+    if (this->m_extra_lift > 0) {
+        target_lift += this->m_extra_lift;
+        this->m_extra_lift = 0;
+    }
+
+    // compare against epsilon because travel_to_z() does math on it
+    // and subtracting layer_height from retract_lift might not give
+    // exactly zero
+    if (std::abs(m_lifted) < target_lift - EPSILON && target_lift > 0) {
+        std::string str =  this->_travel_to_z(m_pos.z() + target_lift - m_lifted, "lift Z");
         m_lifted = target_lift;
-        return this->_travel_to_z(m_pos.z() + target_lift, "lift Z");
+        return str;
     }
-    return {};
+    return "";
 }
 
 std::string GCodeWriter::unlift()
@@ -477,13 +737,14 @@ std::string GCodeWriter::unlift()
     std::string gcode;
     if (m_lifted > 0) {
         gcode += this->_travel_to_z(m_pos.z() - m_lifted, "restore layer Z");
-        m_lifted = 0;
     }
+    m_lifted = 0;
     return gcode;
 }
 
-std::string GCodeWriter::set_fan(const GCodeFlavor gcode_flavor, bool gcode_comments, unsigned int speed)
+std::string GCodeWriter::set_fan(const GCodeFlavor gcode_flavor, bool gcode_comments, uint8_t speed, uint8_t tool_fan_offset, bool is_fan_percentage)
 {
+/*
     std::ostringstream gcode;
     if (speed == 0) {
         switch (gcode_flavor) {
@@ -513,14 +774,53 @@ std::string GCodeWriter::set_fan(const GCodeFlavor gcode_flavor, bool gcode_comm
             gcode << " ; enable fan";
         gcode << "\n";
     }
+    return gcode.str();*/
+
+    std::ostringstream gcode;
+
+    //add fan_offset
+    int8_t fan_speed = int8_t(std::min(uint8_t(100), speed));
+    fan_speed += tool_fan_offset;
+    fan_speed = std::max(int8_t(0), std::min(int8_t(100), fan_speed));
+    const double fan_baseline = (is_fan_percentage ? 100.0 : 255.0);
+
+    // write it
+    if (fan_speed == 0) {
+        if ((gcfTeacup == gcode_flavor)) {
+            gcode << "M106 S0";
+        } else if ((gcfMakerWare == gcode_flavor) || (gcfSailfish == gcode_flavor)) {
+            gcode << "M127";
+        } else {
+            gcode << "M107";
+        }
+        if (gcode_comments) gcode << " ; disable fan";
+        gcode << "\n";
+    } else {
+        if ((gcfMakerWare == gcode_flavor) || (gcfSailfish == gcode_flavor)) {
+            gcode << "M126 T";
+        } else {
+            gcode << "M106 ";
+            if ((gcfMach3 == gcode_flavor) || (gcfMachinekit == gcode_flavor)) {
+                gcode << "P";
+            } else {
+                gcode << "S";
+            }
+            gcode << (fan_baseline * (fan_speed / 100.0));
+        }
+        if (gcode_comments) gcode << " ; enable fan";
+        gcode << "\n";
+    }
     return gcode.str();
 }
 
-std::string GCodeWriter::set_fan(unsigned int speed) const
+std::string GCodeWriter::set_fan(const uint8_t speed, uint16_t default_tool)
 {
-    return GCodeWriter::set_fan(this->config.gcode_flavor, this->config.gcode_comments, speed);
+    const Tool *tool = m_tool == nullptr ? get_tool(default_tool) : m_tool;
+    m_last_fan_speed = speed;
+    return GCodeWriter::set_fan(this->config.gcode_flavor.value, this->config.gcode_comments.value, speed, tool ? tool->fan_offset() : 0, this->config.fan_percentage.value);
 }
 
+#ifdef USE_GCODEFORMATTER
 void GCodeFormatter::emit_axis(const char axis, const double v, size_t digits) {
     assert(digits <= 9);
     static constexpr const std::array<int, 10> pow_10{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
@@ -579,5 +879,6 @@ void GCodeFormatter::emit_axis(const char axis, const double v, size_t digits) {
     }
 #endif // NDEBUG
 }
+#endif
 
 } // namespace Slic3r

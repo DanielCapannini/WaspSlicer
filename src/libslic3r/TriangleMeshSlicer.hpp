@@ -43,7 +43,9 @@ struct MeshSlicingParamsEx : public MeshSlicingParams
     float         extra_offset { 0 };
     // Resolution for contour simplification, unscaled.
     // 0 = don't simplify.
-    double        resolution { 0 };
+    double        resolution{ 0 };
+    // Resolution for colinear points silmplification
+    double        model_resolution{ 0 };
 };
 
 // All the following slicing functions shall produce consistent results with the same mesh, same transformation matrix and slicing parameters.
@@ -130,6 +132,6 @@ void cut_mesh(
     indexed_triangle_set            *lower,
     bool                             triangulate_caps = true);
 
-} // namespace Slic3r
+}
 
 #endif // slic3r_TriangleMeshSlicer_hpp_

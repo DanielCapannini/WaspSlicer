@@ -80,16 +80,14 @@ enum PolyFillType { pftEvenOdd, pftNonZero, pftPositive, pftNegative };
 // If defined, Clipper will work with 32bit signed int coordinates to reduce memory
 // consumption and to speed up exact orientation predicate calculation.
 // In that case, coordinates and their differences (vectors of the coordinates) have to fit int32_t.
-#define CLIPPERLIB_INT32
+// #define CLIPPERLIB_INT32
 
 // Point coordinate type
 #ifdef CLIPPERLIB_INT32
   // Coordinates and their differences (vectors of the coordinates) have to fit int32_t.
-  using cInt = int32_t;
-  using CrossProductType = int64_t;
+  typedef int32_t cInt;
 #else
-  using cInt = int64_t;
-  using CrossProductType = double;
+  typedef int64_t cInt;
   // Maximum cInt value to allow a cross product calculation using 32bit expressions.
   static constexpr cInt const loRange = 0x3FFFFFFF; // 0x3FFFFFFF = 1 073 741 823
   // Maximum allowed cInt value.
@@ -191,6 +189,7 @@ private:
 };
 
 double Area(const Path &poly);
+IntPoint Centroid(const Path& poly, double area);
 inline bool Orientation(const Path &poly) { return Area(poly) >= 0; }
 int PointInPolygon(const IntPoint &pt, const Path &path);
 
@@ -206,7 +205,6 @@ void MinkowskiSum(const Path& pattern, const Paths& paths, Paths& solution, bool
 void MinkowskiDiff(const Path& poly1, const Path& poly2, Paths& solution);
 
 void PolyTreeToPaths(const PolyTree& polytree, Paths& paths);
-void PolyTreeToPaths(PolyTree&& polytree, Paths& paths);
 void ClosedPathsFromPolyTree(const PolyTree& polytree, Paths& paths);
 void OpenPathsFromPolyTree(PolyTree& polytree, Paths& paths);
 

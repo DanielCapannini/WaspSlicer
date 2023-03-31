@@ -88,11 +88,11 @@ class TriangleMesh
 {
 public:
     TriangleMesh() = default;
-    TriangleMesh(const std::vector<Vec3f> &vertices, const std::vector<Vec3i> &faces);
-    TriangleMesh(std::vector<Vec3f> &&vertices, const std::vector<Vec3i> &&faces);
+    TriangleMesh(const std::vector<Vec3f> &vertices, const std::vector<Vec3i32> &faces);
+    TriangleMesh(std::vector<Vec3f> &&vertices, const std::vector<Vec3i32> &&faces);
     explicit TriangleMesh(const indexed_triangle_set &M);
     explicit TriangleMesh(indexed_triangle_set &&M, const RepairedMeshErrors& repaired_errors = RepairedMeshErrors());
-    void clear() { this->its.clear(); m_stats.clear(); }
+    void clear() { this->its.clear(); this->m_stats.clear(); }
     bool ReadSTLFile(const char* input_file, bool repair = true);
     bool write_ascii(const char* output_file);
     bool write_binary(const char* output_file);
@@ -139,7 +139,6 @@ public:
     bool   empty() const { return this->facets_count() == 0; }
     bool   repaired() const;
     bool   is_splittable() const;
-    bool   has_zero_volume() const;
     // Estimate of the memory occupied by this structure, important for keeping an eye on the Undo / Redo stack allocation.
     size_t memsize() const;
 
@@ -154,6 +153,9 @@ public:
     
     indexed_triangle_set its;
 
+/// --- for tests  ----- ///
+    Pointf3s vertices();
+    
 private:
     TriangleMeshStats m_stats;
 };
@@ -186,15 +188,15 @@ private:
 // Map from a face edge to a unique edge identifier or -1 if no neighbor exists.
 // Two neighbor faces share a unique edge identifier even if they are flipped.
 // Used for chaining slice lines into polygons.
-std::vector<Vec3i> its_face_edge_ids(const indexed_triangle_set &its);
-std::vector<Vec3i> its_face_edge_ids(const indexed_triangle_set &its, std::function<void()> throw_on_cancel_callback);
-std::vector<Vec3i> its_face_edge_ids(const indexed_triangle_set &its, const std::vector<char> &face_mask);
+std::vector<Vec3i32> its_face_edge_ids(const indexed_triangle_set &its);
+std::vector<Vec3i32> its_face_edge_ids(const indexed_triangle_set &its, std::function<void()> throw_on_cancel_callback);
+std::vector<Vec3i32> its_face_edge_ids(const indexed_triangle_set &its, const std::vector<bool> &face_mask);
 // Having the face neighbors available, assign unique edge IDs to face edges for chaining of polygons over slices.
-std::vector<Vec3i> its_face_edge_ids(const indexed_triangle_set &its, std::vector<Vec3i> &face_neighbors, bool assign_unbound_edges = false, int *num_edges = nullptr);
+std::vector<Vec3i32> its_face_edge_ids(const indexed_triangle_set &its, std::vector<Vec3i32> &face_neighbors, bool assign_unbound_edges = false, int *num_edges = nullptr);
 
 // Create index that gives neighbor faces for each face. Ignores face orientations.
-std::vector<Vec3i> its_face_neighbors(const indexed_triangle_set &its);
-std::vector<Vec3i> its_face_neighbors_par(const indexed_triangle_set &its);
+std::vector<Vec3i32> its_face_neighbors(const indexed_triangle_set &its);
+std::vector<Vec3i32> its_face_neighbors_par(const indexed_triangle_set &its);
 
 // After applying a transformation with negative determinant, flip the faces to keep the transformed mesh volume positive.
 void its_flip_triangles(indexed_triangle_set &its);
@@ -204,8 +206,6 @@ void its_flip_triangles(indexed_triangle_set &its);
 // or more than two faces share the same edge position!
 int its_merge_vertices(indexed_triangle_set &its, bool shrink_to_fit = true);
 
-// Calculate number of degenerate faces. There should be no degenerate faces in a nice mesh.
-int its_num_degenerate_faces(const indexed_triangle_set &its);
 // Remove degenerate faces, return number of faces removed.
 int its_remove_degenerate_faces(indexed_triangle_set &its, bool shrink_to_fit = true);
 
@@ -213,26 +213,22 @@ int its_remove_degenerate_faces(indexed_triangle_set &its, bool shrink_to_fit = 
 int its_compactify_vertices(indexed_triangle_set &its, bool shrink_to_fit = true);
 
 // store part of index triangle set
-bool its_store_triangle_to_obj(const indexed_triangle_set &its, const char *obj_filename, size_t triangle_index);
-bool its_store_triangles_to_obj(const indexed_triangle_set &its, const char *obj_filename, const std::vector<size_t>& triangles);
+bool its_store_triangle(const indexed_triangle_set &its, const char *obj_filename, size_t triangle_index);
+bool its_store_triangles(const indexed_triangle_set &its, const char *obj_filename, const std::vector<size_t>& triangles);
 
 std::vector<indexed_triangle_set> its_split(const indexed_triangle_set &its);
-std::vector<indexed_triangle_set> its_split(const indexed_triangle_set &its, std::vector<Vec3i> &face_neighbors);
+std::vector<indexed_triangle_set> its_split(const indexed_triangle_set &its, std::vector<Vec3i32> &face_neighbors);
 
 // Number of disconnected patches (faces are connected if they share an edge, shared edge defined with 2 shared vertex indices).
 size_t its_number_of_patches(const indexed_triangle_set &its);
-size_t its_number_of_patches(const indexed_triangle_set &its, const std::vector<Vec3i> &face_neighbors);
+size_t its_number_of_patches(const indexed_triangle_set &its, const std::vector<Vec3i32> &face_neighbors);
 // Same as its_number_of_patches(its) > 1, but faster.
 bool its_is_splittable(const indexed_triangle_set &its);
-bool its_is_splittable(const indexed_triangle_set &its, const std::vector<Vec3i> &face_neighbors);
+bool its_is_splittable(const indexed_triangle_set &its, const std::vector<Vec3i32> &face_neighbors);
 
 // Calculate number of unconnected face edges. There should be no unconnected edge in a manifold mesh.
 size_t its_num_open_edges(const indexed_triangle_set &its);
-size_t its_num_open_edges(const std::vector<Vec3i> &face_neighbors);
-
-// Calculate and returns the list of unconnected face edges.
-// Each edge is represented by the indices of the two endpoint vertices
-std::vector<std::pair<int, int>> its_get_open_edges(const indexed_triangle_set& its);
+size_t its_num_open_edges(const std::vector<Vec3i32> &face_neighbors);
 
 // Shrink the vectors of its.vertices and its.faces to a minimum size by reallocating the two vectors.
 void its_shrink_to_fit(indexed_triangle_set &its);
@@ -253,14 +249,14 @@ inline int its_triangle_vertex_index(const stl_triangle_vertex_indices &triangle
            vertex_idx == triangle_indices[2] ? 2 : -1;
 }
 
-inline Vec2i its_triangle_edge(const stl_triangle_vertex_indices &triangle_indices, int edge_idx)
+inline Vec2i32 its_triangle_edge(const stl_triangle_vertex_indices &triangle_indices, int edge_idx)
 {
     int next_edge_idx = (edge_idx == 2) ? 0 : edge_idx + 1;
     return { triangle_indices[edge_idx], triangle_indices[next_edge_idx] };
 }
 
 // Index of an edge inside triangle.
-inline int its_triangle_edge_index(const stl_triangle_vertex_indices &triangle_indices, const Vec2i &triangle_edge)
+inline int its_triangle_edge_index(const stl_triangle_vertex_indices &triangle_indices, const Vec2i32 &triangle_edge)
 {
     return triangle_edge(0) == triangle_indices[0] && triangle_edge(1) == triangle_indices[1] ? 0 :
            triangle_edge(0) == triangle_indices[1] && triangle_edge(1) == triangle_indices[2] ? 1 :
@@ -270,17 +266,11 @@ inline int its_triangle_edge_index(const stl_triangle_vertex_indices &triangle_i
 using its_triangle = std::array<stl_vertex, 3>;
 
 inline its_triangle its_triangle_vertices(const indexed_triangle_set &its,
-                                          const Vec3i &face)
-{
-    return {its.vertices[face(0)],
-            its.vertices[face(1)],
-            its.vertices[face(2)]};
-}
-
-inline its_triangle its_triangle_vertices(const indexed_triangle_set &its,
                                           size_t                      face_id)
 {
-    return its_triangle_vertices(its, its.indices[face_id]);
+    return {its.vertices[its.indices[face_id](0)],
+            its.vertices[its.indices[face_id](1)],
+            its.vertices[its.indices[face_id](2)]};
 }
 
 inline stl_normal its_unnormalized_normal(const indexed_triangle_set &its,
@@ -292,14 +282,6 @@ inline stl_normal its_unnormalized_normal(const indexed_triangle_set &its,
 
 float its_volume(const indexed_triangle_set &its);
 float its_average_edge_length(const indexed_triangle_set &its);
-
-/// <summary>
-/// Merge one triangle mesh to another
-/// Added triangle set will be consumed
-/// </summary>
-/// <param name="its">IN/OUT triangle mesh</param>
-/// <param name="its_add">Triangle mesh (will be consumed)</param>
-void its_merge(indexed_triangle_set &its, indexed_triangle_set &&its_add);
 
 void its_merge(indexed_triangle_set &A, const indexed_triangle_set &B);
 void its_merge(indexed_triangle_set &A, const std::vector<Vec3f> &triangles);
@@ -317,7 +299,6 @@ indexed_triangle_set    its_make_cube(double x, double y, double z);
 indexed_triangle_set    its_make_prism(float width, float length, float height);
 indexed_triangle_set    its_make_cylinder(double r, double h, double fa=(2*PI/360));
 indexed_triangle_set    its_make_cone(double r, double h, double fa=(2*PI/360));
-indexed_triangle_set    its_make_frustum_dowel(double r, double h, int sectorCount);
 indexed_triangle_set    its_make_pyramid(float base, float height);
 indexed_triangle_set    its_make_sphere(double radius, double fa);
 
@@ -347,22 +328,6 @@ inline BoundingBoxf3 bounding_box(const indexed_triangle_set& its)
     for (const Vec3f &p : its.vertices) {
         bmin = p.cwiseMin(bmin);
         bmax = p.cwiseMax(bmax);
-    }
-
-    return {bmin.cast<double>(), bmax.cast<double>()};
-}
-
-inline BoundingBoxf3 bounding_box(const indexed_triangle_set& its, const Transform3f &tr)
-{
-    if (its.vertices.empty())
-        return {};
-
-    Vec3f bmin = tr * its.vertices.front(), bmax = tr * its.vertices.front();
-
-    for (const Vec3f &p : its.vertices) {
-        Vec3f pp = tr * p;
-        bmin = pp.cwiseMin(bmin);
-        bmax = pp.cwiseMax(bmax);
     }
 
     return {bmin.cast<double>(), bmax.cast<double>()};

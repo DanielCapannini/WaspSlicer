@@ -2308,15 +2308,15 @@ static int stk500v2_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
   int result;
   OPCODE * rop, * wop;
 
-  // Wasp3D workaround for a bug in the USB communication controller. The semicolon character is used as an initial character
+  // Prusa3D workaround for a bug in the USB communication controller. The semicolon character is used as an initial character
   // for special command sequences for the USB communication chip. The early releases of the USB communication chip had
   // a bug, which produced a 0x0ff character after the semicolon. The patch is to program the semicolons by flashing
   // firmware blocks twice: First the low nibbles of semicolons, second the high nibbles of the semicolon characters.
   //
   // Inside the 2nd round of a firmware block flashing?
-  bool wasp3d_semicolon_workaround_round2 = false;
+  bool prusa3d_semicolon_workaround_round2 = false;
   // Buffer containing the other nibbles of semicolons to be flashed in the 2nd round.
-  unsigned char wasp3d_semicolon_workaround_round2_data[256];
+  unsigned char prusa3d_semicolon_workaround_round2_data[256];
 
   DEBUG("STK500V2: stk500v2_paged_write(..,%s,%u,%u,%u)\n",
         m->desc, page_size, addr, n_bytes);
@@ -2401,7 +2401,7 @@ static int stk500v2_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
 
   last_addr=UINT_MAX;   /* impossible address */
 
-  for (; addr < maxaddr; addr += wasp3d_semicolon_workaround_round2 ? 0 : page_size) {
+  for (; addr < maxaddr; addr += prusa3d_semicolon_workaround_round2 ? 0 : page_size) {
     if ((maxaddr - addr) < page_size)
       block_size = maxaddr - addr;
     else
@@ -2414,26 +2414,26 @@ static int stk500v2_paged_write(PROGRAMMER * pgm, AVRPART * p, AVRMEM * m,
     buf[1] = block_size >> 8;
     buf[2] = block_size & 0xff;
 
-    if((last_addr==UINT_MAX)||(last_addr+block_size != addr)||wasp3d_semicolon_workaround_round2){
+    if((last_addr==UINT_MAX)||(last_addr+block_size != addr)||prusa3d_semicolon_workaround_round2){
       if (stk500v2_loadaddr(pgm, use_ext_addr | (addr >> addrshift)) < 0)
         return -1;
     }
     last_addr=addr;
 
-    if (wasp3d_semicolon_workaround_round2) {
+    if (prusa3d_semicolon_workaround_round2) {
         // printf("Round 2: address %d\r\n", addr);
-        memcpy(buf+10, wasp3d_semicolon_workaround_round2_data, block_size);
-        wasp3d_semicolon_workaround_round2 = false;
+        memcpy(buf+10, prusa3d_semicolon_workaround_round2_data, block_size);
+        prusa3d_semicolon_workaround_round2 = false;
     } else {
         for (size_t i = 0; i < block_size; ++ i) {
             unsigned char b = m->buf[addr+i];
             if (b == ';') {
               // printf("semicolon at %d %d\r\n", addr, i);
-              wasp3d_semicolon_workaround_round2_data[i] = b | 0x0f0;
+              prusa3d_semicolon_workaround_round2_data[i] = b | 0x0f0;
               b |= 0x0f;
-              wasp3d_semicolon_workaround_round2 = true;
+              prusa3d_semicolon_workaround_round2 = true;
             } else 
-              wasp3d_semicolon_workaround_round2_data[i] = 0x0ff;
+              prusa3d_semicolon_workaround_round2_data[i] = 0x0ff;
             buf[i+10] = b;
         }
     }
@@ -4808,7 +4808,7 @@ void stk500v2_jtag3_initpgm(PROGRAMMER * pgm)
 void stk500v2_set_upload_size(PROGRAMMER * pgm, int size)
 {
 	unsigned char buf[16];
-	buf[0] = CMD_SET_UPLOAD_SIZE_WASP3D;
+	buf[0] = CMD_SET_UPLOAD_SIZE_PRUSA3D;
 	buf[1] = size & 0xff;
 	buf[2] = size >> 8;
 	buf[3] = size >> 16;

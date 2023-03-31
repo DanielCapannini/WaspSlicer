@@ -56,7 +56,7 @@
 
 
 /* Get VERSION from ac_cfg.h */
-char * version      = VERSION "-wasp3d";
+char * version      = VERSION "++";
 
 char * progname;
 char   progbuf[PATH_MAX]; /* temporary buffer of spaces the same

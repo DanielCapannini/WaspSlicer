@@ -24,6 +24,7 @@ public:
     void        reset_once_modifiers()  { m_use_external_mp_once = false; m_disabled_once = false; }
 
     void        init_layer(const Layer &layer);
+    bool        is_init() { return m_init; }
 
     Polyline    travel_to(const GCode& gcodegen, const Point& point)
     {
@@ -42,11 +43,14 @@ public:
         std::vector<std::vector<float>> boundaries_params;
         // Used for detection of intersection between line and any polygon from boundaries
         EdgeGrid::Grid                  grid;
+        //used to move the point inside the boundary
+        std::vector<std::pair<ExPolygon, ExPolygons>> boundary_growth;
 
         void clear()
         {
             boundaries.clear();
             boundaries_params.clear();
+            boundary_growth.clear();
         }
     };
 
@@ -58,11 +62,10 @@ private:
     // we enable it by default for the first travel move in print
     bool           m_disabled_once { true };
 
-    // Lslices offseted by half an external perimeter width. Used for detection if line or polyline is inside of any polygon.
-    ExPolygons               m_lslices_offset;
-    std::vector<BoundingBox> m_lslices_offset_bboxes;
+    bool m_init{ false };
+
     // Used for detection of line or polyline is inside of any polygon.
-    EdgeGrid::Grid           m_grid_lslices_offset;
+    EdgeGrid::Grid m_grid_lslice;
     // Store all needed data for travels inside object
     Boundary m_internal;
     // Store all needed data for travels outside object
